@@ -1,2 +1,8 @@
-flipped_stomach: https://vmccny.com/gastric-dilatationvolvulus-bloat/
+Dog Financial Costs:
 
+food costs: https://thedogstop.com/blog/the-real-cost-of-dog-food/
+normal_food: $50/month
+quality_food: $150-300/month
+
+Dog Health Conditions and Afflictions:
+flipped_stomach: https://vmccny.com/gastric-dilatationvolvulus-bloat/
