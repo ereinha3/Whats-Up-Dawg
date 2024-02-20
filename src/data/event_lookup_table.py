@@ -1,4 +1,4 @@
-{
+events = {
 "chipped_tooth",
 "ate_unknown_substance_off_ground",
 "drank_dirty_water",
