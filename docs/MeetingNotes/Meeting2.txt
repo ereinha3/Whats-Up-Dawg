@@ -1,0 +1,39 @@
+02/20/2024: 3:20 to 5:15pm. Full group present.
+
+Discussed Software Architecture Design:
+
+Revised our initial implementation of software architecture and changed modular dependencies.
+
+Determined which modules were necessary for implementation: 
+GUI, Event Lookup, Afflictions, Event, User Classes
+
+Outline sequence of events throughout GUI to better understand relationship between modules:
+	Dog is initialised based on given parameters
+	Event is generated allowing for user input
+	User selects event and event alters data in the UserClasses file
+	Event Synopsis is given based on the decision of the event
+	Dog parameters are redisplayed for altering, continuing the cycle
+
+Articulated the objects of the Afflictions file.
+The Afflictions class will contain the following parameters:
+	Message: the message displayed stating that the affliction has occurred
+	Cost: a cost per round
+	Duration: a number corresponding to the number of rounds this will last, this will also differentiate between afflictions that require one-time payment or repeated payments
+	Commonality: a number representing the BASE likelihood of contracting a particular illness
+	Multipliers: a dictionary of multipliers based on dog parameters (ie old age increases likelihood of cancer so a high multiplier for age) that will alter the commonality of the affliction
+	Option1: a dictionary containing:
+		message: the message displayed if the option is selected
+		status: this will be a dictionary of the relative status updates to the human and the dogs attributes
+	Option2: "
+
+We also discussed methods of determining relative likelihood of a given illness. This will likely be reflective of commonality * rng(Multipliers, Human, Dog) to give some numerical output. All events will then be ranked and the most likely or most likely few will be displayed and given to the GUI.
+
+We additionally parsed up work today toward the prototype of our application.
+Based on individual preferences, the workload was divided to:
+GUI : Darby
+Afflictions: Morgan
+Event Lookup / User Class Implementation : Ethan and Anna
+
+We have decided that we will be currently working to create a working primitive prototype and will implement complete additional features later on. 
+	
+	
