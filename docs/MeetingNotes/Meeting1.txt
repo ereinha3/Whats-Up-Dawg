@@ -8,11 +8,11 @@ Dog should be a class with its own user-viewable properties, and secret properti
 
 User should be a class with its own user-viewable properties, no secret properties for the user have been discussed.
 
-Dog should have status affects whose description is defined in a dictionary. These status effects largely include afflictions, such as: Giardia, Chipped tooth, Foxtail, Bee-sting, Torn ACL, Hip Displacia, Cancer, etc. For the initial prototype we will seek only to define and implement a few of these status effects, and expand as we go.
+Dog should have status affects whose description is defined in a dictionary. These status effects largely include afflictions, such as: Giardia, Chipped tooth, Foxtail, Bee-sting, Torn ACL, Hip Dysplasia, Cancer, etc. For the initial prototype we will seek only to define and implement a few of these status effects, and expand as we go.
 
 Status effects have a duration (either permanent, or listed in time or round units) and an effect. This effect can be cumulative (triggered with every new round) or passive. In either case, the status will likely call a Dog method when invoked to modify Dog attributes (such as Health or Happiness).
 
-Round length is still being discussed, but 3-months is likely. This way the game should give you enough time with your dog for you to form some attachment, but it shouldn't be long, boring or grueling. You will have experienced plenty in that time.
+Round length is still being discussed, but 3-months is likely. This way the game should give you enough time with your dog for you to form some attachment, but it shouldn't be long, boring or gruelling. You will have experienced plenty in that time.
 
 Between every time round, you can adjust lifestyle choices, such as time spent walking your dog, dog grooming schedule, dog diet and treats given, time spent socializing dog with other dogs, vet checkups, etc. For the prototype, we may commit to only a couple of these lifestyle choices (such as walk schedule, diet and vet-checkups).
 
