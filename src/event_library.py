@@ -1,7 +1,7 @@
 event_lookup_table = {
     "fleas": {
         "resist": {
-            "check": lambda dog: "flea_and_tick" in dog.get_meds().keys(),
+            "check": lambda dog: "flea_and_tick" in dog.get_medications().keys(),
             "message": "Your dog was exposed to fleas, but fortunately they were on flea and tick meds and didn't catch them."\
             },
         "intro": "Your dog has fleas. Do you?",

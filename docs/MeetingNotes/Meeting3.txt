@@ -1,0 +1,13 @@
+02/27/2024
+
+Brainstorm of ideas:
+
+Attribute for dog: behavior (0.5 to 2)
+Trainable: (0.1 to 1)
+
+Should we include a spade and neuter option? Or more general information about dog breeding statistics, etc.
+
+
+lambda dog : percentCheck(happiness * behavior)
+
+
