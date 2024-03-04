@@ -131,28 +131,30 @@ class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
 
-        # configure window
-        self.title("CustomTkinter complex_example.py")
+        # Configure window
+        self.title("What's Up Dawg?")
         self.geometry(f"{900}x{650}")
 
-        # configure grid layout (3x3)
+        # Configure grid layout (3x3)
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(1, weight=1)
 
+        # Window Attributes
         self.shop_window = None
+        self.mode = "dark"
 
+        # Dog and Human Objects
         self.human = Model.Human()
         self.dog = Model.Dog(name="Example Dog")
 
+        # Images
         image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../docs/test-images")
         self.dog_image = customtkinter.CTkImage(
             Image.open(os.path.join(image_path, "weiner_dog_example.png")),
             size=(800, 75))
         self.happy_face_image = customtkinter.CTkImage(
             Image.open(os.path.join(image_path, "happy-face.png")),
-            size=(40, 40))
-        
-        self.mode = "dark"
+            size=(30, 30))
 
 #------------------------------------------------------------------------------
         # Top Bar
@@ -179,26 +181,6 @@ class App(customtkinter.CTk):
             padx=20,
             pady=20)
         
-        # self.image_label = customtkinter.CTkLabel(
-        #     self.top_bar_frame,
-        #     text="",
-        #     image=self.dog_image)
-        # self.image_label.grid(
-        #     row=0,
-        #     column=0,
-        #     padx=20,
-        #     pady=20)
-        
-        # self.back_button = customtkinter.CTkButton(
-        #     self.top_bar_frame,
-        #     text="Exit To Main Menu",
-        #     width=30,
-        #     command=self.exit_button_event)
-        # self.back_button.grid(
-        #     row=0,
-        #     column=0,
-        #     padx=25)
-        
 #------------------------------------------------------------------------------
         # Left Side Bar
         self.left_side_bar = customtkinter.CTkFrame(
@@ -208,7 +190,7 @@ class App(customtkinter.CTk):
         self.left_side_bar.grid(
             row=1,
             column=0,
-            rowspan=1,
+            rowspan=2,
             sticky="news")
         self.left_side_bar.grid_rowconfigure(5, weight=1)
         
@@ -222,15 +204,33 @@ class App(customtkinter.CTk):
             padx=20,
             pady=(20, 10))
         
-        self.age_label = customtkinter.CTkLabel(
-            self.left_side_bar,
-            text=f"Age: {self.dog.age}",
-            font=customtkinter.CTkFont(size=18, weight="normal"))
-        self.age_label.grid(
+        self.age_frame = customtkinter.CTkFrame(
+            self.left_side_bar)
+        self.age_frame.grid(
             row=1,
             column=0,
+            padx=20,
+            pady=(5, 25))
+        
+        self.age_label = customtkinter.CTkLabel(
+            self.age_frame,
+            text=f"Age:",
+            font=customtkinter.CTkFont(size=18, weight="normal"))
+        self.age_label.grid(
+            row=0,
+            column=0,
             padx=10,
-            pady=10)
+            pady=5)
+        
+        self.age_value_label = customtkinter.CTkLabel(
+            self.age_frame,
+            text=f"0",
+            font=customtkinter.CTkFont(size=18, weight="normal"))
+        self.age_value_label.grid(
+            row=0,
+            column=1,
+            padx=10,
+            pady=5)
         
         self.meds_button = customtkinter.CTkButton(
             self.left_side_bar,
@@ -239,8 +239,8 @@ class App(customtkinter.CTk):
         self.meds_button.grid(
             row=2,
             column=0,
-            padx=10,
-            pady=10)
+            padx=20,
+            pady=5)
         
         self.items_button = customtkinter.CTkButton(
             self.left_side_bar,
@@ -249,8 +249,8 @@ class App(customtkinter.CTk):
         self.items_button.grid(
             row=3,
             column=0,
-            padx=10,
-            pady=10)
+            padx=20,
+            pady=5)
         
         self.afflictions_button = customtkinter.CTkButton(
             self.left_side_bar,
@@ -259,8 +259,8 @@ class App(customtkinter.CTk):
         self.afflictions_button.grid(
             row=4,
             column=0,
-            padx=10,
-            pady=10)
+            padx=20,
+            pady=5)
         
         self.dashed_line = customtkinter.CTkLabel(
             self.left_side_bar,
@@ -278,7 +278,7 @@ class App(customtkinter.CTk):
             row=6,
             column=0,
             padx=20,
-            pady=(10, 0))
+            pady=5)
         
         self.walks_option_menu = customtkinter.CTkOptionMenu(
             self.left_side_bar,
@@ -288,7 +288,7 @@ class App(customtkinter.CTk):
             row=7,
             column=0,
             padx=20,
-            pady=(10, 0))
+            pady=(5, 20))
 
         self.food_option_label = customtkinter.CTkLabel(
             self.left_side_bar,
@@ -298,7 +298,7 @@ class App(customtkinter.CTk):
             row=8,
             column=0,
             padx=20,
-            pady=(10, 0))
+            pady=5)
 
         self.food_options_menu = customtkinter.CTkOptionMenu(
             self.left_side_bar,
@@ -308,7 +308,7 @@ class App(customtkinter.CTk):
             row=9,
             column=0,
             padx=20,
-            pady=(10, 20))
+            pady=(5, 20))
         
 #------------------------------------------------------------------------------
         # Bottom Bar
@@ -318,10 +318,10 @@ class App(customtkinter.CTk):
             corner_radius=0)
         self.bottom_bar_frame.grid(
             row=2,
-            column=0,
-            columnspan=3,
+            column=1,
+            columnspan=1,
             sticky="nsew")
-        self.bottom_bar_frame.grid_columnconfigure(3, weight=1)
+        self.bottom_bar_frame.grid_columnconfigure((0, 1, 2), weight=1)
         
         self.shop_button = customtkinter.CTkButton(
             self.bottom_bar_frame,
@@ -353,15 +353,15 @@ class App(customtkinter.CTk):
             padx=20,
             pady=20)
         
-        self.continue_button = customtkinter.CTkButton(
-            self.bottom_bar_frame,
-            text="Continue",
-            command=self.continue_button_event)
-        self.continue_button.grid(
-            row=0,
-            column=4,
-            padx=20,
-            pady=20)
+        # self.continue_button = customtkinter.CTkButton(
+        #     self.bottom_bar_frame,
+        #     text="Continue",
+        #     command=self.continue_button_event)
+        # self.continue_button.grid(
+        #     row=0,
+        #     column=4,
+        #     padx=20,
+        #     pady=20)
         
 #------------------------------------------------------------------------------
         # Right Side Bar
@@ -372,9 +372,9 @@ class App(customtkinter.CTk):
         self.right_side_bar.grid(
             row=1,
             column=2,
-            rowspan=1,
+            rowspan=2,
             sticky="news")
-        self.right_side_bar.grid_rowconfigure(5, weight=1)
+        self.right_side_bar.grid_rowconfigure(4, weight=1)
         
         self.human_name_label = customtkinter.CTkLabel(
             self.right_side_bar,
@@ -384,17 +384,34 @@ class App(customtkinter.CTk):
             row=0,
             column=0,
             padx=20,
-            pady=10)
+            pady=(20, 10))
         
-        self.balance_label = customtkinter.CTkLabel(
-            self.right_side_bar,
-            text="Balance: $0.00",
-            font=customtkinter.CTkFont(size=18, weight="normal"))
-        self.balance_label.grid(
+        self.balance_frame = customtkinter.CTkFrame(self.right_side_bar)
+        self.balance_frame.grid(
             row=1,
             column=0,
-            padx=10,
-            pady=10)
+            padx=20,
+            pady=5)
+
+        self.balance_label = customtkinter.CTkLabel(
+            self.balance_frame,
+            text="Balance:",
+            font=customtkinter.CTkFont(size=18, weight="normal"))
+        self.balance_label.grid(
+            row=0,
+            column=0,
+            padx=5,
+            pady=5)
+        
+        self.balance_value_label = customtkinter.CTkLabel(
+            self.balance_frame,
+            text="$0.00",
+            font=customtkinter.CTkFont(size=18, weight="normal"))
+        self.balance_value_label.grid(
+            row=0,
+            column=1,
+            padx=5,
+            pady=5)
         
         self.happiness_frame = customtkinter.CTkFrame(
             self.right_side_bar
@@ -402,9 +419,8 @@ class App(customtkinter.CTk):
         self.happiness_frame.grid(
             row=2,
             column=0,
-            padx=10,
-            pady=10)
-
+            padx=20,
+            pady=5)
         
         self.happiness_label = customtkinter.CTkLabel(
             self.happiness_frame,
@@ -413,8 +429,8 @@ class App(customtkinter.CTk):
         self.happiness_label.grid(
             row=0,
             column=0,
-            padx=10,
-            pady=10)
+            padx=5,
+            pady=5)
 
         self.happiness_image_label = customtkinter.CTkLabel(
             self.happiness_frame,
@@ -424,18 +440,45 @@ class App(customtkinter.CTk):
         self.happiness_image_label.grid(
             row=0,
             column=1,
-            padx=10,
-            pady=10)
+            padx=5,
+            pady=5)
         
-        self.time_invested_label = customtkinter.CTkLabel(
-            self.right_side_bar,
-            text="Time Invested: 1000",
-            font=customtkinter.CTkFont(size=18, weight="normal"))
-        self.time_invested_label.grid(
+        self.time_invested_frame = customtkinter.CTkFrame(self.right_side_bar)
+        self.time_invested_frame.grid(
             row=3,
             column=0,
-            padx=10,
-            pady=10)
+            padx=20,
+            pady=5)
+
+        self.time_invested_label = customtkinter.CTkLabel(
+            self.time_invested_frame,
+            text="Time Invested:",
+            font=customtkinter.CTkFont(size=18, weight="normal"))
+        self.time_invested_label.grid(
+            row=0,
+            column=0,
+            padx=5,
+            pady=5)
+        
+        self.time_invested_value_label = customtkinter.CTkLabel(
+            self.time_invested_frame,
+            text="1000",
+            font=customtkinter.CTkFont(size=18, weight="normal"))
+        self.time_invested_value_label.grid(
+            row=0,
+            column=1,
+            padx=5,
+            pady=5)
+        
+        self.continue_button = customtkinter.CTkButton(
+            self.right_side_bar,
+            text="Continue",
+            command=self.continue_button_event)
+        self.continue_button.grid(
+            row=5,
+            column=0,
+            padx=20,
+            pady=20)
 
 #------------------------------------------------------------------------------
         # create textbox
@@ -474,7 +517,7 @@ class App(customtkinter.CTk):
     
     def continue_button_event(self):
         print("Continue Button Pressed")
-        self.age_label.configure(text=f"Age: {self.dog.age + 1}")
+        self.age_value_label.configure(text=f"{self.dog.age + 1}")
         return
     
     def change_walk_option_event(self, new_walk_option):
