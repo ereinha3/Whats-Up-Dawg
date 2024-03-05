@@ -9,6 +9,71 @@ from PIL import Image
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
+class MedicationsWindow(customtkinter.CTkToplevel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.geometry(f"{380}x{550}")
+
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+
+        self.title_label = customtkinter.CTkLabel(
+            self,
+            text="Medications",
+            font=customtkinter.CTkFont(size=25, weight="bold", underline=True))
+        self.title_label.grid(
+            row=0,
+            column=0,
+            padx=20,
+            pady=15)
+        
+    #------------------------------------------------------------------------------
+    # Medications Window Methods
+
+
+class ItemsWindow(customtkinter.CTkToplevel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.geometry(f"{380}x{550}")
+
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+
+        self.title_label = customtkinter.CTkLabel(
+            self,
+            text="Items",
+            font=customtkinter.CTkFont(size=25, weight="bold", underline=True))
+        self.title_label.grid(
+            row=0,
+            column=0,
+            padx=20,
+            pady=15)
+        
+    #------------------------------------------------------------------------------
+    # Items Window Methods
+
+
+class AfflictionsWindow(customtkinter.CTkToplevel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.geometry(f"{380}x{550}")
+
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+
+        self.title_label = customtkinter.CTkLabel(
+            self,
+            text="Afflictions",
+            font=customtkinter.CTkFont(size=25, weight="bold", underline=True))
+        self.title_label.grid(
+            row=0,
+            column=0,
+            padx=20,
+            pady=15)
+        
+    #------------------------------------------------------------------------------
+    # Afflictions Window Methods
+
 
 class InstructionsWindow(customtkinter.CTkToplevel):
     def __init__(self, *args, **kwargs):
@@ -37,6 +102,8 @@ class InstructionsWindow(customtkinter.CTkToplevel):
             padx=20,
             pady=20,
             sticky="nsew")
+        self.instructions_textbox.insert("0.0", "Instructions Should Go Here...")
+        self.instructions_textbox.configure(state="disabled")
 
 
 class ShopWindow(customtkinter.CTkToplevel):
@@ -47,12 +114,12 @@ class ShopWindow(customtkinter.CTkToplevel):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-#------------------------------------------------------------------------------
-        # Tab View
-        self.store_tabs = customtkinter.CTkTabview(
+    #--------------------------------------------------------------------------
+        # Shop Tab View
+        self.shop_tabs = customtkinter.CTkTabview(
             self,
             width=250)
-        self.store_tabs.grid(
+        self.shop_tabs.grid(
             row=0,
             column=0,
             columnspan=2,
@@ -61,12 +128,12 @@ class ShopWindow(customtkinter.CTkToplevel):
             sticky="nsew")
         
         #------------------------------
-        # Shots Selection
-        self.store_tabs.add("Shots")
-        self.store_tabs.tab("Shots").grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
+        # Shots / Meds Selection
+        self.shop_tabs.add("Shots/Meds")
+        self.shop_tabs.tab("Shots/Meds").grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
 
         self.shots_tab_frame = customtkinter.CTkFrame(
-            self.store_tabs.tab("Shots"))
+            self.shop_tabs.tab("Shots/Meds"))
         self.shots_tab_frame.grid(
             row=0,
             column=0,
@@ -86,15 +153,15 @@ class ShopWindow(customtkinter.CTkToplevel):
         
         #------------------------------
         # Treats and Toys Selection
-        self.store_tabs.add("Treats/Toys")
-        self.store_tabs.tab("Treats/Toys").grid_columnconfigure(0, weight=1)
+        self.shop_tabs.add("Treats/Toys")
+        self.shop_tabs.tab("Treats/Toys").grid_columnconfigure(0, weight=1)
         
         self.treats_toys_tab_frame = customtkinter.CTkFrame(
-            self.store_tabs.tab("Treats/Toys"))
+            self.shop_tabs.tab("Treats/Toys"))
         self.treats_toys_tab_frame.grid(
             row=0,
             column=0,
-            padx=(20, 20),
+            padx=20,
             pady=(20, 0),
             sticky="nsew")
         
@@ -109,14 +176,14 @@ class ShopWindow(customtkinter.CTkToplevel):
             padx=20,
             sticky="n")
         
-#------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
         # Checkout (Cost and Pay Button) Frame
         self.checkout_frame = customtkinter.CTkFrame(self)
         self.checkout_frame.grid(
             row=1,
             column=0,
-            padx=(20, 20),
-            pady=(20, 20),
+            padx=20,
+            pady=20,
             sticky="nsew")
         self.checkout_frame.grid_columnconfigure((0, 1), weight=1)
 
@@ -125,7 +192,8 @@ class ShopWindow(customtkinter.CTkToplevel):
             row=0,
             column=0,
             padx=10,
-            pady=10)
+            pady=10,
+            sticky="news")
         self.cost_label_frame.grid_columnconfigure(0, weight=1)
 
         self.cost_label = customtkinter.CTkLabel(
@@ -135,7 +203,7 @@ class ShopWindow(customtkinter.CTkToplevel):
         self.cost_label.grid(
             row=0,
             column=0,
-            padx=(20, 5),
+            padx=(10, 5),
             pady=10,
             sticky="nsew")
         
@@ -146,13 +214,14 @@ class ShopWindow(customtkinter.CTkToplevel):
         self.cost_value_label.grid(
             row=0,
             column=1,
-            padx=(5, 20),
+            padx=(5, 10),
             pady=10,
             sticky="nsew")
         
         self.pay_button = customtkinter.CTkButton(
             self.checkout_frame,
             text="Pay",
+            state="disabled",
             command=self.pay_button_event)
         self.pay_button.grid(
             row=0,
@@ -162,13 +231,14 @@ class ShopWindow(customtkinter.CTkToplevel):
             sticky="nsew")
         
 
-#------------------------------------------------------------------------------
-    # Methods
+    #--------------------------------------------------------------------------
+    # Shop Window Methods
     def do_nothing(self):
         return
     
     def item_selected(self):
         print(f"Item Selected")
+        self.pay_button.configure(state="enabled")
         return
     
     def pay_button_event(self):
@@ -188,9 +258,13 @@ class MainWindow(customtkinter.CTk):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
-        # Window Attributes
+        # Top Level Windows
         self.shop_window = None
         self.instructions_window = None
+        self.meds_window = None
+        self.items_window = None
+        self.afflictions_window = None
+
         self.mode = "dark"
 
         # Dog and Human Objects
@@ -206,22 +280,22 @@ class MainWindow(customtkinter.CTk):
             Image.open(os.path.join(image_path, "happy-face.png")),
             size=(30, 30))
         
-#------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
         # Main Window Frame
-        self.main_frame = customtkinter.CTkFrame(self)
-        self.main_frame.grid(
+        self.main_window_frame = customtkinter.CTkFrame(self)
+        self.main_window_frame.grid(
             row=0,
             column=0,
             sticky="news")
         
         # Main window is a 3x3 grid
-        self.main_frame.grid_columnconfigure(1, weight=1)
-        self.main_frame.grid_rowconfigure(1, weight=1)
+        self.main_window_frame.grid_columnconfigure(1, weight=1)
+        self.main_window_frame.grid_rowconfigure(1, weight=1)
 
-#------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
         # Top Bar
         self.top_bar_frame = customtkinter.CTkFrame(
-            self.main_frame,
+            self.main_window_frame,
             height=140,
             corner_radius=0)
         self.top_bar_frame.grid(
@@ -243,10 +317,10 @@ class MainWindow(customtkinter.CTk):
             padx=20,
             pady=15)
         
-#------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
         # Dog Side Bar (Right)
         self.dog_side_bar = customtkinter.CTkFrame(
-            self.main_frame,
+            self.main_window_frame,
             corner_radius=0)
         self.dog_side_bar.grid(
             row=1,
@@ -346,10 +420,10 @@ class MainWindow(customtkinter.CTk):
             padx=20,
             pady=20)
         
-#------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
         # Bottom Bar
         self.bottom_bar_frame = customtkinter.CTkFrame(
-            self.main_frame,
+            self.main_window_frame,
             height=140,
             corner_radius=0)
         self.bottom_bar_frame.grid(
@@ -389,10 +463,10 @@ class MainWindow(customtkinter.CTk):
             padx=(5, 20),
             pady=20)
         
-#------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
         # Human Side Bar (Left)
         self.human_side_bar = customtkinter.CTkFrame( 
-            self.main_frame,
+            self.main_window_frame,
             width=140,
             corner_radius=0)
         self.human_side_bar.grid(
@@ -550,10 +624,10 @@ class MainWindow(customtkinter.CTk):
             sticky="ew")
         self.food_seg_button.set("Medium")
 
-#------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
         # TextBox
         self.textbox = customtkinter.CTkTextbox(
-            self.main_frame,
+            self.main_window_frame,
             wrap="word")
         self.textbox.grid(
             row=1,
@@ -564,7 +638,7 @@ class MainWindow(customtkinter.CTk):
         self.textbox.insert("0.0", "It's time to begin your adventure with your new furry friend! Make sure to take good care of them!\n" * 100)
         self.textbox.configure(state="disabled")
         
-#------------------------------------------------------------------------------
+    #--------------------------------------------------------------------------
         # Info/Stat Selection Screen
         self.stat_screen_frame = customtkinter.CTkFrame(self)
         self.stat_screen_frame.grid(
@@ -648,19 +722,37 @@ class MainWindow(customtkinter.CTk):
             padx=5,
             pady=5)
         self.income_variable.trace_add("write", self.trace_function)
-        
-        self.begin_button = customtkinter.CTkButton(
-            self.stat_screen_frame,
-            text="Lets Begin!",
-            state="disabled",
-            command=self.begin_button_event)
-        self.begin_button.grid(
+
+        self.buttons_frame = customtkinter.CTkFrame(self.stat_screen_frame)
+        self.buttons_frame.grid(
             row=7,
             column=0,
             padx=5,
             pady=5)
+
+        self.back_button = customtkinter.CTkButton(
+            self.buttons_frame,
+            text="Back",
+            command=self.back_button_event)
+        self.back_button.grid(
+            row=0,
+            column=0,
+            padx=5,
+            pady=5
+        )
         
-#------------------------------------------------------------------------------
+        self.begin_button = customtkinter.CTkButton(
+            self.buttons_frame,
+            text="Lets Begin!",
+            state="disabled",
+            command=self.begin_button_event)
+        self.begin_button.grid(
+            row=0,
+            column=1,
+            padx=5,
+            pady=5)
+        
+    #--------------------------------------------------------------------------
         # Welcome / Main Menu Window
         self.main_menu_frame = customtkinter.CTkFrame(self)
         self.main_menu_frame.grid(
@@ -669,8 +761,8 @@ class MainWindow(customtkinter.CTk):
             rowspan=3,
             columnspan=3,
             sticky="news")
-        self.main_menu_frame.grid_columnconfigure((0, 2), weight=1)
-        self.main_menu_frame.grid_columnconfigure(1, weight=0)
+        self.main_menu_frame.grid_columnconfigure((0, 1, 2), weight=1)
+        # self.main_menu_frame.grid_columnconfigure(1, weight=0)
         self.main_menu_frame.grid_rowconfigure(1, weight=1)
         
         self.welcome_label = customtkinter.CTkLabel(
@@ -692,7 +784,10 @@ class MainWindow(customtkinter.CTk):
             row=1,
             column=0,
             padx=5,
-            pady=5)
+            pady=5,
+            sticky="e")
+        
+        # Resume Button gets added once a game is started...
 
         self.start_button = customtkinter.CTkButton(
             self.main_menu_frame,
@@ -702,10 +797,21 @@ class MainWindow(customtkinter.CTk):
             row=1,
             column=2,
             padx=5,
-            pady=5)
+            pady=5,
+            sticky="w")
+        
+        self.exit_button = customtkinter.CTkButton(
+            self.main_menu_frame,
+            text="Exit",
+            command=self.exit_button_event)
+        self.exit_button.grid(
+            row=2,
+            column=1,
+            padx=20,
+            pady=20)
 
-#------------------------------------------------------------------------------
-    # methods
+    #--------------------------------------------------------------------------
+    # Main Window Methods
     def instructions_button_event(self):
         print("How to Button Pressed")
         #TODO open new window with instructions
@@ -723,14 +829,27 @@ class MainWindow(customtkinter.CTk):
 
         self.stat_screen_frame.tkraise()
         return
+
+    def back_button_event(self):
+        print("Back Button Pressed")
+        self.human_name_variable.set("")
+        self.dog_name_variable.set("")
+        self.income_variable.set("")
+
+        self.main_menu_frame.tkraise()
+        return
     
     def begin_button_event(self):
         print("Begin Button Pressed")
         #TODO set Dog and Human attributes
-        print(self.human_name_variable.get())
-        self.human_name_label.configure(text=self.human_name_variable.get())
-        self.dog_name_label.configure(text=self.dog_name_variable.get())
-        self.balance_value_label.configure(text="$"+self.income_variable.get())
+        human_name = self.human_name_variable.get().strip()
+        dog_name = self.dog_name_variable.get().strip()
+        income = self.income_variable.get().strip().strip("$").strip() # strip white space, then $ symbol, then whitespace again
+        
+        self.human_name_label.configure(text=human_name)
+        self.dog_name_label.configure(text=dog_name)
+
+        self.balance_value_label.configure(text="$"+income)
 
         # Add resume button to main menu once a game is started
         self.resume_button = customtkinter.CTkButton(
@@ -743,22 +862,44 @@ class MainWindow(customtkinter.CTk):
             padx=5,
             pady=5)
 
-        self.main_frame.tkraise()
+        self.main_window_frame.tkraise()
         return
 
-    def meds_button_event(self):
+    # Would like to combine the meds, items, and afflictions event funcntions
+    def meds_button_event(self, window):
         print("Meds Button Pressed")
         #TODO open new window with list of current meds
+
+        if self.meds_window is None or not self.meds_window.winfo_exists():
+            print("Creating New Meds Window")
+            self.meds_window = MedicationsWindow(self)  # create window if its None or destroyed
+        else:
+            print("Focusing Meds Window")
+            self.meds_window.focus()
         return
     
     def items_button_event(self):
         print("Items Button Pressed")
         #TODO open new window with list of current items
+
+        if self.items_window is None or not self.items_window.winfo_exists():
+            print("Creating New Items Window")
+            self.items_window = ItemsWindow(self)  # create window if its None or destroyed
+        else:
+            print("Focusing Items Window")
+            self.items_window.focus()
         return
     
     def afflictions_button_event(self):
         print("Afflictions Button Pressed")
         #TODO open new window with list of current afflictions
+
+        if self.afflictions_window is None or not self.afflictions_window.winfo_exists():
+            print("Creating New Afflictions Window")
+            self.afflictions_window = AfflictionsWindow(self)  # create window if its None or destroyed
+        else:
+            print("Focusing Afflictions Window")
+            self.afflictions_window.focus()
         return
     
     def shop_button_event(self):
@@ -776,7 +917,12 @@ class MainWindow(customtkinter.CTk):
     
     def resume_button_event(self):
         print("Resume Button Pressed")
-        self.main_frame.tkraise()
+        self.main_window_frame.tkraise()
+        return
+    
+    def exit_button_event(self):
+        print("Exit Button Pressed")
+        self.destroy()
         return
     
     def change_appearance_mode_event(self):
@@ -804,11 +950,18 @@ class MainWindow(customtkinter.CTk):
     def trace_function(self, *args):
         print("Trace Function Called")
         if (len(self.human_name_variable.get()) > 0 and len(self.dog_name_variable.get()) > 0 and len(self.income_variable.get()) > 0):
+
+            income_value = self.income_variable.get().strip()
+            if len(income_value) > 0 and income_value[0] == '$':
+                income_value = income_value[1:]
+
             try:
-                int(self.income_variable.get())
+                int(income_value)
             except:
                 print("Income Value Invalid - Not a Number")
+                self.begin_button.configure(state="disabled")
                 return
+            
             self.begin_button.configure(state="enabled")
         else:
             self.begin_button.configure(state="disabled")
