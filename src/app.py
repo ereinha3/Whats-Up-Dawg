@@ -13,7 +13,7 @@ customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "gre
 class ShopWindow(customtkinter.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.geometry(f"{380}x{500}")
+        self.geometry(f"{380}x{550}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
@@ -135,7 +135,7 @@ class MainWindow(customtkinter.CTk):
 
         # Configure window
         self.title("What's Up Dawg?")
-        self.geometry(f"{900}x{500}")
+        self.geometry(f"{900}x{550}")
 
         # Give weight to window container - allows for better window size adjustment
         self.grid_columnconfigure(0, weight=1)
