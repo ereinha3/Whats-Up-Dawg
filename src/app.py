@@ -13,7 +13,7 @@ customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "gre
 class ShopWindow(customtkinter.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.geometry(f"{380}x{600}")
+        self.geometry(f"{380}x{500}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
@@ -135,12 +135,11 @@ class MainWindow(customtkinter.CTk):
 
         # Configure window
         self.title("What's Up Dawg?")
-        self.geometry(f"{900}x{600}")
+        self.geometry(f"{900}x{500}")
 
-        # Configure grid layout (3x3)
+        # Give weight to window container - allows for better window size adjustment
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
-
 
         # Window Attributes
         self.shop_window = None
@@ -148,7 +147,7 @@ class MainWindow(customtkinter.CTk):
 
         # Dog and Human Objects
         self.human = Model.Human()
-        self.dog = Model.Dog(name="Example Dog")
+        self.dog = Model.Dog()
 
         # Images
         image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../docs/test-images")
@@ -194,7 +193,7 @@ class MainWindow(customtkinter.CTk):
             column=1,
             columnspan=3,
             padx=20,
-            pady=20)
+            pady=15)
         
 #------------------------------------------------------------------------------
         # Left Side Bar
@@ -208,16 +207,16 @@ class MainWindow(customtkinter.CTk):
             rowspan=2,
             sticky="news")
         self.left_side_bar.grid_rowconfigure(5, weight=1)
-        
+
         self.dog_name_label = customtkinter.CTkLabel(
             self.left_side_bar,
-            text=self.dog.name,
-            font=customtkinter.CTkFont(size=20, weight="bold", underline=True))
+            text="Example",
+            font=customtkinter.CTkFont(size=25, weight="bold", underline=False))
         self.dog_name_label.grid(
             row=0,
             column=0,
             padx=20,
-            pady=(20, 10))
+            pady=20)
         
         self.age_frame = customtkinter.CTkFrame(
             self.left_side_bar)
@@ -279,7 +278,9 @@ class MainWindow(customtkinter.CTk):
         
 #------------------------------------------------------------------------------
         # Options Frame - Bottom Left
-        self.options_frame = customtkinter.CTkFrame(self.left_side_bar)
+        self.options_frame = customtkinter.CTkFrame(
+            self.left_side_bar,
+            fg_color="transparent")
         self.options_frame.grid(
             row=6,
             column=0,
@@ -296,13 +297,15 @@ class MainWindow(customtkinter.CTk):
         
         self.walk_seg_button = customtkinter.CTkSegmentedButton(
             self.options_frame,
-            values=["Short", "Medium", "Long"])
+            values=["Short", "Medium", "Long"],
+            command=self.change_walk_option_event)
         self.walk_seg_button.grid(
             row=1,
             column=0,
             padx=20,
             pady=10,
             sticky="ew")
+        self.walk_seg_button.set("Medium")
 
         self.food_option_label = customtkinter.CTkLabel(
             self.options_frame,
@@ -314,15 +317,17 @@ class MainWindow(customtkinter.CTk):
             padx=20,
             pady=5)
         
-        self.walk_seg_button = customtkinter.CTkSegmentedButton(
+        self.food_seg_button = customtkinter.CTkSegmentedButton(
             self.options_frame,
-            values=["Cheap", "Medium", "Expensive"])
-        self.walk_seg_button.grid(
+            values=["Cheap", "Medium", "Expensive"],
+            command=self.change_food_option_event)
+        self.food_seg_button.grid(
             row=3,
             column=0,
             padx=20,
             pady=(5, 20),
             sticky="ew")
+        self.food_seg_button.set("Medium")
         
 #------------------------------------------------------------------------------
         # Bottom Bar
@@ -383,12 +388,12 @@ class MainWindow(customtkinter.CTk):
         self.human_name_label = customtkinter.CTkLabel(
             self.right_side_bar,
             text="Human Name Here",
-            font=customtkinter.CTkFont(size=20, weight="bold", underline=True))
+            font=customtkinter.CTkFont(size=25, weight="bold", underline=False))
         self.human_name_label.grid(
             row=0,
             column=0,
             padx=20,
-            pady=(20, 10))
+            pady=20)
         
         self.balance_frame = customtkinter.CTkFrame(self.right_side_bar)
         self.balance_frame.grid(
@@ -404,7 +409,7 @@ class MainWindow(customtkinter.CTk):
         self.balance_label.grid(
             row=0,
             column=0,
-            padx=5,
+            padx=(10, 5),
             pady=5)
         
         self.balance_value_label = customtkinter.CTkLabel(
@@ -414,7 +419,7 @@ class MainWindow(customtkinter.CTk):
         self.balance_value_label.grid(
             row=0,
             column=1,
-            padx=5,
+            padx=(5, 10),
             pady=5)
         
         self.happiness_frame = customtkinter.CTkFrame(
@@ -433,7 +438,7 @@ class MainWindow(customtkinter.CTk):
         self.happiness_label.grid(
             row=0,
             column=0,
-            padx=5,
+            padx=(10, 5),
             pady=5)
 
         self.happiness_image_label = customtkinter.CTkLabel(
@@ -444,7 +449,7 @@ class MainWindow(customtkinter.CTk):
         self.happiness_image_label.grid(
             row=0,
             column=1,
-            padx=5,
+            padx=(5, 10),
             pady=5)
         
         self.time_invested_frame = customtkinter.CTkFrame(self.right_side_bar)
@@ -461,17 +466,17 @@ class MainWindow(customtkinter.CTk):
         self.time_invested_label.grid(
             row=0,
             column=0,
-            padx=5,
+            padx=(10, 5),
             pady=5)
         
         self.time_invested_value_label = customtkinter.CTkLabel(
             self.time_invested_frame,
-            text="1000",
+            text="0",
             font=customtkinter.CTkFont(size=18, weight="normal"))
         self.time_invested_value_label.grid(
             row=0,
             column=1,
-            padx=5,
+            padx=(5, 10),
             pady=5)
         
         self.continue_button = customtkinter.CTkButton(
@@ -506,53 +511,59 @@ class MainWindow(customtkinter.CTk):
             columnspan=3,
             sticky="news")
         self.stat_screen_frame.grid_columnconfigure(0, weight=1)
-        self.stat_screen_frame.grid_rowconfigure(7, weight=1)
+        self.stat_screen_frame.grid_rowconfigure((0, 7), weight=1)
         
-        self.income_label = customtkinter.CTkLabel(
+        self.info_label = customtkinter.CTkLabel(
             self.stat_screen_frame,
             text="Enter Your Information Below",
             font=customtkinter.CTkFont(size=40, weight="bold"))
-        self.income_label.grid(
+        self.info_label.grid(
             row=0,
             column=0,
             padx=5,
             pady=5)
 
-        self.dog_entry_label = customtkinter.CTkLabel(
+        self.human_name_entry_label = customtkinter.CTkLabel(
             self.stat_screen_frame,
             text="Your Name")
-        self.dog_entry_label.grid(
+        self.human_name_entry_label.grid(
             row=1,
             column=0,
             padx=5,
             pady=5)
         
-        self.income_entry = customtkinter.CTkEntry(
+        self.human_name_variable = tkinter.StringVar(self)
+        self.human_name_entry = customtkinter.CTkEntry(
             self.stat_screen_frame,
-            placeholder_text="Jane Doe")
-        self.income_entry.grid(
+            placeholder_text="Jane Doe",
+            textvariable=self.human_name_variable)
+        self.human_name_entry.grid(
             row=2,
             column=0,
             padx=5,
             pady=5)
+        self.human_name_variable.trace_add("write", self.trace_function)
         
-        self.income_label = customtkinter.CTkLabel(
+        self.dog_name_entry_label = customtkinter.CTkLabel(
             self.stat_screen_frame,
             text="Dog Name")
-        self.income_label.grid(
+        self.dog_name_entry_label.grid(
             row=3,
             column=0,
             padx=5,
             pady=5)
         
-        self.income_entry = customtkinter.CTkEntry(
+        self.dog_name_variable = tkinter.StringVar(self)
+        self.dog_name_entry = customtkinter.CTkEntry(
             self.stat_screen_frame,
-            placeholder_text="Spike")
-        self.income_entry.grid(
+            placeholder_text="Spike",
+            textvariable=self.dog_name_variable)
+        self.dog_name_entry.grid(
             row=4,
             column=0,
             padx=5,
             pady=5)
+        self.dog_name_variable.trace_add("write", self.trace_function)
         
         self.income_label = customtkinter.CTkLabel(
             self.stat_screen_frame,
@@ -563,18 +574,22 @@ class MainWindow(customtkinter.CTk):
             padx=5,
             pady=5)
         
+        self.income_variable = tkinter.StringVar(self)
         self.income_entry = customtkinter.CTkEntry(
             self.stat_screen_frame,
-            placeholder_text="500")
+            placeholder_text="500",
+            textvariable=self.income_variable)
         self.income_entry.grid(
             row=6,
             column=0,
             padx=5,
             pady=5)
+        self.income_variable.trace_add("write", self.trace_function)
         
         self.begin_button = customtkinter.CTkButton(
             self.stat_screen_frame,
             text="Lets Begin!",
+            state="disabled",
             command=self.begin_button_event)
         self.begin_button.grid(
             row=7,
@@ -640,6 +655,11 @@ class MainWindow(customtkinter.CTk):
     def begin_button_event(self):
         print("Begin Button Pressed")
         #TODO set Dog and Human attributes
+        print(self.human_name_variable.get())
+        self.human_name_label.configure(text=self.human_name_variable.get())
+        self.dog_name_label.configure(text=self.dog_name_variable.get())
+        self.balance_value_label.configure(text="$"+self.income_variable.get())
+
         self.main_frame.tkraise()
         return
 
@@ -669,6 +689,10 @@ class MainWindow(customtkinter.CTk):
     def exit_button_event(self):
         print("Exit Button Pressed")
         #TODO reset all the Dog and Human attributes
+        self.human_name_variable.set("")
+        self.dog_name_variable.set("")
+        self.income_variable.set("")
+
         self.welcome_frame.tkraise()
         return
     
@@ -686,12 +710,26 @@ class MainWindow(customtkinter.CTk):
             self.shop_window.destroy()
         return
     
-    def change_walk_option_event(self, new_walk_option):
-        print(f"Walk Option Changed to {new_walk_option}")
+    def change_walk_option_event(self, choice: str):
+        print(f"Walk Option Changed to {choice}")
         return
     
-    def change_food_option_event(self, new_food_option):
-        print(f"Food Option Changed to {new_food_option}")
+    def change_food_option_event(self, choice: str):
+        print(f"Food Option Changed to {choice}")
+        return
+    
+    def trace_function(self, *args):
+        print("Trace Function Called")
+        if (len(self.human_name_variable.get()) > 0 and len(self.dog_name_variable.get()) > 0 and len(self.income_variable.get()) > 0):
+            try:
+                int(self.income_variable.get())
+            except:
+                print("Income Value Invalid - Not a Number")
+                return
+            self.begin_button.configure(state="enabled")
+        else:
+            self.begin_button.configure(state="disabled")
+
         return
 
 
