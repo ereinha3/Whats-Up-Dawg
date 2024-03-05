@@ -137,7 +137,7 @@ event_lookup_table = {
             },
         },
 
-    "Allergies": {
+    "allergies": {
         "resist": {
             "check": lambda dog: False,  #add a clause for excersise when this is added to the dog object model
             "message": "n/a",
