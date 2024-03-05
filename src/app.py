@@ -5,13 +5,15 @@ import Model
 import os
 from PIL import Image
 
+
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
+
 
 class ShopWindow(customtkinter.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.geometry(f"{380}x{650}")
+        self.geometry(f"{380}x{600}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
@@ -127,17 +129,18 @@ class ShopWindow(customtkinter.CTkToplevel):
         return
 
 
-class App(customtkinter.CTk):
+class MainWindow(customtkinter.CTk):
     def __init__(self):
         super().__init__()
 
         # Configure window
         self.title("What's Up Dawg?")
-        self.geometry(f"{900}x{650}")
+        self.geometry(f"{900}x{600}")
 
         # Configure grid layout (3x3)
-        self.grid_columnconfigure(1, weight=1)
-        self.grid_rowconfigure(1, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+
 
         # Window Attributes
         self.shop_window = None
@@ -155,11 +158,23 @@ class App(customtkinter.CTk):
         self.happy_face_image = customtkinter.CTkImage(
             Image.open(os.path.join(image_path, "happy-face.png")),
             size=(30, 30))
+        
+#------------------------------------------------------------------------------
+        # Main Window Frame
+        self.main_frame = customtkinter.CTkFrame(self)
+        self.main_frame.grid(
+            row=0,
+            column=0,
+            sticky="news")
+        
+        # Main window is a 3x3 grid
+        self.main_frame.grid_columnconfigure(1, weight=1)
+        self.main_frame.grid_rowconfigure(1, weight=1)
 
 #------------------------------------------------------------------------------
         # Top Bar
         self.top_bar_frame = customtkinter.CTkFrame(
-            self,
+            self.main_frame,
             height=140,
             corner_radius=0)
         self.top_bar_frame.grid(
@@ -172,7 +187,7 @@ class App(customtkinter.CTk):
         self.title_label = customtkinter.CTkLabel(
             self.top_bar_frame,
             text="Whats Up Dawg?!",
-            image=self.dog_image,
+            # image=self.dog_image,
             font=customtkinter.CTkFont(size=40, weight="bold"))
         self.title_label.grid(
             row=0,
@@ -184,7 +199,7 @@ class App(customtkinter.CTk):
 #------------------------------------------------------------------------------
         # Left Side Bar
         self.left_side_bar = customtkinter.CTkFrame(
-            self,
+            self.main_frame,
             width=140,
             corner_radius=0)
         self.left_side_bar.grid(
@@ -262,58 +277,57 @@ class App(customtkinter.CTk):
             padx=20,
             pady=5)
         
-        self.dashed_line = customtkinter.CTkLabel(
-            self.left_side_bar,
-            text="--------------------",
-            font=customtkinter.CTkFont(size=18, weight="normal"))
-        self.dashed_line.grid(
-            row=5,
-            column=0)
+#------------------------------------------------------------------------------
+        # Options Frame - Bottom Left
+        self.options_frame = customtkinter.CTkFrame(self.left_side_bar)
+        self.options_frame.grid(
+            row=6,
+            column=0,
+            sticky="news")
 
         self.walks_option_label = customtkinter.CTkLabel(
-            self.left_side_bar,
-            text="Walk Options",
-            anchor="w")
+            self.options_frame,
+            text="Walk Options")
         self.walks_option_label.grid(
-            row=6,
+            row=0,
             column=0,
             padx=20,
             pady=5)
         
-        self.walks_option_menu = customtkinter.CTkOptionMenu(
-            self.left_side_bar,
-            values=["Long", "Medium", "Short"],
-            command=self.change_walk_option_event)
-        self.walks_option_menu.grid(
-            row=7,
+        self.walk_seg_button = customtkinter.CTkSegmentedButton(
+            self.options_frame,
+            values=["Short", "Medium", "Long"])
+        self.walk_seg_button.grid(
+            row=1,
             column=0,
             padx=20,
-            pady=(5, 20))
+            pady=10,
+            sticky="ew")
 
         self.food_option_label = customtkinter.CTkLabel(
-            self.left_side_bar,
+            self.options_frame,
             text="Food Quality",
             anchor="w")
         self.food_option_label.grid(
-            row=8,
+            row=2,
             column=0,
             padx=20,
             pady=5)
-
-        self.food_options_menu = customtkinter.CTkOptionMenu(
-            self.left_side_bar,
-            values=["High", "Medium", "Low"],
-            command=self.change_food_option_event)
-        self.food_options_menu.grid(
-            row=9,
+        
+        self.walk_seg_button = customtkinter.CTkSegmentedButton(
+            self.options_frame,
+            values=["Cheap", "Medium", "Expensive"])
+        self.walk_seg_button.grid(
+            row=3,
             column=0,
             padx=20,
-            pady=(5, 20))
+            pady=(5, 20),
+            sticky="ew")
         
 #------------------------------------------------------------------------------
         # Bottom Bar
         self.bottom_bar_frame = customtkinter.CTkFrame(
-            self,
+            self.main_frame,
             height=140,
             corner_radius=0)
         self.bottom_bar_frame.grid(
@@ -330,18 +344,18 @@ class App(customtkinter.CTk):
         self.shop_button.grid(
             row=0,
             column=0,
-            padx=20,
+            padx=(20, 5),
             pady=20)
         
         self.back_button = customtkinter.CTkButton(
             self.bottom_bar_frame,
-            text="Exit To Main Menu",
+            text="Exit",
             width=30,
             command=self.exit_button_event)
         self.back_button.grid(
             row=0,
             column=1,
-            padx=20)
+            padx=5)
         
         self.light_mode_switch = customtkinter.CTkSwitch(
             master=self.bottom_bar_frame,
@@ -350,23 +364,13 @@ class App(customtkinter.CTk):
         self.light_mode_switch.grid(
             row=0,
             column=2,
-            padx=20,
+            padx=(5, 20),
             pady=20)
-        
-        # self.continue_button = customtkinter.CTkButton(
-        #     self.bottom_bar_frame,
-        #     text="Continue",
-        #     command=self.continue_button_event)
-        # self.continue_button.grid(
-        #     row=0,
-        #     column=4,
-        #     padx=20,
-        #     pady=20)
         
 #------------------------------------------------------------------------------
         # Right Side Bar
         self.right_side_bar = customtkinter.CTkFrame( 
-            self,
+            self.main_frame,
             width=140,
             corner_radius=0)
         self.right_side_bar.grid(
@@ -481,9 +485,8 @@ class App(customtkinter.CTk):
             pady=20)
 
 #------------------------------------------------------------------------------
-        # create textbox
-        self.textbox = customtkinter.CTkTextbox(
-            self)
+        # TextBox
+        self.textbox = customtkinter.CTkTextbox(self.main_frame)
         self.textbox.grid(
             row=1,
             column=1,
@@ -492,19 +495,167 @@ class App(customtkinter.CTk):
             sticky="nsew")
         self.textbox.insert("0.0", "What's Up Dawg?!")
         self.textbox.configure(state="disabled")
+        
+#------------------------------------------------------------------------------
+        # Info/Stat Selection Screen
+        self.stat_screen_frame = customtkinter.CTkFrame(self)
+        self.stat_screen_frame.grid(
+            row=0,
+            column=0,
+            rowspan=3,
+            columnspan=3,
+            sticky="news")
+        self.stat_screen_frame.grid_columnconfigure(0, weight=1)
+        self.stat_screen_frame.grid_rowconfigure(7, weight=1)
+        
+        self.income_label = customtkinter.CTkLabel(
+            self.stat_screen_frame,
+            text="Enter Your Information Below",
+            font=customtkinter.CTkFont(size=40, weight="bold"))
+        self.income_label.grid(
+            row=0,
+            column=0,
+            padx=5,
+            pady=5)
+
+        self.dog_entry_label = customtkinter.CTkLabel(
+            self.stat_screen_frame,
+            text="Your Name")
+        self.dog_entry_label.grid(
+            row=1,
+            column=0,
+            padx=5,
+            pady=5)
+        
+        self.income_entry = customtkinter.CTkEntry(
+            self.stat_screen_frame,
+            placeholder_text="Jane Doe")
+        self.income_entry.grid(
+            row=2,
+            column=0,
+            padx=5,
+            pady=5)
+        
+        self.income_label = customtkinter.CTkLabel(
+            self.stat_screen_frame,
+            text="Dog Name")
+        self.income_label.grid(
+            row=3,
+            column=0,
+            padx=5,
+            pady=5)
+        
+        self.income_entry = customtkinter.CTkEntry(
+            self.stat_screen_frame,
+            placeholder_text="Spike")
+        self.income_entry.grid(
+            row=4,
+            column=0,
+            padx=5,
+            pady=5)
+        
+        self.income_label = customtkinter.CTkLabel(
+            self.stat_screen_frame,
+            text="Monthly Disposable Income ($)")
+        self.income_label.grid(
+            row=5,
+            column=0,
+            padx=5,
+            pady=5)
+        
+        self.income_entry = customtkinter.CTkEntry(
+            self.stat_screen_frame,
+            placeholder_text="500")
+        self.income_entry.grid(
+            row=6,
+            column=0,
+            padx=5,
+            pady=5)
+        
+        self.begin_button = customtkinter.CTkButton(
+            self.stat_screen_frame,
+            text="Lets Begin!",
+            command=self.begin_button_event)
+        self.begin_button.grid(
+            row=7,
+            column=0,
+            padx=5,
+            pady=5)
+        
+#------------------------------------------------------------------------------
+        # Welcome Screen
+        self.welcome_frame = customtkinter.CTkFrame(self)
+        self.welcome_frame.grid(
+            row=0,
+            column=0,
+            rowspan=3,
+            columnspan=3,
+            sticky="news")
+        self.welcome_frame.grid_columnconfigure((0, 1), weight=1)
+        self.welcome_frame.grid_rowconfigure(1, weight=1)
+        
+        self.welcome_label = customtkinter.CTkLabel(
+            self.welcome_frame,
+            text="Welcome!",
+            font=customtkinter.CTkFont(size=40, weight="bold"))
+        self.welcome_label.grid(
+            row=0,
+            column=0,
+            columnspan=2,
+            padx=20,
+            pady=20)
+        
+        self.howto_button = customtkinter.CTkButton(
+            self.welcome_frame,
+            text="How to Play",
+            command=self.howto_button_event)
+        self.howto_button.grid(
+            row=1,
+            column=0,
+            padx=5,
+            pady=5)
+
+        self.start_button = customtkinter.CTkButton(
+            self.welcome_frame,
+            text="Start!",
+            command=self.start_button_event)
+        self.start_button.grid(
+            row=1,
+            column=1,
+            padx=5,
+            pady=5)
 
 #------------------------------------------------------------------------------
     # methods
+    def howto_button_event(self):
+        print("How to Button Pressed")
+        #TODO open new window with instructions
+        return
+
+    def start_button_event(self):
+        print("Start Button Pressed")
+        self.stat_screen_frame.tkraise()
+        return
+    
+    def begin_button_event(self):
+        print("Begin Button Pressed")
+        #TODO set Dog and Human attributes
+        self.main_frame.tkraise()
+        return
+
     def meds_button_event(self):
         print("Meds Button Pressed")
+        #TODO open new window with list of current meds
         return
     
     def items_button_event(self):
         print("Items Button Pressed")
+        #TODO open new window with list of current items
         return
     
     def afflictions_button_event(self):
         print("Afflictions Button Pressed")
+        #TODO open new window with list of current afflictions
         return
     
     def shop_button_event(self):
@@ -515,9 +666,24 @@ class App(customtkinter.CTk):
             self.shop_window.focus()
         return
     
+    def exit_button_event(self):
+        print("Exit Button Pressed")
+        #TODO reset all the Dog and Human attributes
+        self.welcome_frame.tkraise()
+        return
+    
+    def change_appearance_mode_event(self):
+        if self.mode == "dark":
+            customtkinter.set_appearance_mode("light")
+            self.mode = "light"
+        else:
+            customtkinter.set_appearance_mode("dark")
+            self.mode = "dark"
+    
     def continue_button_event(self):
         print("Continue Button Pressed")
-        self.age_value_label.configure(text=f"{self.dog.age + 1}")
+        if self.shop_window.winfo_exists():
+            self.shop_window.destroy()
         return
     
     def change_walk_option_event(self, new_walk_option):
@@ -527,32 +693,8 @@ class App(customtkinter.CTk):
     def change_food_option_event(self, new_food_option):
         print(f"Food Option Changed to {new_food_option}")
         return
-    
-    def exit_button_event(self):
-        print("Exit Button Pressed")
-        return
-
-    def change_appearance_mode_event(self):
-        if self.mode == "dark":
-            customtkinter.set_appearance_mode("light")
-            self.mode = "light"
-        else:
-            customtkinter.set_appearance_mode("dark")
-            self.mode = "dark"
-
-    # def open_input_dialog_event(self):
-    #     dialog = customtkinter.CTkInputDialog(text="Type in a number:", title="CTkInputDialog")
-    #     print("CTkInputDialog:", dialog.get_input())
-
-    # def change_scaling_event(self, new_scaling: str):
-    #     return
-    #     # new_scaling_float = int(new_scaling.replace("%", "")) / 100
-    #     # customtkinter.set_widget_scaling(new_scaling_float)
-
-    # def sidebar_button_event(self):
-    #     print("sidebar_button click")
 
 
 if __name__ == "__main__":
-    app = App()
+    app = MainWindow()
     app.mainloop()
