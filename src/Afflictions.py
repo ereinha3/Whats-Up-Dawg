@@ -16,7 +16,7 @@ afflictions_dictionary = {
         "stress": 8,
         "description": "Heartworms is a very serious parasitic disease affecting the lungs, heart, and other organs. Will result in death if left untreated.",
     },
-    "Ingrown Nail" : {
+    "ingrown_nail" : {
         "persistent": False,
         "indefinite": False,
         "cure": { "cost": lambda dog : 100,  "work": 1, }, 
@@ -24,7 +24,7 @@ afflictions_dictionary = {
         "stress": 2,
         "description": "Your dog has an ingrown nail on its paw.",
     },
-    "Bur in Paw" : {
+    "bur_in_paw" : {
         "persistent": False,
         "indefinite": False,
         "cure": { "cost": lambda dog : 100,  "work": 1, }, 
@@ -32,15 +32,15 @@ afflictions_dictionary = {
         "stress": 2,
         "description": "Your dog has a burr in its paw.",
     },
-    "Allergies" : {
+    "allergies" : {
         "persistent": True,
         "indefinite": True,
         "cure": { "cost": lambda dog : 60,  "work": 1, }, #this is the recurrent cost... NOT the intitial cost. That will be in the event lookup 
-        "harm": 0,
-        "stress": 0,
+        "harm": 1,
+        "stress": 2,
         "description": "Allergies are a lifelong condition. Your dog will need to recieve treatment for it's whole life.",
     },
-    
+
 
 
 }
