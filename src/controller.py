@@ -12,7 +12,9 @@ def load_event():
 def determine_event_outcome(options: dict, human: Human):
     for key, value in options.items():
         print(key + ".", value["intro"])
-    choice = sys.stdin.readline().strip()
+
+    choice = sys.stdin.readline().strip() # TODO - Replace with 
+
     if (choice not in options.keys()):
         print("Please enter a valid option number.\n")
         return determine_event_outcome(options, human)
@@ -27,36 +29,34 @@ def determine_event_outcome(options: dict, human: Human):
 
     return selection
 
-def play_event(dog: Dog, human: Human, event: dict) -> None:
+def check_resistance(dog: Dog, human: Human, event: dict) -> None:
     print(event["intro"] + "\n")
     if (event["resist"]["check"](dog)):
-        print(event["resist"]["message"])
-        return
+        # print(event["resist"]["message"])
+        return True
+    else:
+        return False
     
     outcome = determine_event_outcome(event["options"], human)
     
-    if "cost" in outcome:
-        human.pay(outcome["cost"])
-    if "work" in outcome:
-        human.work(outcome["work"])
-    if "harm" in outcome:
-        dog.update_health(-outcome["harm"])
-    if "stress" in outcome:
-        dog.update_happiness(-outcome["stress"])
-    if "afflictions" in outcome:
-        dog.add_afflictions(outcome["afflictions"])
+    # if "cost" in outcome:
+    #     human.pay(outcome["cost"])
+    # if "work" in outcome:
+    #     human.work(outcome["work"])
+    # if "harm" in outcome:
+    #     dog.update_health(-outcome["harm"])
+    # if "stress" in outcome:
+    #     dog.update_happiness(-outcome["stress"])
+    # if "afflictions" in outcome:
+    #     dog.add_afflictions(outcome["afflictions"])
     
-    print(outcome["outro"])
+    # print(outcome["outro"])
 
-'''
+
 def event_loader(dog: Dog):
     # Event Load Logic Goes Here
-    if dog.name == "Max": # <-----Pretend logic
-        dog.name = "Change"
-        return (dog, "1", "fleas")
-    else:
-        return "Nill"
-'''
+    event = load_event()
+
 # def life_cycle_update(dog: Dog, human: Human, months: int) -> None:
 #     dog.update_age(months)
 #     dog.activate_afflictions()

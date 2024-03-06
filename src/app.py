@@ -5,6 +5,8 @@ import model
 import controller
 import os
 from PIL import Image
+from data.breeds_dict import breeds
+from string import capwords
 
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
@@ -303,7 +305,7 @@ class ShopWindow(customtkinter.CTkToplevel):
     def item_selected(self, item):
         print(f"Item: {item} Selected")
         self.pay_button.configure(state="enabled")
-        
+
         return
     
     def pay_button_event(self):
@@ -335,14 +337,27 @@ class MainWindow(customtkinter.CTk):
         # Dog and Human Objects
         self.human = None
         self.dog = None
+        self.dog_image = None
 
         # Images
-        image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../docs/test-images")
-        self.dog_image = customtkinter.CTkImage(
-            Image.open(os.path.join(image_path, "weiner_dog_example.png")),
-            size=(800, 75))
-        self.happy_face_image = customtkinter.CTkImage(
-            Image.open(os.path.join(image_path, "happy-face.png")),
+        self.dog_image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../docs/Images")
+        self.happiness_face_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../docs/test-images")
+
+        #TODO Make Dynamic
+        self.face1_image = customtkinter.CTkImage(
+            Image.open(os.path.join(self.happiness_face_path, "one_smiling.png")),
+            size=(30, 30))
+        self.face2_image = customtkinter.CTkImage(
+            Image.open(os.path.join(self.happiness_face_path, "two_happy.png")),
+            size=(30, 30))
+        self.face3_image = customtkinter.CTkImage(
+            Image.open(os.path.join(self.happiness_face_path, "three_neutral.png")),
+            size=(30, 30))
+        self.face4_image = customtkinter.CTkImage(
+            Image.open(os.path.join(self.happiness_face_path, "four_sad.png")),
+            size=(30, 30))
+        self.face5_image = customtkinter.CTkImage(
+            Image.open(os.path.join(self.happiness_face_path, "five_frowning.png")),
             size=(30, 30))
         
     #--------------------------------------------------------------------------
@@ -475,6 +490,16 @@ class MainWindow(customtkinter.CTk):
             padx=20,
             pady=10)
         
+        # Initialize empty Dog Image
+        self.dog_image_label = customtkinter.CTkLabel(
+            self.dog_image_frame,
+            text="")
+        self.dog_image_label.grid(
+            row=0,
+            column=0,
+            padx=10,
+            pady=10)
+        
     #--------------------------------------------------------------------------
         # Bottom Bar
         self.bottom_bar_frame = customtkinter.CTkFrame(
@@ -591,7 +616,7 @@ class MainWindow(customtkinter.CTk):
         self.happiness_image_label = customtkinter.CTkLabel(
             self.happiness_frame,
             text="",
-            image=self.happy_face_image,
+            image=self.face1_image,
             font=customtkinter.CTkFont(size=18, weight="normal"))
         self.happiness_image_label.grid(
             row=0,
@@ -743,8 +768,7 @@ class MainWindow(customtkinter.CTk):
             column=0,
             padx=20,
             pady=10,
-            sticky="ew"
-        )
+            sticky="ew")
         self.continue_button_frame.grid_columnconfigure(0, weight=1)
         
         self.continue_button = customtkinter.CTkButton(
@@ -766,8 +790,8 @@ class MainWindow(customtkinter.CTk):
             rowspan=3,
             columnspan=3,
             sticky="news")
-        self.stat_screen_frame.grid_columnconfigure(0, weight=1)
-        self.stat_screen_frame.grid_rowconfigure((0, 7), weight=1)
+        self.stat_screen_frame.grid_columnconfigure((0, 1), weight=1)
+        self.stat_screen_frame.grid_rowconfigure(1, weight=1)
         
         self.info_label = customtkinter.CTkLabel(
             self.stat_screen_frame,
@@ -776,76 +800,117 @@ class MainWindow(customtkinter.CTk):
         self.info_label.grid(
             row=0,
             column=0,
-            padx=5,
-            pady=5)
-
-        self.human_name_entry_label = customtkinter.CTkLabel(
-            self.stat_screen_frame,
-            text="Your Name")
-        self.human_name_entry_label.grid(
+            columnspan=2,
+            padx=10,
+            pady=10)
+        
+        #------------------------------
+        # Human Info Frame (Inside Stat Screen Frame)
+        self.human_info_frame = customtkinter.CTkFrame(self.stat_screen_frame)
+        self.human_info_frame.grid(
             row=1,
             column=0,
-            padx=5,
+            padx=10,
+            pady=10,
+            sticky="news")
+        self.human_info_frame.grid_columnconfigure(0, weight=1)
+
+        self.human_name_entry_label = customtkinter.CTkLabel(
+            self.human_info_frame,
+            text="Your Name")
+        self.human_name_entry_label.grid(
+            row=0,
+            column=0,
+            padx=10,
             pady=5)
         
         self.human_name_variable = tkinter.StringVar(self)
         self.human_name_entry = customtkinter.CTkEntry(
-            self.stat_screen_frame,
-            placeholder_text="Jane Doe",
+            self.human_info_frame,
             textvariable=self.human_name_variable)
         self.human_name_entry.grid(
-            row=2,
+            row=1,
             column=0,
-            padx=5,
+            padx=10,
             pady=5)
         self.human_name_variable.trace_add("write", self.trace_function)
-        
-        self.dog_name_entry_label = customtkinter.CTkLabel(
-            self.stat_screen_frame,
-            text="Dog Name")
-        self.dog_name_entry_label.grid(
-            row=3,
-            column=0,
-            padx=5,
-            pady=5)
-        
-        self.dog_name_variable = tkinter.StringVar(self)
-        self.dog_name_entry = customtkinter.CTkEntry(
-            self.stat_screen_frame,
-            placeholder_text="Spike",
-            textvariable=self.dog_name_variable)
-        self.dog_name_entry.grid(
-            row=4,
-            column=0,
-            padx=5,
-            pady=5)
-        self.dog_name_variable.trace_add("write", self.trace_function)
-        
+
         self.income_label = customtkinter.CTkLabel(
-            self.stat_screen_frame,
+            self.human_info_frame,
             text="Monthly Disposable Income ($)")
         self.income_label.grid(
-            row=5,
+            row=2,
             column=0,
-            padx=5,
+            padx=10,
             pady=5)
         
         self.income_variable = tkinter.StringVar(self)
         self.income_entry = customtkinter.CTkEntry(
-            self.stat_screen_frame,
-            placeholder_text="500",
+            self.human_info_frame,
             textvariable=self.income_variable)
         self.income_entry.grid(
-            row=6,
+            row=3,
             column=0,
-            padx=5,
+            padx=10,
             pady=5)
         self.income_variable.trace_add("write", self.trace_function)
 
+        #------------------------------
+        # Dog Info Frame (Inside Stat Screen Frame)
+        self.dog_info_frame = customtkinter.CTkFrame(self.stat_screen_frame)
+        self.dog_info_frame.grid(
+            row=1,
+            column=1,
+            padx=10,
+            pady=10,
+            sticky="news")
+        self.dog_info_frame.grid_columnconfigure(0, weight=1)
+        
+        self.dog_name_entry_label = customtkinter.CTkLabel(
+            self.dog_info_frame,
+            text="Dog Name")
+        self.dog_name_entry_label.grid(
+            row=0,
+            column=0,
+            padx=10,
+            pady=5)
+        
+        self.dog_name_variable = tkinter.StringVar(self)
+        self.dog_name_entry = customtkinter.CTkEntry(
+            self.dog_info_frame,
+            textvariable=self.dog_name_variable)
+        self.dog_name_entry.grid(
+            row=1,
+            column=0,
+            padx=10,
+            pady=5)
+        self.dog_name_variable.trace_add("write", self.trace_function)
+
+        self.dog_type_label = customtkinter.CTkLabel(
+            self.dog_info_frame,
+            text="Dog Breed")
+        self.dog_type_label.grid(
+            row=2,
+            column=0,
+            padx=10,
+            pady=5)
+        
+        self.dog_type_combobox = customtkinter.CTkComboBox(
+            self.dog_info_frame,
+            values=list((capwords(breed) for breed in breeds.keys())))
+        self.dog_type_combobox.grid(
+            row=3,
+            column=0,
+            padx=10,
+            pady=5)
+
+        #------------------------------
+        # Stat Screen Buttons Frame (Inside Stat Screen Frame)
         self.buttons_frame = customtkinter.CTkFrame(self.stat_screen_frame)
         self.buttons_frame.grid(
-            row=7,
+            row=2,
             column=0,
+            columnspan=2,
             padx=5,
             pady=5)
 
@@ -856,9 +921,8 @@ class MainWindow(customtkinter.CTk):
         self.back_button.grid(
             row=0,
             column=0,
-            padx=5,
-            pady=5
-        )
+            padx=10,
+            pady=10)
         
         self.begin_button = customtkinter.CTkButton(
             self.buttons_frame,
@@ -868,8 +932,8 @@ class MainWindow(customtkinter.CTk):
         self.begin_button.grid(
             row=0,
             column=1,
-            padx=5,
-            pady=5)
+            padx=10,
+            pady=10)
         
     #--------------------------------------------------------------------------
         # Welcome / Main Menu Window
@@ -970,15 +1034,25 @@ class MainWindow(customtkinter.CTk):
             self.dog = None
             self.human = None
 
-        self.human = model.Human()
-        self.human.income = income
-
         self.dog = model.Dog(name=dog_name) #option: breed
+        self.human = model.Human(income, self.dog)
+
 
         #TODO set Dog and Human attributes
         self.human_name_label.configure(text=human_name)
         self.dog_name_label.configure(text=dog_name)
         self.balance_value_label.configure(text="$"+income)
+
+        # Set Dog Image
+        dog_string = self.dog_type_combobox.get()
+        print(dog_string)
+        
+        self.dog_image = customtkinter.CTkImage(
+            Image.open(os.path.join(self.dog_image_path, "akita.jpg")),
+            size=(100, 100))
+        
+        self.dog_image_label.configure(image=self.dog_image)
+    
 
         # Add resume button to main menu once a game is started
         self.resume_button = customtkinter.CTkButton(
@@ -1064,16 +1138,22 @@ class MainWindow(customtkinter.CTk):
     #--------------------------------------------------------------------------
     def continue_button_event(self):
         print("Continue Button Pressed")
+        event = controller.load_event()
+
+        resistance = controller.check_resistance(self.dog, self.human, event) #TODO - This is not working properly
+
+        if resistance:
+            print(f"{event} Resisted")
+        else:
+            print(f"{event} Not Resisted")
+
 
         self.decision_options_frame.tkraise()
-
-        event = controller.event_loader(self.dog)
 
         # 2. index into events and display information and options
         # 3a. On option1 Do option1 one stuff (Controlller.Event_resolve("option1"))
         # 3b. On option 2 do option 2 stuff 
 
-        # ready to reassign
         return
     
     def option_button_event(self):
@@ -1082,15 +1162,15 @@ class MainWindow(customtkinter.CTk):
         self.continue_button_frame.tkraise()
 
         return
-        
+
     def change_walk_option_event(self, choice: str):
         print(f"Walk Option Changed to {choice}")
         return
-    
+
     def change_food_option_event(self, choice: str):
         print(f"Food Option Changed to {choice}")
         return
-    
+
     def trace_function(self, *args):
         print("Trace Function Called")
         if (len(self.human_name_variable.get()) > 0 and len(self.dog_name_variable.get()) > 0 and len(self.income_variable.get()) > 0):
