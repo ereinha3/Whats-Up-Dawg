@@ -1,8 +1,8 @@
 import tkinter
 import tkinter.messagebox
 import customtkinter
-import Model
-import Controller
+import model
+import controller
 import os
 from PIL import Image
 
@@ -892,8 +892,10 @@ class MainWindow(customtkinter.CTk):
             self.dog = None
             self.human = None
 
-        self.human = Model.Human()
-        self.dog = Model.Dog(name=dog_name)
+        self.human = model.Human()
+        self.human.income = income
+
+        self.dog = model.Dog(name=dog_name) #option: breed
 
         #TODO set Dog and Human attributes
         self.human_name_label.configure(text=human_name)
@@ -984,23 +986,15 @@ class MainWindow(customtkinter.CTk):
     #--------------------------------------------------------------------------
     def continue_button_event(self):
         print("Continue Button Pressed")
-        event = Controller.event_getter()
+        event = controller.event_loader(self.dog)
 
         # 2. index into events and display information and options
-
         # 3a. On option1 Do option1 one stuff (Controlller.Event_resolve("option1"))
         # 3b. On option 2 do option 2 stuff 
 
         # ready to reassign
         return
-    
-    # def refresh(self):
-
-    #     self.balance_value_label.configure(text=str(self.human.balance))
-    #     return
-    
-    #--------------------------------------------------------------------------
-    
+        
     def change_walk_option_event(self, choice: str):
         print(f"Walk Option Changed to {choice}")
         return
