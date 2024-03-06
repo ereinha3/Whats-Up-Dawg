@@ -1,7 +1,7 @@
 from utils import percentCheck
 from random import randint
 from event_library import event_lookup_table
-from Model import Dog, Human
+from model import Dog, Human
 import sys
 
 def load_event():
