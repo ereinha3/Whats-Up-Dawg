@@ -54,3 +54,6 @@ medications = {
             "display": "Flea and Tick Meds",
             },
     }
+default_walk_options = {"short": {"time": 2, "health": 1, "happiness": 0}, "medium": {"time": 7, "health": 2, "happiness": 3}, "long": {"time": 15, "health": 3, "happiness": 5}}
+
+meal_options = {"cheap": {"display": "Walmart's Finest", "cost": 65, "health": 1}, "vet_recommended": {"display": "Vet Recommended", "cost": 200, "health": 2}}
