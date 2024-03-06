@@ -60,7 +60,7 @@ proposed new template:
         },
 
 
-"""
+'''
 
 
 event_lookup_table = {
