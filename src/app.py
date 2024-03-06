@@ -14,6 +14,8 @@ customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "gre
 class MedicationsWindow(customtkinter.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.title("Medications")
         self.geometry(f"{380}x{550}")
 
         self.grid_columnconfigure(0, weight=1)
@@ -21,7 +23,7 @@ class MedicationsWindow(customtkinter.CTkToplevel):
 
         self.title_label = customtkinter.CTkLabel(
             self,
-            text="Medications",
+            text="Current Medications",
             font=customtkinter.CTkFont(size=25, weight="bold", underline=True))
         self.title_label.grid(
             row=0,
@@ -29,13 +31,29 @@ class MedicationsWindow(customtkinter.CTkToplevel):
             padx=20,
             pady=15)
         
+        self.close_button = customtkinter.CTkButton(
+            self,
+            text="Close",
+            command=self.close_button_event)
+        self.close_button.grid(
+            row=2,
+            column=0,
+            padx=10,
+            pady=10)
+        
     #------------------------------------------------------------------------------
     # Medications Window Methods
+    def close_button_event(self):
+        print("Close Meds Window Button Pressed")
+        self.destroy()
+        return
 
 
 class ItemsWindow(customtkinter.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.title("Items")
         self.geometry(f"{380}x{550}")
 
         self.grid_columnconfigure(0, weight=1)
@@ -43,7 +61,7 @@ class ItemsWindow(customtkinter.CTkToplevel):
 
         self.title_label = customtkinter.CTkLabel(
             self,
-            text="Items",
+            text="Current Items",
             font=customtkinter.CTkFont(size=25, weight="bold", underline=True))
         self.title_label.grid(
             row=0,
@@ -51,13 +69,29 @@ class ItemsWindow(customtkinter.CTkToplevel):
             padx=20,
             pady=15)
         
+        self.close_button = customtkinter.CTkButton(
+            self,
+            text="Close",
+            command=self.close_button_event)
+        self.close_button.grid(
+            row=2,
+            column=0,
+            padx=10,
+            pady=10)
+        
     #------------------------------------------------------------------------------
     # Items Window Methods
+    def close_button_event(self):
+        print("Close Meds Window Button Pressed")
+        self.destroy()
+        return
 
 
 class AfflictionsWindow(customtkinter.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.title("Afflictions")
         self.geometry(f"{380}x{550}")
 
         self.grid_columnconfigure(0, weight=1)
@@ -65,7 +99,7 @@ class AfflictionsWindow(customtkinter.CTkToplevel):
 
         self.title_label = customtkinter.CTkLabel(
             self,
-            text="Afflictions",
+            text="Current Afflictions",
             font=customtkinter.CTkFont(size=25, weight="bold", underline=True))
         self.title_label.grid(
             row=0,
@@ -73,13 +107,29 @@ class AfflictionsWindow(customtkinter.CTkToplevel):
             padx=20,
             pady=15)
         
+        self.close_button = customtkinter.CTkButton(
+            self,
+            text="Close",
+            command=self.close_button_event)
+        self.close_button.grid(
+            row=2,
+            column=0,
+            padx=10,
+            pady=10)
+        
     #------------------------------------------------------------------------------
     # Afflictions Window Methods
+    def close_button_event(self):
+        print("Close Meds Window Button Pressed")
+        self.destroy()
+        return
 
 
 class InstructionsWindow(customtkinter.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.title("Game Instructions")
         self.geometry(f"{380}x{550}")
 
         self.grid_columnconfigure(0, weight=1)
@@ -111,6 +161,8 @@ class InstructionsWindow(customtkinter.CTkToplevel):
 class ShopWindow(customtkinter.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.title("Ye Olde Shoppe")
         self.geometry(f"{380}x{550}")
 
         self.grid_columnconfigure(0, weight=1)
@@ -146,9 +198,19 @@ class ShopWindow(customtkinter.CTkToplevel):
         self.fleas_checkbox = customtkinter.CTkCheckBox(
             master=self.shots_tab_frame,
             text="Fleas Medication",
-            command=self.item_selected)
+            command=lambda: self.item_selected("fleas"))
         self.fleas_checkbox.grid(
             row=0,
+            column=0,
+            pady=(20, 0),
+            padx=20)
+
+        self.heartworm_checkbox = customtkinter.CTkCheckBox(
+            master=self.shots_tab_frame,
+            text="Heartworm Medication",
+            command=lambda: self.item_selected("heartworm"))
+        self.heartworm_checkbox.grid(
+            row=1,
             column=0,
             pady=(20, 0),
             padx=20)
@@ -238,13 +300,16 @@ class ShopWindow(customtkinter.CTkToplevel):
     def do_nothing(self):
         return
     
-    def item_selected(self):
-        print(f"Item Selected")
+    def item_selected(self, item):
+        print(f"Item: {item} Selected")
         self.pay_button.configure(state="enabled")
+        
         return
     
     def pay_button_event(self):
         print("Pay Button Pressed")
+
+        self.destroy()
         return
 
 
@@ -409,16 +474,6 @@ class MainWindow(customtkinter.CTk):
             column=0,
             padx=20,
             pady=10)
-        
-        # self.continue_button = customtkinter.CTkButton(
-        #     self.dog_side_bar,
-        #     text="Continue",
-        #     command=self.continue_button_event)
-        # self.continue_button.grid(
-        #     row=6,
-        #     column=0,
-        #     padx=20,
-        #     pady=20)
         
     #--------------------------------------------------------------------------
         # Bottom Bar
@@ -633,7 +688,7 @@ class MainWindow(customtkinter.CTk):
             padx=20,
             pady=20,
             sticky="news")
-        self.text_and_decision_frame.grid_columnconfigure((0, 1, 2), weight=1)
+        self.text_and_decision_frame.grid_columnconfigure(0, weight=1)
         self.text_and_decision_frame.grid_rowconfigure(0, weight=1)
 
         self.textbox = customtkinter.CTkTextbox(
@@ -649,35 +704,58 @@ class MainWindow(customtkinter.CTk):
         self.textbox.insert("0.0", "It's time to begin your adventure with your new furry friend! Make sure to take good care of them!\n" * 100)
         self.textbox.configure(state="disabled")
 
-        self.vet_button = customtkinter.CTkButton(
-            self.text_and_decision_frame,
-            text="Option 1",
-            state="disabled")
-        self.vet_button.grid(
+    #--------------------------------------------------------------------------
+        # Decisions Options Frame (Inside Text and Decisions Frame)
+        self.decision_options_frame = customtkinter.CTkFrame(self.text_and_decision_frame)
+        self.decision_options_frame.grid(
             row=1,
             column=0,
-            padx=5,
-            pady=(5, 20))
+            padx=20,
+            pady=10,
+            sticky="ew")
+        self.decision_options_frame.grid_columnconfigure((0, 1), weight=1)
+
+        self.vet_button = customtkinter.CTkButton(
+            self.decision_options_frame,
+            text="Option 1",
+            command=self.option_button_event)
+        self.vet_button.grid(
+            row=0,
+            column=0,
+            padx=(20, 5),
+            pady=10)
         
         self.nothing_button = customtkinter.CTkButton(
-            self.text_and_decision_frame,
+            self.decision_options_frame,
             text="Option 2",
-            state="disabled")
+            command=self.option_button_event)
         self.nothing_button.grid(
-            row=1,
+            row=0,
             column=1,
-            padx=5,
-            pady=(5, 20))
+            padx=(5, 20),
+            pady=10)
+        
+    #--------------------------------------------------------------------------
+        # Continue Button Frame (Inside Text and Decisions Frame)
+        self.continue_button_frame = customtkinter.CTkFrame(self.text_and_decision_frame)
+        self.continue_button_frame.grid(
+            row=1,
+            column=0,
+            padx=20,
+            pady=10,
+            sticky="ew"
+        )
+        self.continue_button_frame.grid_columnconfigure(0, weight=1)
         
         self.continue_button = customtkinter.CTkButton(
-            self.text_and_decision_frame,
+            self.continue_button_frame,
             text="Continue",
             command=self.continue_button_event)
         self.continue_button.grid(
-            row=1,
-            column=2,
-            padx=5,
-            pady=(5, 20))
+            row=0,
+            column=0,
+            padx=20,
+            pady=10)
         
     #--------------------------------------------------------------------------
         # Info/Stat Selection Screen
@@ -917,7 +995,7 @@ class MainWindow(customtkinter.CTk):
         return
 
     # Would like to combine the meds, items, and afflictions event funcntions
-    def meds_button_event(self, window):
+    def meds_button_event(self):
         print("Meds Button Pressed")
         #TODO open new window with list of current meds
 
@@ -986,6 +1064,9 @@ class MainWindow(customtkinter.CTk):
     #--------------------------------------------------------------------------
     def continue_button_event(self):
         print("Continue Button Pressed")
+
+        self.decision_options_frame.tkraise()
+
         event = controller.event_loader(self.dog)
 
         # 2. index into events and display information and options
@@ -993,6 +1074,13 @@ class MainWindow(customtkinter.CTk):
         # 3b. On option 2 do option 2 stuff 
 
         # ready to reassign
+        return
+    
+    def option_button_event(self):
+        print("Option Button Pressed")
+
+        self.continue_button_frame.tkraise()
+
         return
         
     def change_walk_option_event(self, choice: str):
