@@ -2,12 +2,14 @@ import tkinter
 import tkinter.messagebox
 import customtkinter
 import Model
+import Controller
 import os
 from PIL import Image
 
 
-customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
+customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
+
 
 class MedicationsWindow(customtkinter.CTkToplevel):
     def __init__(self, *args, **kwargs):
@@ -265,11 +267,9 @@ class MainWindow(customtkinter.CTk):
         self.items_window = None
         self.afflictions_window = None
 
-        self.mode = "dark"
-
         # Dog and Human Objects
-        self.human = Model.Human()
-        self.dog = Model.Dog()
+        self.human = None
+        self.dog = None
 
         # Images
         image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../docs/test-images")
@@ -410,15 +410,15 @@ class MainWindow(customtkinter.CTk):
             padx=20,
             pady=10)
         
-        self.continue_button = customtkinter.CTkButton(
-            self.dog_side_bar,
-            text="Continue",
-            command=self.continue_button_event)
-        self.continue_button.grid(
-            row=6,
-            column=0,
-            padx=20,
-            pady=20)
+        # self.continue_button = customtkinter.CTkButton(
+        #     self.dog_side_bar,
+        #     text="Continue",
+        #     command=self.continue_button_event)
+        # self.continue_button.grid(
+        #     row=6,
+        #     column=0,
+        #     padx=20,
+        #     pady=20)
         
     #--------------------------------------------------------------------------
         # Bottom Bar
@@ -487,7 +487,7 @@ class MainWindow(customtkinter.CTk):
             pady=(20, 10))
         
         #------------------------------
-        # Human Stats Frames (Inside Human Side Bar
+        # Human Stats Frames (Inside Human Side Bar)
         self.balance_frame = customtkinter.CTkFrame(self.human_side_bar)
         self.balance_frame.grid(
             row=1,
@@ -625,18 +625,59 @@ class MainWindow(customtkinter.CTk):
         self.food_seg_button.set("Medium")
 
     #--------------------------------------------------------------------------
-        # TextBox
-        self.textbox = customtkinter.CTkTextbox(
-            self.main_window_frame,
-            wrap="word")
-        self.textbox.grid(
+        # TextBox and Decision
+        self.text_and_decision_frame = customtkinter.CTkFrame(self.main_window_frame)
+        self.text_and_decision_frame.grid(
             row=1,
             column=1,
             padx=20,
             pady=20,
+            sticky="news")
+        self.text_and_decision_frame.grid_columnconfigure((0, 1, 2), weight=1)
+        self.text_and_decision_frame.grid_rowconfigure(0, weight=1)
+
+        self.textbox = customtkinter.CTkTextbox(
+            self.text_and_decision_frame,
+            wrap="word")
+        self.textbox.grid(
+            row=0,
+            column=0,
+            columnspan=3,
+            padx=5,
+            pady=5,
             sticky="nsew")
         self.textbox.insert("0.0", "It's time to begin your adventure with your new furry friend! Make sure to take good care of them!\n" * 100)
         self.textbox.configure(state="disabled")
+
+        self.vet_button = customtkinter.CTkButton(
+            self.text_and_decision_frame,
+            text="Option 1",
+            state="disabled")
+        self.vet_button.grid(
+            row=1,
+            column=0,
+            padx=5,
+            pady=(5, 20))
+        
+        self.nothing_button = customtkinter.CTkButton(
+            self.text_and_decision_frame,
+            text="Option 2",
+            state="disabled")
+        self.nothing_button.grid(
+            row=1,
+            column=1,
+            padx=5,
+            pady=(5, 20))
+        
+        self.continue_button = customtkinter.CTkButton(
+            self.text_and_decision_frame,
+            text="Continue",
+            command=self.continue_button_event)
+        self.continue_button.grid(
+            row=1,
+            column=2,
+            padx=5,
+            pady=(5, 20))
         
     #--------------------------------------------------------------------------
         # Info/Stat Selection Screen
@@ -823,6 +864,7 @@ class MainWindow(customtkinter.CTk):
 
     def start_button_event(self):
         print("Start Button Pressed")
+
         self.human_name_variable.set("")
         self.dog_name_variable.set("")
         self.income_variable.set("")
@@ -841,14 +883,21 @@ class MainWindow(customtkinter.CTk):
     
     def begin_button_event(self):
         print("Begin Button Pressed")
-        #TODO set Dog and Human attributes
         human_name = self.human_name_variable.get().strip()
         dog_name = self.dog_name_variable.get().strip()
         income = self.income_variable.get().strip().strip("$").strip() # strip white space, then $ symbol, then whitespace again
-        
+
+        if self.dog or self.human:
+            print("Deleting Old Dog/Human")
+            self.dog = None
+            self.human = None
+
+        self.human = Model.Human()
+        self.dog = Model.Dog(name=dog_name)
+
+        #TODO set Dog and Human attributes
         self.human_name_label.configure(text=human_name)
         self.dog_name_label.configure(text=dog_name)
-
         self.balance_value_label.configure(text="$"+income)
 
         # Add resume button to main menu once a game is started
@@ -926,18 +975,31 @@ class MainWindow(customtkinter.CTk):
         return
     
     def change_appearance_mode_event(self):
-        if self.mode == "dark":
+        mode = customtkinter.get_appearance_mode()
+        if mode == "Dark":
             customtkinter.set_appearance_mode("light")
-            self.mode = "light"
         else:
             customtkinter.set_appearance_mode("dark")
-            self.mode = "dark"
     
+    #--------------------------------------------------------------------------
     def continue_button_event(self):
         print("Continue Button Pressed")
-        if self.shop_window.winfo_exists():
-            self.shop_window.destroy()
+        event = Controller.event_getter()
+
+        # 2. index into events and display information and options
+
+        # 3a. On option1 Do option1 one stuff (Controlller.Event_resolve("option1"))
+        # 3b. On option 2 do option 2 stuff 
+
+        # ready to reassign
         return
+    
+    # def refresh(self):
+
+    #     self.balance_value_label.configure(text=str(self.human.balance))
+    #     return
+    
+    #--------------------------------------------------------------------------
     
     def change_walk_option_event(self, choice: str):
         print(f"Walk Option Changed to {choice}")
