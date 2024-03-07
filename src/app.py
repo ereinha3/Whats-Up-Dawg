@@ -5,7 +5,8 @@ import model
 import controller
 import os
 from PIL import Image
-from data.breeds_dict import breeds
+# from data.breeds_dict import breeds
+from data.matches import matches
 from data.shop import care_items, medications
 from string import capwords
 
@@ -359,10 +360,12 @@ class ShopWindow(customtkinter.CTkToplevel):
         print("Pay Button Pressed")
 
         if self.fleas_checkbox.get():
-            self.master.dog.medications.add(medications["flea_and_tick"]["display"])
+            # self.master.dog.medications.add(medications["flea_and_tick"]["display"])
+            self.master.dog.medications.add("fleas")
 
         if self.heartworm_checkbox.get():
-            self.master.dog.medications.add(medications["heartworm"]["display"])
+            # self.master.dog.medications.add(medications["heartworm"]["display"])
+            self.master.dog.medications.add("heartworm")
 
         self.master.current_balance -= self.total
         self.total = 0
@@ -397,6 +400,7 @@ class MainWindow(customtkinter.CTk):
         self.dog = None
         self.dog_image = None
         self.event = None
+        
         self.current_balance = 0
 
         # Images
@@ -467,7 +471,7 @@ class MainWindow(customtkinter.CTk):
             column=2,
             rowspan=2,
             sticky="news")
-        self.dog_side_bar.grid_rowconfigure(5, weight=1)
+        self.dog_side_bar.grid_rowconfigure(0, weight=1)
 
         self.dog_name_label = customtkinter.CTkLabel(
             self.dog_side_bar,
@@ -486,7 +490,7 @@ class MainWindow(customtkinter.CTk):
         self.age_frame.grid(
             row=1,
             column=0,
-            padx=20,
+            padx=10,
             pady=5)
         
         self.age_label = customtkinter.CTkLabel(
@@ -494,7 +498,7 @@ class MainWindow(customtkinter.CTk):
             text=f"Age:",
             font=customtkinter.CTkFont(size=18, weight="normal"))
         self.age_label.grid(
-            row=0,
+            row=1,
             column=0,
             padx=10,
             pady=5)
@@ -504,7 +508,7 @@ class MainWindow(customtkinter.CTk):
             text=f"0",
             font=customtkinter.CTkFont(size=18, weight="normal"))
         self.age_value_label.grid(
-            row=0,
+            row=1,
             column=1,
             padx=10,
             pady=5)
@@ -516,7 +520,7 @@ class MainWindow(customtkinter.CTk):
             text="Medications",
             command=self.meds_button_event)
         self.meds_button.grid(
-            row=2,
+            row=3,
             column=0,
             padx=20,
             pady=5)
@@ -526,7 +530,7 @@ class MainWindow(customtkinter.CTk):
             text="Items",
             command=self.items_button_event)
         self.items_button.grid(
-            row=3,
+            row=4,
             column=0,
             padx=20,
             pady=5)
@@ -536,7 +540,7 @@ class MainWindow(customtkinter.CTk):
             text="Afflictions",
             command=self.afflictions_button_event)
         self.afflictions_button.grid(
-            row=4,
+            row=5,
             column=0,
             padx=20,
             pady=5)
@@ -545,10 +549,10 @@ class MainWindow(customtkinter.CTk):
         # Dog Image Frame (Inside Dog Side Bar)
         self.dog_image_frame = customtkinter.CTkFrame(self.dog_side_bar)
         self.dog_image_frame.grid(
-            row=5,
+            row=0,
             column=0,
-            padx=20,
-            pady=10)
+            padx=5,
+            pady=5)
         
         # Initialize empty Dog Image
         self.dog_image_label = customtkinter.CTkLabel(
@@ -557,8 +561,8 @@ class MainWindow(customtkinter.CTk):
         self.dog_image_label.grid(
             row=0,
             column=0,
-            padx=10,
-            pady=10)
+            padx=5,
+            pady=5)
         
     #--------------------------------------------------------------------------
         # Bottom Bar
@@ -957,7 +961,7 @@ class MainWindow(customtkinter.CTk):
         
         self.dog_type_combobox = customtkinter.CTkComboBox(
             self.dog_info_frame,
-            values=list((capwords(breed) for breed in breeds.keys())))
+            values=sorted(list((capwords(breed) for breed in matches))))
         self.dog_type_combobox.grid(
             row=3,
             column=0,
@@ -1104,12 +1108,12 @@ class MainWindow(customtkinter.CTk):
         self.current_balance = int(income)
 
         # Set Dog Image
-        dog_string = self.dog_type_combobox.get()
+        dog_string = self.dog_type_combobox.get().lower().strip().replace(" ", "_") + ".jpg"
         print(dog_string)
         
         self.dog_image = customtkinter.CTkImage(
-            Image.open(os.path.join(self.dog_image_path, "akita.jpg")),
-            size=(100, 100))
+            Image.open(os.path.join(self.dog_image_path, dog_string)),
+            size=(200, 200))
         
         self.dog_image_label.configure(image=self.dog_image)
     
@@ -1238,7 +1242,8 @@ class MainWindow(customtkinter.CTk):
             self.textbox.delete("0.0", tkinter.END)
             self.textbox.insert("0.0", self.event["resist"]["message"])
             self.textbox.configure(state="disabled")
-            self.dog.medications.remove(self.event["name"])
+
+            self.dog.medications.remove(self.event["name"]) # <-------
             return
         else:
             self.textbox.configure(state="normal")
@@ -1297,6 +1302,10 @@ class MainWindow(customtkinter.CTk):
         else:
             self.begin_button.configure(state="disabled")
 
+        return
+    
+    def refresh_stats(self):
+        # TODO
         return
 
 
