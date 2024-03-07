@@ -12,13 +12,13 @@ class Dog:
         self.age = age #dog age in months
         self._health = health
         self.weight = weight
-        self.happiness = happiness
+        # self.happiness = happiness
         self.name = name
         self.walk_schedule = "short"
         self.meal_plan = "cheap"
         self.afflictions = set()
         self.medications = set()
-        self.possessions = set()
+        self.items = set()
         self.alive = True
 
     @property

@@ -81,6 +81,16 @@ class ItemsWindow(customtkinter.CTkToplevel):
             padx=20,
             pady=15)
         
+        self.items_textbox = customtkinter.CTkTextbox(
+            self,
+            wrap="word")
+        self.items_textbox.grid(
+            row=1,
+            column=0,
+            padx=20,
+            pady=20,
+            sticky="news")
+        
         self.close_button = customtkinter.CTkButton(
             self,
             text="Close",
@@ -118,6 +128,16 @@ class AfflictionsWindow(customtkinter.CTkToplevel):
             column=0,
             padx=20,
             pady=15)
+        
+        self.afflictions_textbox = customtkinter.CTkTextbox(
+            self,
+            wrap="word")
+        self.afflictions_textbox.grid(
+            row=1,
+            column=0,
+            padx=20,
+            pady=20,
+            sticky="news")
         
         self.close_button = customtkinter.CTkButton(
             self,
@@ -320,8 +340,13 @@ class ShopWindow(customtkinter.CTkToplevel):
     
     def pay_button_event(self):
         print("Pay Button Pressed")
+
         if self.fleas_checkbox.get():
             self.master.dog.medications.add("fleas")
+
+        if self.heartworm_checkbox.get():
+            self.master.dog.medications.add("heartworm")
+    
         self.destroy()
         return
 
@@ -1096,6 +1121,11 @@ class MainWindow(customtkinter.CTk):
         for med in self.dog.medications:
             meds_str += med + "\n"
 
+
+        self.meds_window.meds_textbox.configure(state="normal")
+        self.meds_window.meds_textbox.delete("0.0", tkinter.END)
+        self.meds_window.meds_textbox.insert("0.0", meds_str)
+        self.meds_window.meds_textbox.configure(state="disabled")
         self.meds_window.meds_textbox.insert("0.0", meds_str)
         return
     
@@ -1109,6 +1139,16 @@ class MainWindow(customtkinter.CTk):
         else:
             print("Focusing Items Window")
             self.items_window.focus()
+    
+        items_str = ""
+        for item in self.dog.items:
+            items_str += item + "\n"
+
+        self.items_window.items_textbox.configure(state="normal")
+        self.items_window.items_textbox.delete("0.0", tkinter.END)
+        self.items_window.items_textbox.insert("0.0", items_str)
+        self.items_window.items_textbox.configure(state="disabled")
+        self.items_window.items_textbox.insert("0.0", items_str)
         return
     
     def afflictions_button_event(self):
@@ -1121,6 +1161,16 @@ class MainWindow(customtkinter.CTk):
         else:
             print("Focusing Afflictions Window")
             self.afflictions_window.focus()
+
+        afflictions_str = ""
+        for affliction in self.dog.afflictions:
+            afflictions_str += affliction + "\n"
+
+        self.afflictions_window.afflictions_textbox.configure(state="normal")
+        self.afflictions_window.afflictions_textbox.delete("0.0", tkinter.END)
+        self.afflictions_window.afflictions_textbox.insert("0.0", afflictions_str)
+        self.afflictions_window.afflictions_textbox.configure(state="disabled")
+        self.afflictions_window.afflictions_textbox.insert("0.0", afflictions_str)
         return
     
     def shop_button_event(self):
@@ -1158,7 +1208,7 @@ class MainWindow(customtkinter.CTk):
         print("Continue Button Pressed")
         self.event = controller.load_event()
 
-        resistance = controller.check_resistance(self.dog, self.human, self.event) #TODO - This is not working properly
+        resistance = controller.check_resistance(self.dog, self.human, self.event)
 
         if resistance:
             self.textbox.configure(state="normal")
@@ -1193,15 +1243,16 @@ class MainWindow(customtkinter.CTk):
         self.textbox.configure(state="disabled")
 
         self.continue_button_frame.tkraise()
-
         return
 
     def change_walk_option_event(self, choice: str):
         print(f"Walk Option Changed to {choice}")
+        self.dog.walk_schedule = choice
         return
 
     def change_food_option_event(self, choice: str):
         print(f"Food Option Changed to {choice}")
+        self.dog.meal_plan = choice
         return
 
     def trace_function(self, *args):
