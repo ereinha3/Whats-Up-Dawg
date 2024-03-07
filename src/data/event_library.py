@@ -5,7 +5,7 @@ event_lookup_table = {
             "check": lambda dog: "flea_and_tick" in dog.medications, #().keys(),
             "message": "Your dog was exposed to fleas, but fortunately they were on flea and tick meds and it didn't catch them.",
             },
-        "intro": "Your dog has fleas. Do you... ?",
+        "intro": "Your dog is itchy and has little brown dots jumping from its skin. Do you... ?",
         "options": {
             "1": {
                 "intro": "Take your dog and get rid of those fleas!", 
@@ -44,7 +44,7 @@ event_lookup_table = {
             "check": lambda dog: False,  #
             "message": "n/a",
             },
-        "intro": "Your dog has an ingrown nail! Do you... ?",
+        "intro": "Your dog is limping around your kitchen and yelping when putting pressure on its paw! Do you... ?",
         "options": {
             "1": {
                 "intro": "Take your dog to the vet!", 
@@ -63,7 +63,7 @@ event_lookup_table = {
             "check": lambda dog: False,  #add a clause for excersise when this is added to the dog object model
             "message": "n/a",
             },
-        "intro": "Your dog has a bur in it's paw! Will you... ?",
+        "intro": "Your dog is limping around your kitchen and yelping when putting pressure on its paw! Will you... ?",
         "options": {
             "1": {
                 "intro": "Go to the vet and try to fix it!", 
@@ -94,5 +94,28 @@ event_lookup_table = {
                 },
             },
         },
+
+    "obesity": {
+        "name": "obesity",
+        "resist": {
+            "check": lambda dog: (dog.walk_schedule is "medium" and dog.meal_plan in ["normal", "vet_recommended"]) or (dog.walk_schedule is "long") ,  #add a clause for excersise when this is added to the dog object model
+            "message": "Maybe your dog just had a big lunch? Well done for walking you dog consistently and feeding it properly. Your dog has avoided obesity.",
+            },
+        "intro": "Your dog appears to be gaining weight is having trouble goin to the bathroom. Do you... ?",
+        "options": {
+            "1": {
+                "intro": "Take your dog to the vet.", 
+                "outro": "Your vet informs you your dog is obese. You must be consistent about walking your dog frequently and feeding it healthy food.",
+                },
+            "2": { 
+                "intro": "Do nothing, your dog won't die of obesity, right?",
+                "outro": "Your dog continues to gain weight and lose mobility.",  
+                },
+            },
+        },
+    
+    
+    
+    
     }
 
