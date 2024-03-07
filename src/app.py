@@ -33,6 +33,16 @@ class MedicationsWindow(customtkinter.CTkToplevel):
             padx=20,
             pady=15)
         
+        self.meds_textbox = customtkinter.CTkTextbox(
+            self,
+            wrap="word")
+        self.meds_textbox.grid(
+            row=1,
+            column=0,
+            padx=20,
+            pady=20,
+            sticky="news")
+        
         self.close_button = customtkinter.CTkButton(
             self,
             text="Close",
@@ -310,7 +320,8 @@ class ShopWindow(customtkinter.CTkToplevel):
     
     def pay_button_event(self):
         print("Pay Button Pressed")
-
+        if self.fleas_checkbox.get():
+            self.master.dog.medications.add("fleas")
         self.destroy()
         return
 
@@ -1080,6 +1091,12 @@ class MainWindow(customtkinter.CTk):
         else:
             print("Focusing Meds Window")
             self.meds_window.focus()
+
+        meds_str = ""
+        for med in self.dog.medications:
+            meds_str += med + "\n"
+
+        self.meds_window.meds_textbox.insert("0.0", meds_str)
         return
     
     def items_button_event(self):
@@ -1143,17 +1160,20 @@ class MainWindow(customtkinter.CTk):
 
         resistance = controller.check_resistance(self.dog, self.human, self.event) #TODO - This is not working properly
 
-        # if resistance:
-        #     print(f"{event} Resisted")
-        # else:
-        #     print(f"{event} Not Resisted")
-
-        self.textbox.configure(state="normal")
-        self.textbox.delete("0.0", tkinter.END)
-        self.textbox.insert("0.0", self.event["intro"] + "\n"
-                            + f"[Option 1]: {self.event["options"]["1"]["intro"]}" + "\n"
-                            + f"[Option 2]: {self.event["options"]["2"]["intro"]}")
-        self.textbox.configure(state="disabled")
+        if resistance:
+            self.textbox.configure(state="normal")
+            self.textbox.delete("0.0", tkinter.END)
+            self.textbox.insert("0.0", self.event["resist"]["message"])
+            self.textbox.configure(state="disabled")
+            self.dog.medications.remove(self.event["name"])
+            return
+        else:
+            self.textbox.configure(state="normal")
+            self.textbox.delete("0.0", tkinter.END)
+            self.textbox.insert("0.0", self.event["intro"] + "\n"
+                                + f"[Option 1]: {self.event["options"]["1"]["intro"]}" + "\n"
+                                + f"[Option 2]: {self.event["options"]["2"]["intro"]}")
+            self.textbox.configure(state="disabled")
 
 
         self.decision_options_frame.tkraise()

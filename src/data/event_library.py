@@ -1,7 +1,8 @@
 event_lookup_table = {
     "fleas": {
+        "name": "fleas",
         "resist": {
-            "check": lambda dog: "flea_and_tick" in dog.medications, #().keys(),
+            "check": lambda dog: "fleas" in dog.medications, #().keys(),
             "message": "Your dog was exposed to fleas, but fortunately they were on flea and tick meds and it didn't catch them.",
             },
         "intro": "Your dog has fleas. Do you... ?",
@@ -19,6 +20,7 @@ event_lookup_table = {
 
 
     "heartworms": {
+        "name": "heartworm",
         "resist": {
             "check": lambda dog: "ProHeart" in dog.medications, #().keys(),
             "message": "Your dog was exposed to Heartworm, but luckily has already taken medication for that!",
@@ -37,6 +39,7 @@ event_lookup_table = {
         },
     
     "ingrown_nail": {
+        "name": "ingrown_nail",
         "resist": {
             "check": lambda dog: False,  #
             "message": "n/a",
@@ -55,6 +58,7 @@ event_lookup_table = {
         },
 
     "bur_in_paw": {
+        "name": "bur_in_paw",
         "resist": {
             "check": lambda dog: False,  #add a clause for excersise when this is added to the dog object model
             "message": "n/a",
@@ -73,6 +77,7 @@ event_lookup_table = {
         },
 
     "allergies": {
+        "name": "allergies",
         "resist": {
             "check": lambda dog: False,  #add a clause for excersise when this is added to the dog object model
             "message": "n/a",
