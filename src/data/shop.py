@@ -1,45 +1,45 @@
 #shop menu numbers are mocked
 #need research to support specific costs
 care_items = {
-    "treats": {
+    "Doggy Treat": {
         "cost": 5,
         "display": "Doggy Treat",
         "happiness": 0.25,
         "duration": 1,
         },
-    "puzzle": {
+    "Doggy Puzzle": {
         "cost": 20,
         "display": "Doggy Puzzle",
         "happiness": 0.5,
         "duration": 5,
         },
-    "plushy": {
+    "Plushy Toy": {
         "cost": 10,
         "display": "Plushy Toy",
         "happiness": 0.5,
         "duration": 2
         },
-    "nylabone": {
+    "Nylabone": {
         "cost": 5,
         "display": "Nylabone",
         "happiness": 0.5,
         "duration": 3,
         "health": -1,
         },
-    "butcherbone": {
+    "Butcher Bone": {
         "cost": 5,
         "display": "Butcher Bone",
         "happiness": 0.5,
         "health": -2,
         "duration": 1,
         },
-    "kong": {
+    "Kong Toy": {
         "cost": 10,
         "display": "Kong Toy",
         "duration": 10,
         "happiness": 0.25,
         },
-    "bed": {
+    "Doggy Bed": {
         "cost": 20,
         "display": "Doggy Bed",
         "duration": 5,
@@ -48,12 +48,12 @@ care_items = {
     }
 
 medications = {
-        "flea_and_tick": {
+        "Flea and Tick Meds": {
             "cost": 150, #cost from chewy: https://www.chewy.com/nexgard-chew-dogs-241-60-lbs-purple/dp/173254
             "duation": 1,
             "display": "Flea and Tick Meds",
             },
-        "heartworm": {
+        "Heartworm Meds": {
             "cost": 150, #cost from chewy: https://www.chewy.com/nexgard-chew-dogs-241-60-lbs-purple/dp/173254
             "duation": 1,
             "display": "Heartworm Meds",

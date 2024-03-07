@@ -5,7 +5,6 @@ import model
 import controller
 import os
 from PIL import Image
-# from data.breeds_dict import breeds
 from data.matches import matches
 from data.shop import care_items, medications
 from string import capwords
@@ -82,7 +81,7 @@ class ItemsWindow(customtkinter.CTkToplevel):
             column=0,
             padx=20,
             pady=15)
-        
+
         self.items_textbox = customtkinter.CTkTextbox(
             self,
             wrap="word")
@@ -92,7 +91,7 @@ class ItemsWindow(customtkinter.CTkToplevel):
             padx=20,
             pady=20,
             sticky="news")
-        
+
         self.close_button = customtkinter.CTkButton(
             self,
             text="Close",
@@ -102,7 +101,7 @@ class ItemsWindow(customtkinter.CTkToplevel):
             column=0,
             padx=10,
             pady=10)
-        
+
     #------------------------------------------------------------------------------
     # Items Window Methods
     def close_button_event(self):
@@ -231,25 +230,18 @@ class ShopWindow(customtkinter.CTkToplevel):
             pady=(20, 0),
             sticky="nsew")
 
-        self.fleas_checkbox = customtkinter.CTkCheckBox(
-            master=self.shots_tab_frame,
-            text="Fleas Medication",
-            command=lambda: self.item_selected("fleas"))
-        self.fleas_checkbox.grid(
-            row=0,
-            column=0,
-            pady=(20, 0),
-            padx=20)
-
-        self.heartworm_checkbox = customtkinter.CTkCheckBox(
-            master=self.shots_tab_frame,
-            text="Heartworm Medication",
-            command=lambda: self.item_selected("heartworm"))
-        self.heartworm_checkbox.grid(
-            row=1,
-            column=0,
-            pady=(20, 0),
-            padx=20)
+        self.meds_checkboxes = []
+        for index, med in enumerate(medications):
+            self.med_checkbox = customtkinter.CTkCheckBox(
+                master=self.shots_tab_frame,
+                text=f"{medications[med]["display"]}",
+                command=self.item_selected)
+            self.med_checkbox.grid(
+                row=index,
+                column=0,
+                pady=(20, 0),
+                padx=20)
+            self.meds_checkboxes.append(self.med_checkbox)
         
         #------------------------------
         # Treats and Toys Selection
@@ -265,16 +257,19 @@ class ShopWindow(customtkinter.CTkToplevel):
             pady=(20, 0),
             sticky="nsew")
         
-        self.chewy_checkbox = customtkinter.CTkCheckBox(
-            master=self.treats_toys_tab_frame,
-            text="Chewy Toy",
-            command=self.item_selected)
-        self.chewy_checkbox.grid(
-            row=0,
-            column=0,
-            pady=(20, 0),
-            padx=20,
-            sticky="n")
+        self.items_checkboxes = []
+        for index, item in enumerate(care_items):
+            self.item_checkbox = customtkinter.CTkCheckBox(
+                master=self.treats_toys_tab_frame,
+                text=f"{care_items[item]["display"]}",
+                command=self.item_selected)
+            self.item_checkbox.grid(
+                row=index,
+                column=0,
+                pady=(20, 0),
+                padx=20,
+                sticky="n")
+            self.items_checkboxes.append(self.item_checkbox)
         
     #--------------------------------------------------------------------------
         # Checkout (Cost and Pay Button) Frame
@@ -335,22 +330,23 @@ class ShopWindow(customtkinter.CTkToplevel):
     def do_nothing(self):
         return
     
-    def item_selected(self, item):
-        print(f"Item: {item} Selected")
-        # self.pay_button.configure(state="enabled")
-        match item:
-            case "fleas":
-                cost = medications["flea_and_tick"]["cost"]
-                if self.fleas_checkbox.get():
-                    self.total += cost
-                else:
-                    self.total -= cost
-            case "heartworm":
-                cost = medications["heartworm"]["cost"]
-                if self.heartworm_checkbox.get():
-                    self.total += cost
-                else:
-                    self.total -= cost
+    def item_selected(self):
+        print("Item Selected")
+        self.pay_button.configure(state="enabled")
+        self.total = 0
+        
+        for med_checkbox in self.meds_checkboxes:
+            key = med_checkbox.cget("text")
+            med_price = medications[key]["cost"]
+            if med_checkbox.get():
+                self.total += med_price
+
+        for item_checkbox in self.items_checkboxes:
+            key = item_checkbox.cget("text")
+            item_price = care_items[key]["cost"]
+            if item_checkbox.get():
+                self.total += item_price
+                print(item_price)
 
         self.cost_value_label.configure(text="$"+str(self.total)+".00")
 
@@ -358,19 +354,16 @@ class ShopWindow(customtkinter.CTkToplevel):
     
     def pay_button_event(self):
         print("Pay Button Pressed")
+        for med_checkbox in self.meds_checkboxes:
+            if med_checkbox.get():
+                self.master.dog.medications.add(med_checkbox.cget("text"))
 
-        if self.fleas_checkbox.get():
-            # self.master.dog.medications.add(medications["flea_and_tick"]["display"])
-            self.master.dog.medications.add("fleas")
-
-        if self.heartworm_checkbox.get():
-            # self.master.dog.medications.add(medications["heartworm"]["display"])
-            self.master.dog.medications.add("heartworm")
+        for item_checkbox in self.items_checkboxes:
+            if item_checkbox.get():
+                self.master.dog.items.add(item_checkbox.cget("text"))
 
         self.master.current_balance -= self.total
-        self.total = 0
-
-        self.master.balance_value_label.configure(text="$"+str(self.master.current_balance))
+        self.master.balance_value_label.configure(text="$"+str(self.master.current_balance)) #TODO Fix self.master.current_balance - should reference human balance
     
         self.destroy()
         return
@@ -534,7 +527,7 @@ class MainWindow(customtkinter.CTk):
             column=0,
             padx=20,
             pady=5)
-        
+
         self.afflictions_button = customtkinter.CTkButton(
             self.dog_side_bar,
             text="Afflictions",
@@ -543,7 +536,7 @@ class MainWindow(customtkinter.CTk):
             row=5,
             column=0,
             padx=20,
-            pady=5)
+            pady=(5, 20))
         
         #------------------------------
         # Dog Image Frame (Inside Dog Side Bar)
