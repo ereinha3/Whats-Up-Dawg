@@ -173,7 +173,46 @@ event_lookup_table = {
                 "outro": "You clean up your dog's accident and stay more responsible about returning on time.",  
                 },
             },
+    },
+    
+    "dislikes_friend": {
+        "name": "dislikes_friend",
+        "resist": {
+            "check": lambda dog: dog.happiness>60,  #add a clause for excersise when this is added to the dog object model
+            "message": "You've been caring for you dog and your dog is well-behaved as a result.'",
+            },
+        "intro": "Your friend came over for dinner and your dog wouldn't stop barking at them. Do you...?",
+        "options": {
+            "1": {
+                "intro": "Leave your dog inside and go out to dinner with your friend.", 
+                "outro": "You feel bad so you offer to pay for their dinner.",
+                },
+            "2": { 
+                "intro": "Lock your dog outside.",
+                "outro": "You and your friend enjoy your dinner while your dog whimpers from behind the glass door.",  
+                },
+            },
+    },
+     
+    "bit_other_dog": {
+        "name": "bit_other_dog",
+        "resist": {
+            "check": lambda dog: dog.happiness>20,  #add a clause for excersise when this is added to the dog object model
+            "message": "You've been caring for you dog and your dog is not aggressive as a result.'",
+            },
+        "intro": "You take your dog to the dog park. It bites another dog. Do you...?",
+        "options": {
+            "1": {
+                "intro": "Pay for the other dogs medical bill and apologize profusely.", 
+                "outro": "You feel bad so you offer to pay for their dinner.",
+                },
+            "2": { 
+                "intro": "Say your sorry and leave. You are banned from this dog park, however.",
+                "outro": "The other dog is fine. Your dog may bite again though.",  
+                },
+            },
     }
+     
 
 }
 

@@ -18,6 +18,22 @@ afflictions_dictionary = {
             "stress": 0,
             "description": "Your dog had an accident in the house, requiring you to clean it up.",
             },
+          "dislikes_friend": {
+            "persistent": False, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 60,  "work": 0 },
+            "health": 0,
+            "stress": -5,
+            "description": "Your dog dislikes your friend. You take your friend out to dinner instead of having them over for dinner.",
+            },
+          "bit_other_dog": {
+            "persistent": False, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : random.randint(3, 6)*100,  "work": 4},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
         },
     1:
         {
