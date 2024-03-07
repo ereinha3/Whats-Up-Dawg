@@ -234,7 +234,7 @@ class ShopWindow(customtkinter.CTkToplevel):
         for index, med in enumerate(medications):
             self.med_checkbox = customtkinter.CTkCheckBox(
                 master=self.shots_tab_frame,
-                text=f"{medications[med]["display"]}",
+                text=f"{medications[med]['display']}",
                 command=self.item_selected)
             self.med_checkbox.grid(
                 row=index,
@@ -261,7 +261,7 @@ class ShopWindow(customtkinter.CTkToplevel):
         for index, item in enumerate(care_items):
             self.item_checkbox = customtkinter.CTkCheckBox(
                 master=self.treats_toys_tab_frame,
-                text=f"{care_items[item]["display"]}",
+                text=f"{care_items[item]['display']}",
                 command=self.item_selected)
             self.item_checkbox.grid(
                 row=index,
