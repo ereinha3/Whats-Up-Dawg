@@ -201,6 +201,8 @@ class ShopWindow(customtkinter.CTkToplevel):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
+        self.total = 0
+
     #--------------------------------------------------------------------------
         # Shop Tab View
         self.shop_tabs = customtkinter.CTkTabview(
@@ -318,7 +320,6 @@ class ShopWindow(customtkinter.CTkToplevel):
         self.pay_button = customtkinter.CTkButton(
             self.checkout_frame,
             text="Pay",
-            state="disabled",
             command=self.pay_button_event)
         self.pay_button.grid(
             row=0,
@@ -335,7 +336,22 @@ class ShopWindow(customtkinter.CTkToplevel):
     
     def item_selected(self, item):
         print(f"Item: {item} Selected")
-        self.pay_button.configure(state="enabled")
+        # self.pay_button.configure(state="enabled")
+        match item:
+            case "fleas":
+                cost = medications["flea_and_tick"]["cost"]
+                if self.fleas_checkbox.get():
+                    self.total += cost
+                else:
+                    self.total -= cost
+            case "heartworm":
+                cost = medications["heartworm"]["cost"]
+                if self.heartworm_checkbox.get():
+                    self.total += cost
+                else:
+                    self.total -= cost
+
+        self.cost_value_label.configure(text="$"+str(self.total)+".00")
 
         return
     
@@ -347,6 +363,11 @@ class ShopWindow(customtkinter.CTkToplevel):
 
         if self.heartworm_checkbox.get():
             self.master.dog.medications.add(medications["heartworm"]["display"])
+
+        self.master.current_balance -= self.total
+        self.total = 0
+
+        self.master.balance_value_label.configure(text="$"+str(self.master.current_balance))
     
         self.destroy()
         return
@@ -376,6 +397,7 @@ class MainWindow(customtkinter.CTk):
         self.dog = None
         self.dog_image = None
         self.event = None
+        self.current_balance = 0
 
         # Images
         self.dog_image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../docs/Images")
@@ -1075,11 +1097,11 @@ class MainWindow(customtkinter.CTk):
         self.dog = model.Dog(name=dog_name) #option: breed
         self.human = model.Human(income, self.dog)
 
-
         #TODO set Dog and Human attributes
         self.human_name_label.configure(text=human_name)
         self.dog_name_label.configure(text=dog_name)
         self.balance_value_label.configure(text="$"+income)
+        self.current_balance = int(income)
 
         # Set Dog Image
         dog_string = self.dog_type_combobox.get()

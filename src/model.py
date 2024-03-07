@@ -38,7 +38,7 @@ class Human:
     def __init__(self, income, dog):
         # This explicitly needs to be declared as disposable income to the user as they need income for a variety of essentials
         self.income = income
-        self._balance = 0.
+        self._balance = income
         self.time_spent = 0.
         self.dog = dog
 
