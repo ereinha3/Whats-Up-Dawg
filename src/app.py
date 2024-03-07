@@ -751,7 +751,7 @@ class MainWindow(customtkinter.CTk):
         
         self.food_seg_button = customtkinter.CTkSegmentedButton(
             self.options_frame,
-            values=["Normal", "Vet Recommended"],
+            values=["Cheap", "Normal", "Vet Recommended"],
             command=self.change_food_option_event)
         self.food_seg_button.grid(
             row=3,
@@ -759,7 +759,7 @@ class MainWindow(customtkinter.CTk):
             padx=20,
             pady=(5, 20),
             sticky="ew")
-        self.food_seg_button.set("Normal")
+        self.food_seg_button.set("Purina One")
 
     #--------------------------------------------------------------------------
         # TextBox and Decision
@@ -1054,7 +1054,6 @@ class MainWindow(customtkinter.CTk):
     # Main Window Methods
     def instructions_button_event(self):
         print("How to Button Pressed")
-        #TODO open new window with instructions
         if self.instructions_window is None or not self.instructions_window.winfo_exists():
             self.instructions_window = InstructionsWindow(self)  # create window if its None or destroyed
         else:
@@ -1106,7 +1105,7 @@ class MainWindow(customtkinter.CTk):
         
         self.dog_image = customtkinter.CTkImage(
             Image.open(os.path.join(self.dog_image_path, dog_string)),
-            size=(225, 225))
+            size=(250, 250))
         
         self.dog_image_label.configure(image=self.dog_image)
     
