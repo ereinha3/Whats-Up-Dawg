@@ -35,7 +35,7 @@ class Dog:
         self._health = min(value, self.max_health)
 
 class Human:
-    def __init__(self, income, dog):
+    def __init__(self, income, dog:Dog):
         # This explicitly needs to be declared as disposable income to the user as they need income for a variety of essentials
         self.income = income
         self._balance = income
@@ -59,5 +59,5 @@ class Human:
     @balance.setter
     def balance(self, value):
         self._balance = value
-        if (self._balance < -(revenue * 4)):
+        if (self._balance < -(self.revenue() * 4)):
             self.dog.surrender = True

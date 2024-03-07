@@ -481,7 +481,7 @@ class MainWindow(customtkinter.CTk):
         self.age_frame = customtkinter.CTkFrame(
             self.dog_side_bar)
         self.age_frame.grid(
-            row=1,
+            row=2,
             column=0,
             padx=10,
             pady=5)
@@ -491,7 +491,7 @@ class MainWindow(customtkinter.CTk):
             text=f"Age:",
             font=customtkinter.CTkFont(size=18, weight="normal"))
         self.age_label.grid(
-            row=1,
+            row=2,
             column=0,
             padx=10,
             pady=5)
@@ -501,7 +501,7 @@ class MainWindow(customtkinter.CTk):
             text=f"0",
             font=customtkinter.CTkFont(size=18, weight="normal"))
         self.age_value_label.grid(
-            row=1,
+            row=2,
             column=1,
             padx=10,
             pady=5)
@@ -542,7 +542,7 @@ class MainWindow(customtkinter.CTk):
         # Dog Image Frame (Inside Dog Side Bar)
         self.dog_image_frame = customtkinter.CTkFrame(self.dog_side_bar)
         self.dog_image_frame.grid(
-            row=0,
+            row=1,
             column=0,
             padx=5,
             pady=5)
@@ -1238,12 +1238,19 @@ class MainWindow(customtkinter.CTk):
 
             self.dog.medications.remove(self.event["name"]) # <-------
             return
+        
+        elif len(self.event["options"])==0:
+            self.textbox.configure(state="normal")
+            self.textbox.delete("0.0", tkinter.END)
+            self.textbox.insert("0.0", self.event["intro"])
+            self.textbox.configure(state="disabled")
+            
         else:
             self.textbox.configure(state="normal")
             self.textbox.delete("0.0", tkinter.END)
-            self.textbox.insert("0.0", self.event["intro"] + "\n"
-                                + f"[Option 1]: {self.event["options"]["1"]["intro"]}" + "\n"
-                                + f"[Option 2]: {self.event["options"]["2"]["intro"]}")
+            self.textbox.insert("0.0", self.event["intro"] + "\n" 
+                                + f'[Option 1]: {self.event["options"]["1"]["intro"]}' 
+                                + "\n" + f'[Option 2]: {self.event["options"]["2"]["intro"]}')
             self.textbox.configure(state="disabled")
 
 
