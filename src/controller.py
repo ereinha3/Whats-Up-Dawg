@@ -1,5 +1,6 @@
-from random import randint
+from random import randint, choice
 from data.event_library import event_lookup_table
+from data.afflictions import afflictions_dictionary
 from model import Dog, Human
 import sys
 
@@ -7,7 +8,22 @@ def percentCheck(value):
     return randint(1, 100) < value
 
 def load_event():
-    return event_lookup_table[list(event_lookup_table)[randint(0, len(event_lookup_table) - 1)]]
+    affliction_probabilities = list(afflictions_dictionary.keys())
+    affliction_probabilities.remove(0)
+    new_probabilities = []
+    end = affliction_probabilities[-1]
+    for i in range(len(affliction_probabilities)):
+        new_probabilities += [affliction_probabilities[i] for i in range(end)]
+        end -= 1
+    selection = choice([0, choice(new_probabilities)])
+    return event_lookup_table[choice(list(afflictions_dictionary[selection].keys()))]
+    #return event_lookup_table[list(event_lookup_table)[randint(0, len(event_lookup_table) - 1)]]
+
+def test():
+    for i in range(5):
+        print(load_event()['name'])
+
+test()
 
 def determine_event_outcome(options: dict, human: Human):
     # for key, value in options.items():

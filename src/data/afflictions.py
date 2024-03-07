@@ -5,11 +5,19 @@ afflictions_dictionary = {
           "dog_ate_pizza": {
             "persistent": False, #until treatment
             "indefinite": False, #until death
-            "cure": { "cost": 150,  "work": 4, },
-            "health": -5,
-            "stress": -5,
-            "description": "Fleas cause anemia, and may carry eggs from other parasites, particularly tapeworms. Treatment involves medications, specialty shampoos and extermination of fleas from the environment.",
-        },  
+            "cure": { "cost": lambda dog : 30,  "work": 1 },
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog got the runs and you had to do a little extra clean-up as a result. While you shouldn't give you dog pizza, it won't significantly impact its health.",
+            }, 
+          "accident": {
+            "persistent": False, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 2 },
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog had an accident in the house, requiring you to clean it up.",
+            },
         },
     1:
         {
@@ -20,7 +28,7 @@ afflictions_dictionary = {
             "health": -5,
             "stress": -5,
             "description": "Fleas cause anemia, and may carry eggs from other parasites, particularly tapeworms. Treatment involves medications, specialty shampoos and extermination of fleas from the environment.",
-        },
+            },
         "ingrown_nail" : {
             "persistent": False,
             "indefinite": False,
@@ -28,7 +36,7 @@ afflictions_dictionary = {
             "health": -1,
             "stress": -2,
             "description": "Your dog has an ingrown nail on its paw.",
-        },
+            },
         "bur_in_paw" : {
             "persistent": False,
             "indefinite": False,
@@ -36,7 +44,7 @@ afflictions_dictionary = {
             "health": -1,
             "stress": -2,
             "description": "Your dog has a burr in its paw.",
-        },
+            },
         },
     2:
         {
@@ -47,7 +55,7 @@ afflictions_dictionary = {
             "health": -1,
             "stress": -2,
             "description": "Allergies are a lifelong condition. Your dog will need to recieve treatment for it's whole life.",
-        },
+            },
         "obesity" : {
             "persistent": True,
             "indefinite": True,
@@ -55,7 +63,7 @@ afflictions_dictionary = {
             "health": -3,
             "stress": -2,
             "description": "Obesity is a lasting condition. You will need to walk you dog more frequenlty and feed better food.",
-        },
+            },
         },
     3:
         {    
@@ -66,7 +74,7 @@ afflictions_dictionary = {
             "health": -100,
             "stress": -8,
             "description": "Heartworms is a very serious parasitic disease affecting the lungs, heart, and other organs. Will result in death if left untreated.",
-        },
+            },
         },
 
 

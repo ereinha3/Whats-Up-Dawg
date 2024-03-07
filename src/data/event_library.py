@@ -114,8 +114,27 @@ event_lookup_table = {
             },
         },
     
+    # These are the general events, separate from the "afflictions"
+
+    "dog_ate_pizza": {
+        "name": "dog_ate_pizza",
+        "resist": {
+            "check": lambda dog: 0,  #add a clause for excersise when this is added to the dog object model
+            "message": "Your dog didn't eat your pizza",
+            },
+        "intro": "Your dog ate your pizza while you got up to go to the bathroom. Your dog will be fine... but now you need to find other dinner plans.",
+        "options": {},
+    },
     
-    
-    
+    "accident": {
+         "name": "accident",
+        "resist": {
+            "check": lambda dog: 0,  #add a clause for excersise when this is added to the dog object model
+            "message": "Your dog didn't have an accident",
+            },
+        "intro": "You left to go to dinner with friends and stayed out longer than usual. Your dog had an accident in the house while being left at home.",
+        "options": {},
     }
+
+}
 
