@@ -1091,7 +1091,7 @@ class MainWindow(customtkinter.CTk):
             self.dog = None
             self.human = None
 
-        self.dog = model.Dog(name=dog_name) #option: breed
+        self.dog = model.Dog(name=dog_name, breed = self.dog_type_combobox.get().lower()) #option: breed
         self.human = model.Human(income, self.dog)
 
         #TODO set Dog and Human attributes

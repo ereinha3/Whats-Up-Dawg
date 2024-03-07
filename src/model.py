@@ -1,3 +1,4 @@
+from data.breeds_dict import breeds
 class Dog:
     def __init__(self, 
                  name = "Stitch", 
@@ -5,13 +6,16 @@ class Dog:
                  health = 100, 
                  happiness = 100, 
                  max_age = 14 * 12, 
-                 weight = 50
+                 weight = 50,
+                 breed = "yorkshire terrier"
                  ):
+        self.breed = breed 
         # Max health attribute to set a cap on the amount of health a dog can have so it does not live forever
-        self.max_age = max_age #dog cannot live longer than max_age
+        # Setting max age * 6 to convert to months
+        self.max_age = breeds[breed]["max_expectancy"] * 6 #dog cannot live longer than max_age
         self.age = age #dog age in months
         self._health = health
-        self.weight = weight
+        self.weight = (breeds[breed]["min_weight"] + breeds[breed]["max_weight"]) // 2
         # self.happiness = happiness
         self.name = name
         self.walk_schedule = "short"
@@ -20,6 +24,7 @@ class Dog:
         self.medications = set()
         self.items = set()
         self.alive = True
+        
 
     @property
     def max_health(self):
