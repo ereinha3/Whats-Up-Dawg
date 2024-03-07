@@ -1,8 +1,8 @@
 event_lookup_table = {
     "fleas": {
-        "name": "fleas",
+        "name": "Flea and Tick Meds",
         "resist": {
-            "check": lambda dog: "flea_and_tick" in dog.medications, #().keys(),
+            "check": lambda dog: "Flea and Tick Meds" in dog.medications, #().keys(),
             "message": "Your dog was exposed to fleas, but fortunately they were on flea and tick meds and it didn't catch them.",
             },
         "intro": "Your dog is itchy and has little brown dots jumping from its skin. Do you... ?",
@@ -20,9 +20,9 @@ event_lookup_table = {
 
 
     "heartworm": {
-        "name": "heartworm",
+        "name": "Heartworm Meds",
         "resist": {
-            "check": lambda dog: "ProHeart" in dog.medications, #().keys(),
+            "check": lambda dog: "Heartworm Meds" in dog.medications, #().keys(),
             "message": "Your dog was exposed to Heartworm, but luckily has already taken medication for that!",
             },
         "intro": "Your dog is having trouble breathing and is very lethargic. Do you... ?",
@@ -98,7 +98,7 @@ event_lookup_table = {
     "obesity": {
         "name": "obesity",
         "resist": {
-            "check": lambda dog: (dog.walk_schedule is "medium" and dog.meal_plan in ["normal", "vet_recommended"]) or (dog.walk_schedule is "long") ,  #add a clause for excersise when this is added to the dog object model
+            "check": lambda dog: (dog.walk_schedule is "Medium" and dog.meal_plan in ["Normal", "Vet Recommended"]) or (dog.walk_schedule is "Long") ,  #add a clause for excersise when this is added to the dog object model
             "message": "Maybe your dog just had a big lunch? Well done for walking you dog consistently and feeding it properly. Your dog has avoided obesity.",
             },
         "intro": "Your dog appears to be gaining weight is having trouble goin to the bathroom. Do you... ?",

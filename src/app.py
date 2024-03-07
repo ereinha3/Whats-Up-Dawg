@@ -751,7 +751,7 @@ class MainWindow(customtkinter.CTk):
         
         self.food_seg_button = customtkinter.CTkSegmentedButton(
             self.options_frame,
-            values=["Cheap", "Medium", "Expensive"],
+            values=["Normal", "Vet Recommended"],
             command=self.change_food_option_event)
         self.food_seg_button.grid(
             row=3,
@@ -759,7 +759,7 @@ class MainWindow(customtkinter.CTk):
             padx=20,
             pady=(5, 20),
             sticky="ew")
-        self.food_seg_button.set("Medium")
+        self.food_seg_button.set("Normal")
 
     #--------------------------------------------------------------------------
         # TextBox and Decision
@@ -1110,7 +1110,6 @@ class MainWindow(customtkinter.CTk):
         
         self.dog_image_label.configure(image=self.dog_image)
     
-
         # Add resume button to main menu once a game is started
         self.resume_button = customtkinter.CTkButton(
             self.main_menu_frame,
@@ -1125,11 +1124,9 @@ class MainWindow(customtkinter.CTk):
         self.main_window_frame.tkraise()
         return
 
-    # Would like to combine the meds, items, and afflictions event funcntions
+    # TODO - could combine the meds, items, and afflictions event funcntions
     def meds_button_event(self):
         print("Meds Button Pressed")
-        #TODO open new window with list of current meds
-
         if self.meds_window is None or not self.meds_window.winfo_exists():
             print("Creating New Meds Window")
             self.meds_window = MedicationsWindow(self)  # create window if its None or destroyed
@@ -1141,7 +1138,6 @@ class MainWindow(customtkinter.CTk):
         for med in self.dog.medications:
             meds_str += med + "\n"
 
-
         self.meds_window.meds_textbox.configure(state="normal")
         self.meds_window.meds_textbox.delete("0.0", tkinter.END)
         self.meds_window.meds_textbox.insert("0.0", meds_str)
@@ -1149,10 +1145,9 @@ class MainWindow(customtkinter.CTk):
         self.meds_window.meds_textbox.insert("0.0", meds_str)
         return
     
+    # TODO - could combine the meds, items, and afflictions event funcntions
     def items_button_event(self):
         print("Items Button Pressed")
-        #TODO open new window with list of current items
-
         if self.items_window is None or not self.items_window.winfo_exists():
             print("Creating New Items Window")
             self.items_window = ItemsWindow(self)  # create window if its None or destroyed
@@ -1171,10 +1166,9 @@ class MainWindow(customtkinter.CTk):
         self.items_window.items_textbox.insert("0.0", items_str)
         return
     
+    # TODO - could combine the meds, items, and afflictions event funcntions
     def afflictions_button_event(self):
         print("Afflictions Button Pressed")
-        #TODO open new window with list of current afflictions
-
         if self.afflictions_window is None or not self.afflictions_window.winfo_exists():
             print("Creating New Afflictions Window")
             self.afflictions_window = AfflictionsWindow(self)  # create window if its None or destroyed
@@ -1224,6 +1218,7 @@ class MainWindow(customtkinter.CTk):
             customtkinter.set_appearance_mode("dark")
     
     #--------------------------------------------------------------------------
+
     def continue_button_event(self):
         print("Continue Button Pressed")
         self.event = controller.load_event()
@@ -1235,8 +1230,9 @@ class MainWindow(customtkinter.CTk):
             self.textbox.delete("0.0", tkinter.END)
             self.textbox.insert("0.0", self.event["resist"]["message"])
             self.textbox.configure(state="disabled")
-
-            self.dog.medications.remove(self.event["name"]) # <-------
+            
+            if self.event["name"] in self.dog.medications:
+                self.dog.medications.remove(self.event["name"])
             return
         
         elif len(self.event["options"])==0:
