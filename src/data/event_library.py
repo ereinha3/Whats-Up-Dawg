@@ -123,7 +123,16 @@ event_lookup_table = {
             "message": "Your dog didn't eat your pizza",
             },
         "intro": "Your dog ate your pizza while you got up to go to the bathroom. Your dog will be fine... but now you need to find other dinner plans.",
-        "options": {},
+        "options": {
+            "1": {
+                "intro": "Take your dog to the vet.", 
+                "outro": "Your vet says your dog is fine. Try to avoid letting it eat your pizza.",
+                },
+            "2": { 
+                "intro": "Do nothing, your dog seems to have liked it.",
+                "outro": "Your dog appears to be fine. Make sure you consult a prohibited foods list whenever your dog eats something.",  
+                },
+            },
     },
     
     "accident": {
@@ -133,7 +142,16 @@ event_lookup_table = {
             "message": "Your dog didn't have an accident",
             },
         "intro": "You left to go to dinner with friends and stayed out longer than usual. Your dog had an accident in the house while being left at home.",
-        "options": {},
+        "options": {
+            "1": {
+                "intro": "Take your dog to a trainer", 
+                "outro": "Your dog is much more obedient and less likely to have an accident.",
+                },
+            "2": { 
+                "intro": "Do nothing, your dog probably won't do it again.",
+                "outro": "You clean up your dog's accident and stay more responsible about returning on time.",  
+                },
+            },
     }
 
 }

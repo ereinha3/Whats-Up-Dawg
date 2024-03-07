@@ -19,12 +19,6 @@ def load_event():
     return event_lookup_table[choice(list(afflictions_dictionary[selection].keys()))]
     #return event_lookup_table[list(event_lookup_table)[randint(0, len(event_lookup_table) - 1)]]
 
-def test():
-    for i in range(5):
-        print(load_event()['name'])
-
-test()
-
 def determine_event_outcome(options: dict, human: Human):
     # for key, value in options.items():
         # print(key + ".", value["intro"])
