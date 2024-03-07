@@ -19,8 +19,8 @@ class Dog:
         self.weight = (breeds[breed]["min_weight"] + breeds[breed]["max_weight"]) // 2
         # self.happiness = happiness
         self.name = name
-        self.walk_schedule = "short"
-        self.meal_plan = "cheap"
+        self.walk_schedule = "Short"
+        self.meal_plan = "Normal"
         self.afflictions = set()
         self.medications = set()
         self.items = set()
