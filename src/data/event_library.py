@@ -2,7 +2,7 @@ event_lookup_table = {
     "fleas": {
         "name": "fleas",
         "resist": {
-            "check": lambda dog: "fleas" in dog.medications, #().keys(),
+            "check": lambda dog: "flea_and_tick" in dog.medications, #().keys(),
             "message": "Your dog was exposed to fleas, but fortunately they were on flea and tick meds and it didn't catch them.",
             },
         "intro": "Your dog has fleas. Do you... ?",
@@ -19,7 +19,7 @@ event_lookup_table = {
         },
 
 
-    "heartworms": {
+    "heartworm": {
         "name": "heartworm",
         "resist": {
             "check": lambda dog: "ProHeart" in dog.medications, #().keys(),

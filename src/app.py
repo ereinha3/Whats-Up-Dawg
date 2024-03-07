@@ -6,6 +6,7 @@ import controller
 import os
 from PIL import Image
 from data.breeds_dict import breeds
+from data.shop import care_items, medications
 from string import capwords
 
 
@@ -342,10 +343,10 @@ class ShopWindow(customtkinter.CTkToplevel):
         print("Pay Button Pressed")
 
         if self.fleas_checkbox.get():
-            self.master.dog.medications.add("fleas")
+            self.master.dog.medications.add(medications["flea_and_tick"]["display"])
 
         if self.heartworm_checkbox.get():
-            self.master.dog.medications.add("heartworm")
+            self.master.dog.medications.add(medications["heartworm"]["display"])
     
         self.destroy()
         return
