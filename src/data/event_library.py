@@ -1,3 +1,4 @@
+import random
 event_lookup_table = {
     "fleas": {
         "name": "fleas",
@@ -114,6 +115,26 @@ event_lookup_table = {
             },
         },
     
+    "cancer": {
+        "name": "cancer",
+        "resist": {
+            # This is essentially making it happen if they've made poor lifestyle decisions or giving them 33% chance of resisting in healthy
+            "check": lambda dog: random.choice([0, 0, (dog.walk_schedule in ["medium", "long"] and dog.meal_plan in ["normal", "vet_recommended"])]),  #add a clause for excersise when this is added to the dog object model
+            "message": "While resisting cancer is difficult, frequent excercise and proper diet are the best mechanisms for prevention.",
+            },
+        "intro": "Your dog is lethargic and seems to have no motivation to do anything. Do you... ?",
+        "options": {
+            "1": {
+                "intro": "Take your dog to the vet.", 
+                "outro": "Your vet informs you your dog has cancer. Treatment involves surgery and encouraging healthy behaviour following recovery.",
+                },
+            "2": { 
+                "intro": "Do nothing, maybe it's a case of seasonal depression?",
+                "outro": "Your dog continues to lose energy and is no longer playful.",  
+                },
+            },
+        },
+    
     # These are the general events, separate from the "afflictions"
 
     "dog_ate_pizza": {
@@ -136,7 +157,7 @@ event_lookup_table = {
     },
     
     "accident": {
-         "name": "accident",
+        "name": "accident",
         "resist": {
             "check": lambda dog: 0,  #add a clause for excersise when this is added to the dog object model
             "message": "Your dog didn't have an accident",

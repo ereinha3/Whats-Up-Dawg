@@ -70,10 +70,22 @@ afflictions_dictionary = {
         "heartworm" : {
             "persistent": True,
             "indefinite": False,
-            "cure": { "cost": lambda dog : 500 + 600*random.random(),  "work": 2, }, #WHEN SIZE is implemented, change cost to lambda dog : dog.get_size() to output between $500-1100
+            "cure": { "cost": lambda dog : 500 + (200*dog.weight)//50,  "work": 2, }, #WHEN SIZE is implemented, change cost to lambda dog : dog.get_size() to output between $500-1100
             "health": -100,
             "stress": -8,
             "description": "Heartworms is a very serious parasitic disease affecting the lungs, heart, and other organs. Will result in death if left untreated.",
+            },
+        },
+        
+    4: 
+        {    
+        "cancer" : {
+            "persistent": True,
+            "indefinite": False,
+            "cure": { "cost": lambda dog : 4100,  "work": 2, }, #WHEN SIZE is implemented, change cost to lambda dog : dog.get_size() to output between $500-1100
+            "health": -100,
+            "stress": -8,
+            "description": "Dogs are prone to developing an array of different types of cancer. Different breeds are more prone to certain affected areas than other. Consult a guide for your breed to prevent.",
             },
         },
 

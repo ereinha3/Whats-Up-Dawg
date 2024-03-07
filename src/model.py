@@ -10,6 +10,7 @@ class Dog:
                  breed = "yorkshire terrier"
                  ):
         self.breed = breed 
+        self.happiness = happiness
         # Max health attribute to set a cap on the amount of health a dog can have so it does not live forever
         # Setting max age * 6 to convert to months
         self.max_age = breeds[breed]["max_expectancy"] * 6 #dog cannot live longer than max_age
