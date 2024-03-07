@@ -1244,8 +1244,8 @@ class MainWindow(customtkinter.CTk):
             self.textbox.configure(state="normal")
             self.textbox.delete("0.0", tkinter.END)
             self.textbox.insert("0.0", self.event["intro"] + "\n" 
-                                + f'[Option 1]: {self.event["options"]["1"]["intro"]}' 
-                                + "\n" + f'[Option 2]: {self.event["options"]["2"]["intro"]}')
+                                + f'[Option 1]: {self.event["options"]["1"]["intro"]}' + "\n" 
+                                + f'[Option 2]: {self.event["options"]["2"]["intro"]}')
             self.textbox.configure(state="disabled")
 
 
