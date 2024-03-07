@@ -464,7 +464,7 @@ class MainWindow(customtkinter.CTk):
             column=2,
             rowspan=2,
             sticky="news")
-        self.dog_side_bar.grid_rowconfigure(0, weight=1)
+        self.dog_side_bar.grid_rowconfigure((3, 4, 5), weight=1)
 
         self.dog_name_label = customtkinter.CTkLabel(
             self.dog_side_bar,
@@ -474,14 +474,14 @@ class MainWindow(customtkinter.CTk):
             row=0,
             column=0,
             padx=20,
-            pady=(20, 10))
+            pady=(20, 5))
         
         #------------------------------
         # Dog Age Frame (Inside Dog Side Bar)
         self.age_frame = customtkinter.CTkFrame(
             self.dog_side_bar)
         self.age_frame.grid(
-            row=2,
+            row=1,
             column=0,
             padx=10,
             pady=5)
@@ -491,19 +491,38 @@ class MainWindow(customtkinter.CTk):
             text=f"Age:",
             font=customtkinter.CTkFont(size=18, weight="normal"))
         self.age_label.grid(
-            row=2,
+            row=0,
             column=0,
             padx=10,
-            pady=5)
+            pady=(5, 10))
         
         self.age_value_label = customtkinter.CTkLabel(
             self.age_frame,
             text=f"0",
             font=customtkinter.CTkFont(size=18, weight="normal"))
         self.age_value_label.grid(
-            row=2,
+            row=0,
             column=1,
             padx=10,
+            pady=5)
+        
+        #------------------------------
+        # Dog Image Frame (Inside Dog Side Bar)
+        self.dog_image_frame = customtkinter.CTkFrame(self.dog_side_bar)
+        self.dog_image_frame.grid(
+            row=2,
+            column=0,
+            padx=5,
+            pady=5)
+        
+        # Initialize empty Dog Image
+        self.dog_image_label = customtkinter.CTkLabel(
+            self.dog_image_frame,
+            text="")
+        self.dog_image_label.grid(
+            row=0,
+            column=0,
+            padx=5,
             pady=5)
         
         #------------------------------
@@ -537,25 +556,6 @@ class MainWindow(customtkinter.CTk):
             column=0,
             padx=20,
             pady=(5, 20))
-        
-        #------------------------------
-        # Dog Image Frame (Inside Dog Side Bar)
-        self.dog_image_frame = customtkinter.CTkFrame(self.dog_side_bar)
-        self.dog_image_frame.grid(
-            row=1,
-            column=0,
-            padx=5,
-            pady=5)
-        
-        # Initialize empty Dog Image
-        self.dog_image_label = customtkinter.CTkLabel(
-            self.dog_image_frame,
-            text="")
-        self.dog_image_label.grid(
-            row=0,
-            column=0,
-            padx=5,
-            pady=5)
         
     #--------------------------------------------------------------------------
         # Bottom Bar
@@ -621,7 +621,7 @@ class MainWindow(customtkinter.CTk):
             row=0,
             column=0,
             padx=20,
-            pady=(20, 10))
+            pady=(20, 5))
         
         #------------------------------
         # Human Stats Frames (Inside Human Side Bar)
@@ -1106,7 +1106,7 @@ class MainWindow(customtkinter.CTk):
         
         self.dog_image = customtkinter.CTkImage(
             Image.open(os.path.join(self.dog_image_path, dog_string)),
-            size=(200, 200))
+            size=(225, 225))
         
         self.dog_image_label.configure(image=self.dog_image)
     
