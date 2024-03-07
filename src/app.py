@@ -338,6 +338,7 @@ class MainWindow(customtkinter.CTk):
         self.human = None
         self.dog = None
         self.dog_image = None
+        self.event = None
 
         # Images
         self.dog_image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../docs/Images")
@@ -743,7 +744,7 @@ class MainWindow(customtkinter.CTk):
         self.vet_button = customtkinter.CTkButton(
             self.decision_options_frame,
             text="Option 1",
-            command=self.option_button_event)
+            command=lambda: self.option_button_event("1"))
         self.vet_button.grid(
             row=0,
             column=0,
@@ -753,7 +754,7 @@ class MainWindow(customtkinter.CTk):
         self.nothing_button = customtkinter.CTkButton(
             self.decision_options_frame,
             text="Option 2",
-            command=self.option_button_event)
+            command=lambda: self.option_button_event("2"))
         self.nothing_button.grid(
             row=0,
             column=1,
@@ -1138,14 +1139,21 @@ class MainWindow(customtkinter.CTk):
     #--------------------------------------------------------------------------
     def continue_button_event(self):
         print("Continue Button Pressed")
-        event = controller.load_event()
+        self.event = controller.load_event()
 
-        resistance = controller.check_resistance(self.dog, self.human, event) #TODO - This is not working properly
+        resistance = controller.check_resistance(self.dog, self.human, self.event) #TODO - This is not working properly
 
-        if resistance:
-            print(f"{event} Resisted")
-        else:
-            print(f"{event} Not Resisted")
+        # if resistance:
+        #     print(f"{event} Resisted")
+        # else:
+        #     print(f"{event} Not Resisted")
+
+        self.textbox.configure(state="normal")
+        self.textbox.delete("0.0", tkinter.END)
+        self.textbox.insert("0.0", self.event["intro"] + "\n"
+                            + f"[Option 1]: {self.event["options"]["1"]["intro"]}" + "\n"
+                            + f"[Option 2]: {self.event["options"]["2"]["intro"]}")
+        self.textbox.configure(state="disabled")
 
 
         self.decision_options_frame.tkraise()
@@ -1156,8 +1164,13 @@ class MainWindow(customtkinter.CTk):
 
         return
     
-    def option_button_event(self):
+    def option_button_event(self, button_number):
         print("Option Button Pressed")
+
+        self.textbox.configure(state="normal")
+        self.textbox.delete("0.0", tkinter.END)
+        self.textbox.insert("0.0", self.event["options"][button_number]["outro"])
+        self.textbox.configure(state="disabled")
 
         self.continue_button_frame.tkraise()
 
