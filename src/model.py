@@ -15,26 +15,29 @@ class Dog:
         self.trained = trained
         self.trainability = breeds[breed]["trainability_value"] * 10
         # Max health attribute to set a cap on the amount of health a dog can have so it does not live forever
-        # Setting max age * 6 to convert to months
-        self.max_age = breeds[breed]["max_expectancy"] * 6 #dog cannot live longer than max_age
+        self.max_age = breeds[breed]["max_expectancy"] #dog cannot live longer than max_age
         self.age = age #dog age in months
+        self.max_health = health
         self._health = health
         self.weight = (breeds[breed]["min_weight"] + breeds[breed]["max_weight"]) // 2
         # self.happiness = happiness
         self.name = name
-        self.walk_schedule = "Short"
-        self.meal_plan = "Normal"
+        self.walk_schedule = "short"
+        self.meal_plan = "normal"
         self.afflictions = set()
         self.medications = set()
         self.items = set()
         self.alive = True
         self.surrendered = False
+        self.calculate_food_per_day = lambda w=self.weight: 0.045*w + 0.81
         
+    def __str__(self):
+        return f"{self.name} is a {self.breed} with {self._health} health and is {self.age} years old.\nMedication are {[item for item in self.medications]}.\nItems are {[item for item in self.items]}"
 
-    @property
+    """@property
     def max_health(self):
         middle_age = self.max_age / 2
-        return 100 if self.age < middle_age else middle_age / self.age * 100
+        return 100 if self.age < middle_age else middle_age / self.age * 100"""
 
     @property
     def health(self):
@@ -45,18 +48,23 @@ class Dog:
         self._health = min(value, self.max_health)
 
 class Human:
-    def __init__(self, income, dog:Dog):
+    def __init__(self, income, dog:Dog, name="John"):
         # This explicitly needs to be declared as disposable income to the user as they need income for a variety of essentials
-        self.income = income
-        self._balance = income
-        self.time_spent = 0.
+        self.income = int(income)
+        self._balance = int(income)
+        self.time_spent = 0
+        self.name = name
         self.dog = dog
+        
+    def __str__(self):
+        return f"{self.name} currently has a balance of ${self._balance} and has spent {self.time_spent} hours on {self.dog.name}"
 
     @property
     def upkeep(self):
         meal_cost = 65 #not yet implemented, something like: data.meals[self.dog.meal_plan]["cost"]
         affliction_cost = 0. #not yet implemented
         return meal_cost + affliction_cost
+
 
     @property
     def revenue(self):
