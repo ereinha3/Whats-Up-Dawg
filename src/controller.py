@@ -3,6 +3,7 @@ from data.event_library import event_lookup_table
 from data.afflictions import afflictions_dictionary
 from model import Dog, Human
 import sys
+from data.shop import meal_options, default_walk_options, medications, care_items
 
 def percentCheck(value):
     return randint(1, 100) < value
@@ -15,7 +16,8 @@ def load_event():
     for i in range(len(affliction_probabilities)):
         new_probabilities += [affliction_probabilities[i] for i in range(end)]
         end -= 1
-    selection = choice([0, choice(new_probabilities)])
+    # 25% chance that the selected affliction occurs, 75% chance a random non-affliction event occurs
+    selection = choice([0, 0, 0, choice(new_probabilities)])
     return event_lookup_table[choice(list(afflictions_dictionary[selection].keys()))]
     #return event_lookup_table[list(event_lookup_table)[randint(0, len(event_lookup_table) - 1)]]
 
@@ -38,6 +40,53 @@ def determine_event_outcome(options: dict, human: Human):
         return determine_event_outcome({key: value for key, value in options.items() if key != selection}, human)
 
     return selection
+
+def next_round(dog:Dog, human:Human):
+    # take 5% of income for now
+    human._balance += human.income * 0.05
+    
+    # Multiply by 180 here to accurately calculate the time over 6 month 
+    human.time_spent += default_walk_options[dog.walk_schedule]["time"] * 180
+    
+    # Dividing by 4 to get price per 4oz, then multiply by cups eaten per day, then by 180 to find total cost
+    human._balance -= meal_options[dog.meal_plan]["cost"]/4 * dog.calculate_food_per_day() * 180
+    
+    # Half a year
+    dog.age += 0.5
+    old_max = dog.max_health
+    
+    # Dog max age has to be multiplied by two to account for the fact that this is a 6 month, not a year-long, round
+    dog.max_health -= 100/(dog.max_age*2)
+    if dog.max_health <= 0:
+        dog.alive = False
+    dog._health = dog._health/old_max * dog.max_health
+    if dog._health <= 0:
+        dog.alive = False
+    
+    # TODO: Apply medications to afflictions and get rid of them if applicable
+    
+    # Apply afflictions
+    for illness in dog.afflictions:
+        dog._health += afflictions_dictionary[illness]["health"]
+        dog.happiness += afflictions_dictionary[illness]["stress"]
+        
+    # Remove timed our durations on items
+    for item in dog.items:
+        item = care_items[item]
+        dog.happiness += item["happiness"]
+        dog._health += item["health"]
+        item["duration"] -= 1
+        if item["duration"] == 0:
+            dog.items.remove(item)
+    for medication in dog.medications:
+        medication = medications[medication]
+        human._balance -= medication["cost"]
+        medication["duration"] -= 1
+        if medication["duration"] == 0:
+            dog.medications.remove(medication)
+    
+    human._balance = round(human._balance, 2)
+    return dog, human
 
 def check_resistance(dog: Dog, human: Human, event: dict) -> None:
     print(event["intro"] + "\n")
