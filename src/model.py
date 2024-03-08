@@ -62,12 +62,10 @@ class Human:
 
     @property
     def balance(self):
-        print("calling balance getter")
         return self._balance
 
     @balance.setter
     def balance(self, value):
-        print("calling balance setter")
         self._balance = value
         if (self._balance < -(self.revenue * 4)):
             self.dog.surrender = True
