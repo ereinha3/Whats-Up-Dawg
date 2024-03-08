@@ -60,19 +60,19 @@ def next_round(dog:Dog, human:Human):
     if dog.max_health <= 0:
         dog.alive = False
     dog.health = dog.health/old_max * dog.max_health
-    if dog.health <= 0:
-        dog.alive = False
     
     # TODO: Apply medications to afflictions and get rid of them if applicable
-    for illness in dog.afflictions:
-        pass
     
     # Apply afflictions
     for illness in dog.afflictions:
+        if event_lookup_table[illness]["resist"]["check"](dog):
+            continue
         dog.health += afflictions_dictionary[illness]["health"]
         dog.happiness += afflictions_dictionary[illness]["stress"]
-        if (dog.medications):
-            pass
+        dog.afflictions[illness] -= 1
+        if dog.afflictions[illness] == 0:
+            dog.afflictions.pop(illness)
+        
         
     # Remove timed our durations on items
     for item in dog.items:
