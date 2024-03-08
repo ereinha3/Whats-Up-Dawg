@@ -6,7 +6,7 @@ import controller
 import os
 from PIL import Image
 from data.matches import matches
-from data.shop import care_items, medications
+from data.shop import care_items, medications, walk_options, meal_options
 from string import capwords
 
 
@@ -19,7 +19,7 @@ class MedicationsWindow(customtkinter.CTkToplevel):
         super().__init__(*args, **kwargs)
 
         self.title("Medications")
-        self.geometry(f"{380}x{550}")
+        self.geometry(f"{380}x{600}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -67,7 +67,7 @@ class ItemsWindow(customtkinter.CTkToplevel):
         super().__init__(*args, **kwargs)
 
         self.title("Items")
-        self.geometry(f"{380}x{550}")
+        self.geometry(f"{380}x{600}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -115,7 +115,7 @@ class AfflictionsWindow(customtkinter.CTkToplevel):
         super().__init__(*args, **kwargs)
 
         self.title("Afflictions")
-        self.geometry(f"{380}x{550}")
+        self.geometry(f"{380}x{600}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -163,7 +163,7 @@ class InstructionsWindow(customtkinter.CTkToplevel):
         super().__init__(*args, **kwargs)
 
         self.title("Game Instructions")
-        self.geometry(f"{380}x{550}")
+        self.geometry(f"{380}x{600}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -196,7 +196,7 @@ class ShopWindow(customtkinter.CTkToplevel):
         super().__init__(*args, **kwargs)
 
         self.title("Ye Olde Shoppe")
-        self.geometry(f"{380}x{550}")
+        self.geometry(f"{380}x{600}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
@@ -242,7 +242,7 @@ class ShopWindow(customtkinter.CTkToplevel):
                 pady=(20, 0),
                 padx=20)
             self.meds_checkboxes.append(self.med_checkbox)
-        
+
         #------------------------------
         # Treats and Toys Selection
         self.shop_tabs.add("Treats/Toys")
@@ -375,7 +375,7 @@ class MainWindow(customtkinter.CTk):
 
         # Configure window
         self.title("What's Up Dawg?")
-        self.geometry(f"{900}x{550}")
+        self.geometry(f"{1000}x{600}")
 
         # Give weight to window container - allows for better window size adjustment
         self.grid_columnconfigure(0, weight=1)
@@ -394,7 +394,7 @@ class MainWindow(customtkinter.CTk):
         self.dog_image = None
         self.event = None
         
-        self.current_balance = 0
+        self.current_balance = 0 # TODO <- Get rid of this somehow
 
         # Images
         self.dog_image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../docs/Images")
@@ -558,49 +558,6 @@ class MainWindow(customtkinter.CTk):
             pady=(5, 20))
         
     #--------------------------------------------------------------------------
-        # Bottom Bar
-        self.bottom_bar_frame = customtkinter.CTkFrame(
-            self.main_window_frame,
-            height=140,
-            corner_radius=0)
-        self.bottom_bar_frame.grid(
-            row=2,
-            column=1,
-            columnspan=1,
-            sticky="nsew")
-        self.bottom_bar_frame.grid_columnconfigure((0, 1, 2), weight=1)
-        
-        self.shop_button = customtkinter.CTkButton(
-            self.bottom_bar_frame,
-            text="Shop",
-            command=self.shop_button_event)
-        self.shop_button.grid(
-            row=0,
-            column=0,
-            padx=(20, 5),
-            pady=20)
-        
-        self.back_button = customtkinter.CTkButton(
-            self.bottom_bar_frame,
-            text="Main Menu",
-            width=30,
-            command=self.main_menu_button_event)
-        self.back_button.grid(
-            row=0,
-            column=1,
-            padx=5)
-        
-        self.light_mode_switch = customtkinter.CTkSwitch(
-            master=self.bottom_bar_frame,
-            text=f"Light/Dark Mode",
-            command=self.change_appearance_mode_event)
-        self.light_mode_switch.grid(
-            row=0,
-            column=2,
-            padx=(5, 20),
-            pady=20)
-        
-    #--------------------------------------------------------------------------
         # Human Side Bar (Left)
         self.human_side_bar = customtkinter.CTkFrame( 
             self.main_window_frame,
@@ -621,7 +578,7 @@ class MainWindow(customtkinter.CTk):
             row=0,
             column=0,
             padx=20,
-            pady=(20, 5))
+            pady=20)
         
         #------------------------------
         # Human Stats Frames (Inside Human Side Bar)
@@ -631,6 +588,7 @@ class MainWindow(customtkinter.CTk):
             column=0,
             padx=20,
             pady=5)
+        # self.balance_frame.grid_rowconfigure(5, weight=1)
 
         self.balance_label = customtkinter.CTkLabel(
             self.balance_frame,
@@ -705,16 +663,16 @@ class MainWindow(customtkinter.CTk):
         self.time_invested_value_label.grid(
             row=0,
             column=1,
-            padx=(5, 10),
+            padx=(0, 10),
             pady=5)
-        
+
         #------------------------------
         # Options Frame (Inside Human Side Bar)
         self.options_frame = customtkinter.CTkFrame(
             self.human_side_bar,
             fg_color="transparent")
         self.options_frame.grid(
-            row=5,
+            row=4,
             column=0,
             sticky="news")
 
@@ -724,18 +682,18 @@ class MainWindow(customtkinter.CTk):
         self.walks_option_label.grid(
             row=0,
             column=0,
-            padx=20,
+            padx=10,
             pady=5)
         
         self.walk_seg_button = customtkinter.CTkSegmentedButton(
             self.options_frame,
-            values=["Short", "Medium", "Long"],
+            values=list(walk_options[option]["display"] for option in walk_options.keys()),
             command=self.change_walk_option_event)
         self.walk_seg_button.grid(
             row=1,
             column=0,
-            padx=20,
-            pady=10,
+            padx=10,
+            pady=5,
             sticky="ew")
         self.walk_seg_button.set("Medium")
 
@@ -746,20 +704,64 @@ class MainWindow(customtkinter.CTk):
         self.food_option_label.grid(
             row=2,
             column=0,
-            padx=20,
+            padx=10,
             pady=5)
         
         self.food_seg_button = customtkinter.CTkSegmentedButton(
             self.options_frame,
-            values=["Cheap", "Normal", "Vet Recommended"],
+            values=list(meal_options[option]["display"] for option in meal_options.keys()),#["Cheap", "Normal", "Vet Recommended"],
             command=self.change_food_option_event)
         self.food_seg_button.grid(
             row=3,
             column=0,
-            padx=20,
-            pady=(5, 20),
+            padx=10,
+            pady=5,
             sticky="ew")
-        self.food_seg_button.set("Purina One")
+        self.food_seg_button.set(meal_options["normal"]["display"])
+
+    #--------------------------------------------------------------------------
+        # Bottom Bar
+        self.bottom_bar_frame = customtkinter.CTkFrame(
+            self.human_side_bar,
+            height=140,
+            corner_radius=0,
+            fg_color="transparent")
+        self.bottom_bar_frame.grid(
+            row=5,
+            column=0,
+            columnspan=1,
+            sticky="nsew")
+        self.bottom_bar_frame.grid_columnconfigure(0, weight=1)
+        self.bottom_bar_frame.grid_rowconfigure((0, 1, 2), weight=1)
+        
+        self.shop_button = customtkinter.CTkButton(
+            self.bottom_bar_frame,
+            text="Shop",
+            command=self.shop_button_event)
+        self.shop_button.grid(
+            row=0,
+            column=0,
+            padx=10,
+            pady=10)
+        
+        self.back_button = customtkinter.CTkButton(
+            self.bottom_bar_frame,
+            text="Main Menu",
+            command=self.main_menu_button_event)
+        self.back_button.grid(
+            row=1,
+            column=0,
+            padx=10)
+        
+        self.light_mode_switch = customtkinter.CTkSwitch(
+            master=self.bottom_bar_frame,
+            text=f"Light/Dark Mode",
+            command=self.change_appearance_mode_event)
+        self.light_mode_switch.grid(
+            row=2,
+            column=0,
+            padx=10,
+            pady=(10, 20))
 
     #--------------------------------------------------------------------------
         # TextBox and Decision
@@ -767,6 +769,7 @@ class MainWindow(customtkinter.CTk):
         self.text_and_decision_frame.grid(
             row=1,
             column=1,
+            rowspan=2,
             padx=20,
             pady=20,
             sticky="news")
@@ -894,7 +897,7 @@ class MainWindow(customtkinter.CTk):
 
         self.income_label = customtkinter.CTkLabel(
             self.human_info_frame,
-            text="Monthly Disposable Income ($)")
+            text="Monthly Income ($)")
         self.income_label.grid(
             row=2,
             column=0,
@@ -1233,13 +1236,14 @@ class MainWindow(customtkinter.CTk):
             if self.event["name"] in self.dog.medications:
                 self.dog.medications.remove(self.event["name"])
             return
-        
+
         elif len(self.event["options"])==0:
             self.textbox.configure(state="normal")
             self.textbox.delete("0.0", tkinter.END)
             self.textbox.insert("0.0", self.event["intro"])
             self.textbox.configure(state="disabled")
-            
+            return
+        
         else:
             self.textbox.configure(state="normal")
             self.textbox.delete("0.0", tkinter.END)
