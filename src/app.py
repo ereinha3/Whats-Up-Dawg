@@ -8,10 +8,66 @@ from PIL import Image
 from data.matches import matches
 from data.shop import care_items, medications, walk_options, meal_options
 from string import capwords
+from tktooltip import ToolTip
+
 
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
+
+
+class CreateToolTip(object):
+    """
+    create a tooltip for a given widget
+    """
+    def __init__(self, widget, text='widget info'):
+        self.waittime = 500     #miliseconds
+        self.wraplength = 180   #pixels
+        self.widget = widget
+        self.text = text
+        self.widget.bind("<Enter>", self.enter)
+        self.widget.bind("<Leave>", self.leave)
+        self.widget.bind("<ButtonPress>", self.leave)
+        self.id = None
+        self.tw = None
+
+    def enter(self, event=None):
+        self.schedule()
+
+    def leave(self, event=None):
+        self.unschedule()
+        self.hidetip()
+
+    def schedule(self):
+        self.unschedule()
+        self.id = self.widget.after(self.waittime, self.showtip)
+
+    def unschedule(self):
+        id = self.id
+        self.id = None
+        if id:
+            self.widget.after_cancel(id)
+
+    def showtip(self, event=None):
+        x = y = 0
+        x, y, cx, cy = self.widget.bbox("insert")
+        x += self.widget.winfo_rootx() + 25
+        y += self.widget.winfo_rooty() + 20
+        # creates a toplevel window
+        self.tw = tkinter.Toplevel(self.widget)
+        # Leaves only the label and removes the app window
+        self.tw.wm_overrideredirect(True)
+        self.tw.wm_geometry("+%d+%d" % (x, y))
+        label = tkinter.Label(self.tw, text=self.text, justify='left',
+                       background="#ffffff", relief='solid', borderwidth=1,
+                       wraplength = self.wraplength)
+        label.pack(ipadx=1)
+
+    def hidetip(self):
+        tw = self.tw
+        self.tw= None
+        if tw:
+            tw.destroy()
 
 
 class MedicationsWindow(customtkinter.CTkToplevel):
@@ -697,6 +753,16 @@ class MainWindow(customtkinter.CTk):
             sticky="ew")
         self.walk_seg_button.set("Medium")
 
+        ToolTip(
+            self.walks_option_label, 
+            msg=f"~~~Time Investment~~~\n"
+              + f"{walk_options["short"]["display"]}: {walk_options["short"]["time"]} hrs\n"
+              + f"{walk_options["medium"]["display"]}: {walk_options["medium"]["time"]} hrs\n"
+              + f"{walk_options["long"]["display"]}: {walk_options["long"]["time"]} hrs",
+            delay=0.01, follow=True,
+            parent_kwargs={"bg": "black", "padx": 3, "pady": 3},
+            fg="black", bg="white", padx=7, pady=7)
+
         self.food_option_label = customtkinter.CTkLabel(
             self.options_frame,
             text="Food Quality",
@@ -718,6 +784,16 @@ class MainWindow(customtkinter.CTk):
             pady=5,
             sticky="ew")
         self.food_seg_button.set(meal_options["normal"]["display"])
+
+        ToolTip(
+            self.food_option_label,
+            msg=f"~~~Cost~~~\n"
+              + f"{meal_options["cheap"]["display"].replace('\n', " ")}: {meal_options["cheap"]["cost"]}\n"
+              + f"{meal_options["normal"]["display"].replace('\n', " ")}: {meal_options["normal"]["cost"]}\n"
+              + f"{meal_options["vet_recommended"]["display"].replace('\n', " ")}: {meal_options["vet_recommended"]["cost"]}",
+            delay=0.01, follow=True,
+            parent_kwargs={"bg": "black", "padx": 3, "pady": 3},
+            fg="black", bg="white", padx=7, pady=7)
 
     #--------------------------------------------------------------------------
         # Bottom Bar
@@ -1258,7 +1334,7 @@ class MainWindow(customtkinter.CTk):
         # 2. index into events and display information and options
         # 3a. On option1 Do option1 one stuff (Controlller.Event_resolve("option1"))
         # 3b. On option 2 do option 2 stuff 
-
+        self.refresh_screen()
         return
     
     def option_button_event(self, button_number):
@@ -1270,6 +1346,7 @@ class MainWindow(customtkinter.CTk):
         self.textbox.configure(state="disabled")
 
         self.continue_button_frame.tkraise()
+        self.refresh_screen()
         return
 
     def change_walk_option_event(self, choice: str):
@@ -1303,8 +1380,15 @@ class MainWindow(customtkinter.CTk):
 
         return
     
-    def refresh_stats(self):
+    def refresh_screen(self):
+        print("Refreshing")
         # TODO
+        # update balances
+            # time spent
+            # age
+            # happiness
+            # is alive
+            # 
         return
 
 

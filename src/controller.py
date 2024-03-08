@@ -64,13 +64,15 @@ def next_round(dog:Dog, human:Human):
         dog.alive = False
     
     # TODO: Apply medications to afflictions and get rid of them if applicable
-    for illness in dog.afflictions
+    for illness in dog.afflictions:
+        pass
     
     # Apply afflictions
     for illness in dog.afflictions:
         dog.health += afflictions_dictionary[illness]["health"]
         dog.happiness += afflictions_dictionary[illness]["stress"]
-        if (dog.medications
+        if (dog.medications):
+            pass
         
     # Remove timed our durations on items
     for item in dog.items:
