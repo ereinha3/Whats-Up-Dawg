@@ -75,19 +75,28 @@ def next_round(dog:Dog, human:Human):
         
         
     # Remove timed our durations on items
+    items_to_remove = []
     for item in dog.items:
         item = care_items[item]
         dog.happiness += item["happiness"]
         dog.health += item["health"]
         item["duration"] -= 1
-        if item["duration"] == 0:
-            dog.items.remove(item)
+        if item["duration"] == 0:  
+            items_to_remove.append(dog.items[item["display"]])
+            # del dog.items[item["display"]]
+    for item in items_to_remove:
+        del item
+
+    meds_to_remove = []
     for medication in dog.medications:
         medication = medications[medication]
         human.balance -= medication["cost"]
         medication["duration"] -= 1
         if medication["duration"] == 0:
-            dog.medications.remove(medication)
+            meds_to_remove.append(dog.medications[medication["display"]])
+            # del dog.medications[medication]
+    for medication in meds_to_remove:
+        del medication
     
     human.balance = round(human.balance, 2)
     return dog, human

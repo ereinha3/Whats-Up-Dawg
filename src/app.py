@@ -394,11 +394,13 @@ class ShopWindow(customtkinter.CTkToplevel):
         print("Pay Button Pressed")
         for med_checkbox in self.meds_checkboxes:
             if med_checkbox.get():
-                self.master.dog.medications[med_checkbox.cget("text")] = []# .add(med_checkbox.cget("text"))
+                med_key = med_checkbox.cget("text")
+                self.master.dog.medications[med_key] = medications[med_key]# .add(med_checkbox.cget("text"))
 
         for item_checkbox in self.items_checkboxes:
             if item_checkbox.get():
-                self.master.dog.items[item_checkbox.cget("text")] = []
+                item_key = item_checkbox.cget("text")
+                self.master.dog.items[item_key] = care_items[item_key]
 
         
         self.master.human.balance -= self.total
@@ -1315,12 +1317,20 @@ class MainWindow(customtkinter.CTk):
 
     def change_walk_option_event(self, choice: str):
         print(f"Walk Option Changed to {choice}")
-        self.dog.walk_schedule = choice
+        for key, value in walk_options.items():
+            if value["display"] == choice:
+                self.dog.walk_schedule = key
+                return
+        print("ERROR: No Value Found For Walk Option")
         return
 
     def change_food_option_event(self, choice: str):
         print(f"Food Option Changed to {choice}")
-        self.dog.meal_plan = choice
+        for key, value in meal_options.items():
+            if value["display"] == choice:
+                self.dog.meal_plan = key
+                return
+        print("ERROR: No Value Found For Walk Option")
         return
 
     def trace_function(self, *args):
