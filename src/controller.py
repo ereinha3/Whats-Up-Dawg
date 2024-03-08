@@ -3,7 +3,7 @@ from data.event_library import event_lookup_table
 from data.afflictions import afflictions_dictionary
 from model import Dog, Human
 import sys
-from data.shop import meal_options, default_walk_options, medications, care_items
+from data.shop import meal_options, walk_options, medications, care_items
 
 def percentCheck(value):
     return randint(1, 100) < value
@@ -45,8 +45,8 @@ def next_round(dog:Dog, human:Human):
     # take 5% of income for now
     human.balance += human.revenue
     
-    # Multiply by 180 here to accurately calculate the time over 6 month
-    human.time_spent += default_walk_options[dog.walk_schedule]["time"] * 180
+    # Multiply by 180 here to accurately calculate the time over 6 month 
+    human.time_spent += walk_options[dog.walk_schedule]["time"] * 180
     
     # Dividing by 4 to get price per 4oz, then multiply by cups eaten per day, then by 180 to find total cost
     human.balance -= meal_options[dog.meal_plan]["cost"]/4 * dog.calculate_food_per_day() * 180
