@@ -8,7 +8,7 @@ from PIL import Image
 from data.matches import matches
 from data.shop import care_items, medications, walk_options, meal_options
 from string import capwords
-from tktooltip import ToolTip
+# from tktooltip import ToolTip
 
 
 
@@ -68,6 +68,45 @@ class CreateToolTip(object):
         self.tw= None
         if tw:
             tw.destroy()
+
+class ToolTip(object):
+
+    def __init__(self, widget):
+        self.widget = widget
+        self.tipwindow = None
+        self.id = None
+        self.x = self.y = 0
+
+    def showtip(self, text):
+        "Display text in tooltip window"
+        self.text = text
+        if self.tipwindow or not self.text:
+            return
+        x, y, cx, cy = self.widget.bbox("insert")
+        x = x + self.widget.winfo_rootx()
+        y = y + cy + self.widget.winfo_rooty()
+        self.tipwindow = tw = tkinter.Toplevel(self.widget)
+        tw.wm_overrideredirect(1)
+        tw.wm_geometry("+%d+%d" % (x, y))
+        label = tkinter.Label(tw, text=self.text, justify="left",
+                      background="#ffffe0", relief="solid", borderwidth=1,
+                      font=("tahoma", "12", "normal"))
+        label.pack(ipadx=1)
+
+    def hidetip(self):
+        tw = self.tipwindow
+        self.tipwindow = None
+        if tw:
+            tw.destroy()
+            
+def CreateToolTip(widget, text):
+    toolTip = ToolTip(widget)
+    def enter(event):
+        toolTip.showtip(text)
+    def leave(event):
+        toolTip.hidetip()
+    widget.bind('<Enter>', enter)
+    widget.bind('<Leave>', leave)
 
 
 class MedicationsWindow(customtkinter.CTkToplevel):
@@ -412,11 +451,11 @@ class ShopWindow(customtkinter.CTkToplevel):
         print("Pay Button Pressed")
         for med_checkbox in self.meds_checkboxes:
             if med_checkbox.get():
-                self.master.dog.medications.add(med_checkbox.cget("text"))
+                self.master.dog.medications[med_checkbox.cget("text")] = []# .add(med_checkbox.cget("text"))
 
         for item_checkbox in self.items_checkboxes:
             if item_checkbox.get():
-                self.master.dog.items.add(item_checkbox.cget("text"))
+                self.master.dog.items[item_checkbox.cget("text")] = []
 
         self.master.current_balance -= self.total
         self.master.balance_value_label.configure(text="$"+str(self.master.current_balance)) #TODO Fix self.master.current_balance - should reference human balance
@@ -741,6 +780,9 @@ class MainWindow(customtkinter.CTk):
             padx=10,
             pady=5)
         
+        CreateToolTip(self.walks_option_label, text = "Short : 2hrs/week\nMedium : 7hrs/week\nLong : 15hrs/week")
+
+        
         self.walk_seg_button = customtkinter.CTkSegmentedButton(
             self.options_frame,
             values=list(walk_options[option]["display"] for option in walk_options.keys()),
@@ -752,17 +794,7 @@ class MainWindow(customtkinter.CTk):
             pady=5,
             sticky="ew")
         self.walk_seg_button.set("Medium")
-
-        ToolTip(
-            self.walks_option_label, 
-            msg=f"~~~Time Investment~~~\n"
-              + f"{walk_options["short"]["display"]}: {walk_options["short"]["time"]} hrs\n"
-              + f"{walk_options["medium"]["display"]}: {walk_options["medium"]["time"]} hrs\n"
-              + f"{walk_options["long"]["display"]}: {walk_options["long"]["time"]} hrs",
-            delay=0.01, follow=True,
-            parent_kwargs={"bg": "black", "padx": 3, "pady": 3},
-            fg="black", bg="white", padx=7, pady=7)
-
+        
         self.food_option_label = customtkinter.CTkLabel(
             self.options_frame,
             text="Food Quality",
@@ -773,6 +805,8 @@ class MainWindow(customtkinter.CTk):
             padx=10,
             pady=5)
         
+        CreateToolTip(self.food_option_label, text = "Walmart's finest : $1.07/lb\nPurina One : $1.84/lb\nVet Recommended : $2.15/lb")
+
         self.food_seg_button = customtkinter.CTkSegmentedButton(
             self.options_frame,
             values=list(meal_options[option]["display"] for option in meal_options.keys()),#["Cheap", "Normal", "Vet Recommended"],
@@ -784,16 +818,6 @@ class MainWindow(customtkinter.CTk):
             pady=5,
             sticky="ew")
         self.food_seg_button.set(meal_options["normal"]["display"])
-
-        ToolTip(
-            self.food_option_label,
-            msg=f"~~~Cost~~~\n"
-              + f"{meal_options["cheap"]["display"].replace('\n', " ")}: {meal_options["cheap"]["cost"]}\n"
-              + f"{meal_options["normal"]["display"].replace('\n', " ")}: {meal_options["normal"]["cost"]}\n"
-              + f"{meal_options["vet_recommended"]["display"].replace('\n', " ")}: {meal_options["vet_recommended"]["cost"]}",
-            delay=0.01, follow=True,
-            parent_kwargs={"bg": "black", "padx": 3, "pady": 3},
-            fg="black", bg="white", padx=7, pady=7)
 
     #--------------------------------------------------------------------------
         # Bottom Bar
@@ -862,7 +886,7 @@ class MainWindow(customtkinter.CTk):
             padx=5,
             pady=5,
             sticky="nsew")
-        self.textbox.insert("0.0", "It's time to begin your adventure with your new furry friend! Make sure to take good care of them!\n" * 100)
+        self.textbox.insert("0.0", "It's time to begin your adventure with your new furry friend! Make sure to take good care of them!\n\nPress 'Continue' to begin.")
         self.textbox.configure(state="disabled")
 
     #--------------------------------------------------------------------------
@@ -1310,7 +1334,7 @@ class MainWindow(customtkinter.CTk):
             self.textbox.configure(state="disabled")
             
             if self.event["name"] in self.dog.medications:
-                self.dog.medications.remove(self.event["name"])
+                del self.dog.medications[self.event["name"]]
             return
 
         elif len(self.event["options"])==0:
