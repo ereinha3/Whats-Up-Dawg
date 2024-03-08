@@ -99,7 +99,6 @@ class MedicationsWindow(customtkinter.CTkToplevel):
     #------------------------------------------------------------------------------
     # Medications Window Methods
     def close_button_event(self):
-        print("Close Meds Window Button Pressed")
         self.destroy()
         return
 
@@ -147,7 +146,6 @@ class ItemsWindow(customtkinter.CTkToplevel):
     #------------------------------------------------------------------------------
     # Items Window Methods
     def close_button_event(self):
-        print("Close Meds Window Button Pressed")
         self.destroy()
         return
 
@@ -195,7 +193,6 @@ class AfflictionsWindow(customtkinter.CTkToplevel):
     #------------------------------------------------------------------------------
     # Afflictions Window Methods
     def close_button_event(self):
-        print("Close Meds Window Button Pressed")
         self.destroy()
         return
 
@@ -388,7 +385,6 @@ class ShopWindow(customtkinter.CTkToplevel):
             item_price = care_items[key]["cost"]
             if item_checkbox.get():
                 self.total += item_price
-                print(item_price)
 
         self.cost_value_label.configure(text="$"+str(self.total)+".00")
 
@@ -404,8 +400,11 @@ class ShopWindow(customtkinter.CTkToplevel):
             if item_checkbox.get():
                 self.master.dog.items[item_checkbox.cget("text")] = []
 
-        self.master.current_balance -= self.total
-        self.master.balance_value_label.configure(text="$"+str(self.master.current_balance)) #TODO Fix self.master.current_balance - should reference human balance
+        
+        self.master.human.balance -= self.total
+        # self.master.current_balance -= self.total
+        self.master.balance_value_label.configure(text=f'$ {str(self.master.human.balance)}')
+        # self.master.balance_value_label.configure(text="$"+str(self.master.current_balance)) #TODO Fix self.master.current_balance - should reference human balance
     
         self.destroy()
         return
@@ -1146,12 +1145,11 @@ class MainWindow(customtkinter.CTk):
         #TODO set Dog and Human attributes
         self.human_name_label.configure(text=human_name)
         self.dog_name_label.configure(text=dog_name)
-        self.balance_value_label.configure(text="$"+income)
-        self.current_balance = int(income)
+        self.balance_value_label.configure(text=f'$ {income}')
+        # self.current_balance = int(income) # TODO
 
         # Set Dog Image
         dog_string = self.dog_type_combobox.get().lower().strip().replace(" ", "_") + ".jpg"
-        print(dog_string)
         
         self.dog_image = customtkinter.CTkImage(
             Image.open(os.path.join(self.dog_image_path, dog_string)),
@@ -1177,10 +1175,8 @@ class MainWindow(customtkinter.CTk):
     def meds_button_event(self):
         print("Meds Button Pressed")
         if self.meds_window is None or not self.meds_window.winfo_exists():
-            print("Creating New Meds Window")
             self.meds_window = MedicationsWindow(self)  # create window if its None or destroyed
         else:
-            print("Focusing Meds Window")
             self.meds_window.focus()
 
         meds_str = ""
@@ -1198,10 +1194,8 @@ class MainWindow(customtkinter.CTk):
     def items_button_event(self):
         print("Items Button Pressed")
         if self.items_window is None or not self.items_window.winfo_exists():
-            print("Creating New Items Window")
             self.items_window = ItemsWindow(self)  # create window if its None or destroyed
         else:
-            print("Focusing Items Window")
             self.items_window.focus()
     
         items_str = ""
@@ -1219,10 +1213,8 @@ class MainWindow(customtkinter.CTk):
     def afflictions_button_event(self):
         print("Afflictions Button Pressed")
         if self.afflictions_window is None or not self.afflictions_window.winfo_exists():
-            print("Creating New Afflictions Window")
             self.afflictions_window = AfflictionsWindow(self)  # create window if its None or destroyed
         else:
-            print("Focusing Afflictions Window")
             self.afflictions_window.focus()
 
         afflictions_str = ""
@@ -1282,14 +1274,12 @@ class MainWindow(customtkinter.CTk):
             
             if self.event["name"] in self.dog.medications:
                 del self.dog.medications[self.event["name"]]
-            return
 
         elif len(self.event["options"])==0:
             self.textbox.configure(state="normal")
             self.textbox.delete("0.0", tkinter.END)
             self.textbox.insert("0.0", self.event["intro"])
             self.textbox.configure(state="disabled")
-            return
         
         else:
             self.textbox.configure(state="normal")
@@ -1299,12 +1289,12 @@ class MainWindow(customtkinter.CTk):
                                 + f'[Option 2]: {self.event["options"]["2"]["intro"]}')
             self.textbox.configure(state="disabled")
 
+            self.decision_options_frame.tkraise()
+            return
+            # return TODO <- This could prevent stat updates until an option is selected
 
-        self.decision_options_frame.tkraise()
-
-        # 2. index into events and display information and options
-        # 3a. On option1 Do option1 one stuff (Controlller.Event_resolve("option1"))
-        # 3b. On option 2 do option 2 stuff 
+        #TODO update dog and human stats
+        controller.next_round(self.dog, self.human)
         self.refresh_screen()
         return
     
@@ -1317,6 +1307,9 @@ class MainWindow(customtkinter.CTk):
         self.textbox.configure(state="disabled")
 
         self.continue_button_frame.tkraise()
+
+        #TODO update dog and human stats
+        controller.next_round(self.dog, self.human)
         self.refresh_screen()
         return
 
@@ -1353,13 +1346,23 @@ class MainWindow(customtkinter.CTk):
     
     def refresh_screen(self):
         print("Refreshing")
-        # TODO
-        # update balances
-            # time spent
-            # age
-            # happiness
-            # is alive
-            # 
+        self.balance_value_label.configure(text=f"$ {self.human.balance}")
+        self.time_invested_value_label.configure(text=f"{self.human.time_spent}")
+        self.age_value_label.configure(text=f"{self.dog.age}")
+
+        # Happiness image based on dogs happiness
+        happiness_value = self.dog.happiness
+        if (80 <= happiness_value <= 100):
+            self.happiness_image_label.configure(image=self.face1_image)
+        elif (60 <= happiness_value <= 79):
+            self.happiness_image_label.configure(image=self.face2_image)
+        elif (40 <= happiness_value <= 59):
+            self.happiness_image_label.configure(image=self.face3_image)
+        elif (20 <= happiness_value <= 39):
+            self.happiness_image_label.configure(image=self.face4_image)
+        elif (0 <= happiness_value <= 79):
+            self.happiness_image_label.configure(image=self.face5_image)
+
         return
 
 

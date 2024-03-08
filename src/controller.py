@@ -93,7 +93,7 @@ def next_round(dog:Dog, human:Human):
     return dog, human
 
 def check_resistance(dog: Dog, human: Human, event: dict) -> None:
-    print(event["intro"] + "\n")
+    # print(event["intro"] + "\n")
     if (event["resist"]["check"](dog)):
         # print(event["resist"]["message"])
         return True
