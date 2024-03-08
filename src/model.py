@@ -46,6 +46,8 @@ class Dog:
     @health.setter
     def health(self, value):
         self._health = min(value, self.max_health)
+        if (self._health <= 0):
+            self.alive = False
 
 class Human:
     def __init__(self, income, dog:Dog, name="John"):
