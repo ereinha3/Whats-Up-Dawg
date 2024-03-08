@@ -8,8 +8,6 @@ from PIL import Image
 from data.matches import matches
 from data.shop import care_items, medications, walk_options, meal_options
 from string import capwords
-# from tktooltip import ToolTip
-
 
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
@@ -55,8 +53,9 @@ def CreateToolTip(widget, text):
     widget.bind('<Enter>', enter)
     widget.bind('<Leave>', leave)
 
-
 class MedicationsWindow(customtkinter.CTkToplevel):
+    '''Medication List Pop Up Window Containing List of Current Medications
+    This window is a child (top level) of the main CTk window'''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -99,11 +98,13 @@ class MedicationsWindow(customtkinter.CTkToplevel):
     #------------------------------------------------------------------------------
     # Medications Window Methods
     def close_button_event(self):
+        '''Destroys the medications window when close button is pressed'''
         self.destroy()
         return
 
-
 class ItemsWindow(customtkinter.CTkToplevel):
+    '''Items list pop up window containing list of current items
+    This window is a child (top level) of the main CTk window'''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -146,11 +147,13 @@ class ItemsWindow(customtkinter.CTkToplevel):
     #------------------------------------------------------------------------------
     # Items Window Methods
     def close_button_event(self):
+        '''Destroys the items window when close button is pressed'''
         self.destroy()
         return
 
-
 class AfflictionsWindow(customtkinter.CTkToplevel):
+    '''Afflictions list pop up window containing list of current afflictions
+    This window is a child (top level) of the main CTk window'''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -193,11 +196,13 @@ class AfflictionsWindow(customtkinter.CTkToplevel):
     #------------------------------------------------------------------------------
     # Afflictions Window Methods
     def close_button_event(self):
+        '''Destroys the afflictions window when close button is pressed'''
         self.destroy()
         return
 
-
 class InstructionsWindow(customtkinter.CTkToplevel):
+    '''Instructions pop up window contiaing rules and instructions on how to play the game.
+    This window is a child (top level) of the main CTk window'''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -226,11 +231,29 @@ class InstructionsWindow(customtkinter.CTkToplevel):
             padx=20,
             pady=20,
             sticky="nsew")
-        self.instructions_textbox.insert("0.0", "Instructions Should Go Here...")
+        self.instructions_textbox.insert("0.0", "Instructions Should Go Here...") # TODO
         self.instructions_textbox.configure(state="disabled")
 
+        self.close_button = customtkinter.CTkButton(
+            self,
+            text="Close",
+            command=self.close_button_event)
+        self.close_button.grid(
+            row=2,
+            column=0,
+            padx=10,
+            pady=10)
+
+    #------------------------------------------------------------------------------
+    # Instructions Window Methods
+    def close_button_event(self):
+        '''Destroys the Instructions window when close button is pressed'''
+        self.destroy()
+        return
 
 class ShopWindow(customtkinter.CTkToplevel):
+    '''Shop pop up window containing both the medications and items shops.
+    This window is a child (top level) of the main CTk window'''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -240,10 +263,11 @@ class ShopWindow(customtkinter.CTkToplevel):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
+        # Running total for current shopping session
         self.total = 0
 
     #--------------------------------------------------------------------------
-        # Shop Tab View
+        # Shop Tab View - Allows for multiple toggleable frames
         self.shop_tabs = customtkinter.CTkTabview(
             self,
             width=250)
@@ -256,50 +280,52 @@ class ShopWindow(customtkinter.CTkToplevel):
             sticky="nsew")
         
         #------------------------------
-        # Shots / Meds Selection
+        # medications (Shots / Meds) Selection
         self.shop_tabs.add("Shots/Meds")
         self.shop_tabs.tab("Shots/Meds").grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
 
-        self.shots_tab_frame = customtkinter.CTkFrame(
+        self.meds_tab_frame = customtkinter.CTkFrame(
             self.shop_tabs.tab("Shots/Meds"))
-        self.shots_tab_frame.grid(
+        self.meds_tab_frame.grid(
             row=0,
             column=0,
             padx=(20, 20),
             pady=(20, 0),
             sticky="nsew")
 
+        # Dynamically populated from dictionary in shop.py
         self.meds_checkboxes = []
         for index, med in enumerate(medications):
             self.med_checkbox = customtkinter.CTkCheckBox(
-                master=self.shots_tab_frame,
+                master=self.meds_tab_frame,
                 text=f"{medications[med]['display']}",
                 command=self.item_selected)
             self.med_checkbox.grid(
-                row=index,
+                row=index, # Need index so check boxes dont stack on top of eachother
                 column=0,
                 pady=(20, 0),
                 padx=20)
             self.meds_checkboxes.append(self.med_checkbox)
 
         #------------------------------
-        # Treats and Toys Selection
+        # Items (Treats / Toys) Selection
         self.shop_tabs.add("Treats/Toys")
         self.shop_tabs.tab("Treats/Toys").grid_columnconfigure(0, weight=1)
         
-        self.treats_toys_tab_frame = customtkinter.CTkFrame(
+        self.items_tab_frame = customtkinter.CTkFrame(
             self.shop_tabs.tab("Treats/Toys"))
-        self.treats_toys_tab_frame.grid(
+        self.items_tab_frame.grid(
             row=0,
             column=0,
             padx=20,
             pady=(20, 0),
             sticky="nsew")
         
+        # Dynamically populated from dictionary in shop.py
         self.items_checkboxes = []
         for index, item in enumerate(care_items):
             self.item_checkbox = customtkinter.CTkCheckBox(
-                master=self.treats_toys_tab_frame,
+                master=self.items_tab_frame,
                 text=f"{care_items[item]['display']}",
                 command=self.item_selected)
             self.item_checkbox.grid(
@@ -332,23 +358,12 @@ class ShopWindow(customtkinter.CTkToplevel):
 
         self.cost_label = customtkinter.CTkLabel(
             self.cost_label_frame,
-            text="Cost:",
+            text="Cost: $0.00",
             font=customtkinter.CTkFont(size=20, weight="bold"))
         self.cost_label.grid(
             row=0,
             column=0,
-            padx=(10, 5),
-            pady=10,
-            sticky="nsew")
-        
-        self.cost_value_label = customtkinter.CTkLabel(
-            self.cost_label_frame,
-            text="$0.00",
-            font=customtkinter.CTkFont(size=20, weight="bold"))
-        self.cost_value_label.grid(
-            row=0,
-            column=1,
-            padx=(5, 10),
+            padx=(10, 10),
             pady=10,
             sticky="nsew")
         
@@ -363,17 +378,14 @@ class ShopWindow(customtkinter.CTkToplevel):
             pady=10,
             sticky="nsew")
         
-
     #--------------------------------------------------------------------------
     # Shop Window Methods
-    def do_nothing(self):
-        return
-    
     def item_selected(self):
+        '''TODO'''
         print("Item Selected")
         self.pay_button.configure(state="enabled")
         self.total = 0
-        
+        # To update the running total we iterate through all meds/items and check which are switched on.
         for med_checkbox in self.meds_checkboxes:
             key = med_checkbox.cget("text")
             med_price = medications[key]["cost"]
@@ -386,12 +398,16 @@ class ShopWindow(customtkinter.CTkToplevel):
             if item_checkbox.get():
                 self.total += item_price
 
-        self.cost_value_label.configure(text="$"+str(self.total)+".00")
+        # Update screen every time an item is selected or un-selected
+        self.cost_label.configure(text=f'Cost: $ {str(self.total)}.00')
 
         return
     
     def pay_button_event(self):
+        '''TODO'''
         print("Pay Button Pressed")
+
+        # Add all selected meds/items to appropriate dog attribute dictionaries
         for med_checkbox in self.meds_checkboxes:
             if med_checkbox.get():
                 med_key = med_checkbox.cget("text")
@@ -402,15 +418,12 @@ class ShopWindow(customtkinter.CTkToplevel):
                 item_key = item_checkbox.cget("text")
                 self.master.dog.items[item_key] = care_items[item_key]
 
-        
+        # Update human balance and screen
         self.master.human.balance -= self.total
-        # self.master.current_balance -= self.total
-        self.master.balance_value_label.configure(text=f'$ {str(self.master.human.balance)}')
-        # self.master.balance_value_label.configure(text="$"+str(self.master.current_balance)) #TODO Fix self.master.current_balance - should reference human balance
+        self.master.balance_label.configure(text=f'Balance: ${str(self.master.human.balance)}')
     
         self.destroy()
         return
-
 
 class MainWindow(customtkinter.CTk):
     def __init__(self):
@@ -437,13 +450,11 @@ class MainWindow(customtkinter.CTk):
         self.dog_image = None
         self.event = None
         
-        self.current_balance = 0 # TODO <- Get rid of this somehow
-
-        # Images
+        # Clip art image paths
         self.dog_image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../docs/Images")
         self.happiness_face_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../docs/test-images")
 
-        #TODO Make Dynamic
+        # 5-stage happiness indicator emojis
         self.face1_image = customtkinter.CTkImage(
             Image.open(os.path.join(self.happiness_face_path, "one_smiling.png")),
             size=(30, 30))
@@ -461,7 +472,7 @@ class MainWindow(customtkinter.CTk):
             size=(30, 30))
         
     #--------------------------------------------------------------------------
-        # Main Window Frame
+        # Main Window Frame - Contains all widgets that are displayed on the main play screen
         self.main_window_frame = customtkinter.CTkFrame(self)
         self.main_window_frame.grid(
             row=0,
@@ -473,11 +484,8 @@ class MainWindow(customtkinter.CTk):
         self.main_window_frame.grid_rowconfigure(1, weight=1)
 
     #--------------------------------------------------------------------------
-        # Top Bar
-        self.top_bar_frame = customtkinter.CTkFrame(
-            self.main_window_frame,
-            height=140,
-            corner_radius=0)
+        # Top Bar - Game title
+        self.top_bar_frame = customtkinter.CTkFrame(self.main_window_frame)
         self.top_bar_frame.grid(
             row=0,
             column=0,
@@ -488,7 +496,6 @@ class MainWindow(customtkinter.CTk):
         self.title_label = customtkinter.CTkLabel(
             self.top_bar_frame,
             text="Whats Up Dawg?!",
-            # image=self.dog_image,
             font=customtkinter.CTkFont(size=40, weight="bold"))
         self.title_label.grid(
             row=0,
@@ -498,54 +505,51 @@ class MainWindow(customtkinter.CTk):
             pady=15)
         
     #--------------------------------------------------------------------------
-        # Dog Side Bar (Right)
-        self.dog_side_bar = customtkinter.CTkFrame(
-            self.main_window_frame,
-            corner_radius=0)
+        # Dog Side Bar (Right) - Contains dog name, age, image, and meds/items/afflictions lists
+        self.dog_side_bar = customtkinter.CTkFrame(self.main_window_frame)
         self.dog_side_bar.grid(
             row=1,
             column=2,
             rowspan=2,
             sticky="news")
-        self.dog_side_bar.grid_rowconfigure((3, 4, 5), weight=1)
+        self.dog_side_bar.grid_rowconfigure((0, 1, 2), weight=1)
+        
+        #------------------------------
+        # Dog Name and Age Frame (Inside Dog Side Bar)
+        self.dog_stats_frame = customtkinter.CTkFrame(self.dog_side_bar)
+        self.dog_stats_frame.grid(
+            row=0,
+            column=0,
+            padx=10,
+            pady=(10, 5),
+            sticky="news")
+        self.dog_stats_frame.grid_columnconfigure(0, weight=1)
+        self.dog_stats_frame.grid_rowconfigure((0, 1), weight=1)
 
         self.dog_name_label = customtkinter.CTkLabel(
-            self.dog_side_bar,
-            text="Example",
-            font=customtkinter.CTkFont(size=25, weight="bold", underline=False))
+            self.dog_stats_frame,
+            text="Dog Name",
+            font=customtkinter.CTkFont(size=25, weight="bold", underline=True))
         self.dog_name_label.grid(
             row=0,
             column=0,
-            padx=20,
-            pady=(20, 5))
-        
-        #------------------------------
-        # Dog Age Frame (Inside Dog Side Bar)
-        self.age_frame = customtkinter.CTkFrame(
-            self.dog_side_bar)
+            padx=10,
+            pady=10)
+
+        self.age_frame = customtkinter.CTkFrame(self.dog_stats_frame)
         self.age_frame.grid(
             row=1,
             column=0,
-            padx=10,
+            padx=5,
             pady=5)
         
         self.age_label = customtkinter.CTkLabel(
             self.age_frame,
-            text=f"Age:",
+            text=f"Age: 0",
             font=customtkinter.CTkFont(size=18, weight="normal"))
         self.age_label.grid(
             row=0,
             column=0,
-            padx=10,
-            pady=(5, 10))
-        
-        self.age_value_label = customtkinter.CTkLabel(
-            self.age_frame,
-            text=f"0",
-            font=customtkinter.CTkFont(size=18, weight="normal"))
-        self.age_value_label.grid(
-            row=0,
-            column=1,
             padx=10,
             pady=5)
         
@@ -553,12 +557,12 @@ class MainWindow(customtkinter.CTk):
         # Dog Image Frame (Inside Dog Side Bar)
         self.dog_image_frame = customtkinter.CTkFrame(self.dog_side_bar)
         self.dog_image_frame.grid(
-            row=2,
+            row=1,
             column=0,
-            padx=5,
+            padx=10,
             pady=5)
         
-        # Initialize empty Dog Image
+        # Initialize empty Dog Image - Gets dynamically filled with appropriate image based on breed selected
         self.dog_image_label = customtkinter.CTkLabel(
             self.dog_image_frame,
             text="")
@@ -569,97 +573,103 @@ class MainWindow(customtkinter.CTk):
             pady=5)
         
         #------------------------------
+        # Dog Attribute Buttons Frame (Inside Dog Side Bar)
+        self.dog_buttons_frame = customtkinter.CTkFrame(self.dog_side_bar)
+        self.dog_buttons_frame.grid(
+            row=2,
+            column=0,
+            padx=10,
+            pady=(5, 10),
+            sticky="news")
+        self.dog_buttons_frame.grid_columnconfigure(0, weight=1)
+        self.dog_buttons_frame.grid_rowconfigure((0, 1, 2), weight=1)
         
         self.meds_button = customtkinter.CTkButton(
-            self.dog_side_bar,
+            self.dog_buttons_frame,
             text="Medications",
             command=self.meds_button_event)
         self.meds_button.grid(
-            row=3,
+            row=0,
             column=0,
             padx=20,
-            pady=5)
+            pady=(10, 5))
         
         self.items_button = customtkinter.CTkButton(
-            self.dog_side_bar,
+            self.dog_buttons_frame,
             text="Items",
             command=self.items_button_event)
         self.items_button.grid(
-            row=4,
+            row=1,
             column=0,
             padx=20,
             pady=5)
 
         self.afflictions_button = customtkinter.CTkButton(
-            self.dog_side_bar,
+            self.dog_buttons_frame,
             text="Afflictions",
             command=self.afflictions_button_event)
         self.afflictions_button.grid(
-            row=5,
+            row=2,
             column=0,
             padx=20,
-            pady=(5, 20))
+            pady=(5,10))
         
     #--------------------------------------------------------------------------
         # Human Side Bar (Left)
-        self.human_side_bar = customtkinter.CTkFrame( 
-            self.main_window_frame,
-            width=140,
-            corner_radius=0)
+        self.human_side_bar = customtkinter.CTkFrame(self.main_window_frame)
         self.human_side_bar.grid(
             row=1,
             column=0,
             rowspan=2,
             sticky="news")
-        self.human_side_bar.grid_rowconfigure(4, weight=1)
+        self.human_side_bar.grid_rowconfigure((0, 1, 2), weight=1)
         
+        #------------------------------
+        # Human Name and Stats Frame (Inside Human Side Bar)
+        self.human_stats_frame = customtkinter.CTkFrame(self.human_side_bar)
+        self.human_stats_frame.grid(
+            row=0,
+            column=0,
+            padx=10,
+            pady=(10, 5),
+            sticky="news")
+        self.human_stats_frame.grid_columnconfigure(0, weight=1)
+        self.human_stats_frame.grid_rowconfigure((0, 1, 2, 3), weight=1)
+
         self.human_name_label = customtkinter.CTkLabel(
-            self.human_side_bar,
+            self.human_stats_frame,
             text="Human Name Here",
-            font=customtkinter.CTkFont(size=25, weight="bold", underline=False))
+            font=customtkinter.CTkFont(size=25, weight="bold", underline=True))
         self.human_name_label.grid(
             row=0,
             column=0,
-            padx=20,
-            pady=20)
-        
-        #------------------------------
-        # Human Stats Frames (Inside Human Side Bar)
-        self.balance_frame = customtkinter.CTkFrame(self.human_side_bar)
+            padx=10,
+            pady=10)
+
+        self.balance_frame = customtkinter.CTkFrame(self.human_stats_frame)
         self.balance_frame.grid(
             row=1,
             column=0,
             padx=20,
             pady=5)
-        # self.balance_frame.grid_rowconfigure(5, weight=1)
 
         self.balance_label = customtkinter.CTkLabel(
             self.balance_frame,
-            text="Balance:",
+            text="Balance: $0.00",
             font=customtkinter.CTkFont(size=18, weight="normal"))
         self.balance_label.grid(
             row=0,
             column=0,
-            padx=(10, 5),
+            padx=10,
             pady=5)
         
-        self.balance_value_label = customtkinter.CTkLabel(
-            self.balance_frame,
-            text="$0.00",
-            font=customtkinter.CTkFont(size=18, weight="normal"))
-        self.balance_value_label.grid(
-            row=0,
-            column=1,
-            padx=(5, 10),
-            pady=5)
-        
-        self.happiness_frame = customtkinter.CTkFrame(
-            self.human_side_bar)
+        #------------------------------
+        self.happiness_frame = customtkinter.CTkFrame(self.human_stats_frame)
         self.happiness_frame.grid(
             row=2,
             column=0,
             padx=20,
-            pady=5)
+            pady=0)
         
         self.happiness_label = customtkinter.CTkLabel(
             self.happiness_frame,
@@ -682,55 +692,46 @@ class MainWindow(customtkinter.CTk):
             padx=(5, 10),
             pady=5)
         
-        self.time_invested_frame = customtkinter.CTkFrame(self.human_side_bar)
+        #------------------------------
+        self.time_invested_frame = customtkinter.CTkFrame(self.human_stats_frame)
         self.time_invested_frame.grid(
             row=3,
             column=0,
-            padx=20,
+            padx=10,
             pady=5)
 
         self.time_invested_label = customtkinter.CTkLabel(
             self.time_invested_frame,
-            text="Time Invested:",
+            text="Time Invested: 0",
             font=customtkinter.CTkFont(size=18, weight="normal"))
         self.time_invested_label.grid(
             row=0,
             column=0,
-            padx=(10, 5),
-            pady=5)
-        
-        self.time_invested_value_label = customtkinter.CTkLabel(
-            self.time_invested_frame,
-            text="0",
-            font=customtkinter.CTkFont(size=18, weight="normal"))
-        self.time_invested_value_label.grid(
-            row=0,
-            column=1,
-            padx=(0, 10),
+            padx=10,
             pady=5)
 
         #------------------------------
         # Options Frame (Inside Human Side Bar)
-        self.options_frame = customtkinter.CTkFrame(
-            self.human_side_bar,
-            fg_color="transparent")
+        self.options_frame = customtkinter.CTkFrame(self.human_side_bar)
         self.options_frame.grid(
-            row=4,
+            row=1,
             column=0,
+            padx=10,
+            pady=5,
             sticky="news")
+        self.options_frame.grid_rowconfigure((0, 1, 2, 3), weight=1)
 
         self.walks_option_label = customtkinter.CTkLabel(
             self.options_frame,
-            text="Walk Options")
+            text="Walk Options",
+            font=customtkinter.CTkFont(underline=True))
         self.walks_option_label.grid(
             row=0,
             column=0,
             padx=10,
             pady=5)
-        
         CreateToolTip(self.walks_option_label, text = "Short : 2hrs/week\nMedium : 7hrs/week\nLong : 15hrs/week")
 
-        
         self.walk_seg_button = customtkinter.CTkSegmentedButton(
             self.options_frame,
             values=list(walk_options[option]["display"] for option in walk_options.keys()),
@@ -746,13 +747,12 @@ class MainWindow(customtkinter.CTk):
         self.food_option_label = customtkinter.CTkLabel(
             self.options_frame,
             text="Food Quality",
-            anchor="w")
+            font=customtkinter.CTkFont(underline=True))
         self.food_option_label.grid(
             row=2,
             column=0,
             padx=10,
             pady=5)
-        
         CreateToolTip(self.food_option_label, text = "Walmart's finest : $1.07/lb\nPurina One : $1.84/lb\nVet Recommended : $2.15/lb")
 
         self.food_seg_button = customtkinter.CTkSegmentedButton(
@@ -767,17 +767,15 @@ class MainWindow(customtkinter.CTk):
             sticky="ew")
         self.food_seg_button.set(meal_options["normal"]["display"])
 
-    #--------------------------------------------------------------------------
-        # Bottom Bar
-        self.bottom_bar_frame = customtkinter.CTkFrame(
-            self.human_side_bar,
-            height=140,
-            corner_radius=0,
-            fg_color="transparent")
+        #------------------------------
+        # Bottom Bar (Inside Human Side Bar)
+        self.bottom_bar_frame = customtkinter.CTkFrame(self.human_side_bar)
         self.bottom_bar_frame.grid(
-            row=5,
+            row=2,
             column=0,
             columnspan=1,
+            padx=10,
+            pady=(5, 10),
             sticky="nsew")
         self.bottom_bar_frame.grid_columnconfigure(0, weight=1)
         self.bottom_bar_frame.grid_rowconfigure((0, 1, 2), weight=1)
@@ -818,8 +816,6 @@ class MainWindow(customtkinter.CTk):
             row=1,
             column=1,
             rowspan=2,
-            padx=20,
-            pady=20,
             sticky="news")
         self.text_and_decision_frame.grid_columnconfigure(0, weight=1)
         self.text_and_decision_frame.grid_rowconfigure(0, weight=1)
@@ -831,8 +827,8 @@ class MainWindow(customtkinter.CTk):
             row=0,
             column=0,
             columnspan=3,
-            padx=5,
-            pady=5,
+            padx=10,
+            pady=10,
             sticky="nsew")
         self.textbox.insert("0.0", "It's time to begin your adventure with your new furry friend! Make sure to take good care of them!\n\nPress 'Continue' to begin.")
         self.textbox.configure(state="disabled")
@@ -843,7 +839,7 @@ class MainWindow(customtkinter.CTk):
         self.decision_options_frame.grid(
             row=1,
             column=0,
-            padx=20,
+            padx=10,
             pady=10,
             sticky="ew")
         self.decision_options_frame.grid_columnconfigure((0, 1), weight=1)
@@ -1019,8 +1015,8 @@ class MainWindow(customtkinter.CTk):
             row=2,
             column=0,
             columnspan=2,
-            padx=5,
-            pady=5)
+            padx=10,
+            pady=10)
 
         self.back_button = customtkinter.CTkButton(
             self.buttons_frame,
@@ -1147,7 +1143,7 @@ class MainWindow(customtkinter.CTk):
         #TODO set Dog and Human attributes
         self.human_name_label.configure(text=human_name)
         self.dog_name_label.configure(text=dog_name)
-        self.balance_value_label.configure(text=f'$ {income}')
+        self.balance_label.configure(text=f'Balance: ${income}')
         # self.current_balance = int(income) # TODO
 
         # Set Dog Image
@@ -1356,9 +1352,9 @@ class MainWindow(customtkinter.CTk):
     
     def refresh_screen(self):
         print("Refreshing")
-        self.balance_value_label.configure(text=f"$ {self.human.balance}")
-        self.time_invested_value_label.configure(text=f"{self.human.time_spent}")
-        self.age_value_label.configure(text=f"{self.dog.age}")
+        self.balance_label.configure(text=f"Balance: ${self.human.balance}")
+        self.time_invested_label.configure(text=f"Time Invested: {self.human.time_spent}")
+        self.age_label.configure(text=f'Age: {self.dog.age}')
 
         # Happiness image based on dogs happiness
         happiness_value = self.dog.happiness
