@@ -43,13 +43,13 @@ def determine_event_outcome(options: dict, human: Human):
 
 def next_round(dog:Dog, human:Human):
     # take 5% of income for now
-    human._balance += human.income * 0.05
+    human.balance += human.revenue
     
-    # Multiply by 180 here to accurately calculate the time over 6 month 
+    # Multiply by 180 here to accurately calculate the time over 6 month
     human.time_spent += default_walk_options[dog.walk_schedule]["time"] * 180
     
     # Dividing by 4 to get price per 4oz, then multiply by cups eaten per day, then by 180 to find total cost
-    human._balance -= meal_options[dog.meal_plan]["cost"]/4 * dog.calculate_food_per_day() * 180
+    human.balance -= meal_options[dog.meal_plan]["cost"]/4 * dog.calculate_food_per_day() * 180
     
     # Half a year
     dog.age += 0.5
@@ -59,33 +59,35 @@ def next_round(dog:Dog, human:Human):
     dog.max_health -= 100/(dog.max_age*2)
     if dog.max_health <= 0:
         dog.alive = False
-    dog._health = dog._health/old_max * dog.max_health
-    if dog._health <= 0:
+    dog.health = dog.health/old_max * dog.max_health
+    if dog.health <= 0:
         dog.alive = False
     
     # TODO: Apply medications to afflictions and get rid of them if applicable
+    for illness in dog.afflictions
     
     # Apply afflictions
     for illness in dog.afflictions:
-        dog._health += afflictions_dictionary[illness]["health"]
+        dog.health += afflictions_dictionary[illness]["health"]
         dog.happiness += afflictions_dictionary[illness]["stress"]
+        if (dog.medications
         
     # Remove timed our durations on items
     for item in dog.items:
         item = care_items[item]
         dog.happiness += item["happiness"]
-        dog._health += item["health"]
+        dog.health += item["health"]
         item["duration"] -= 1
         if item["duration"] == 0:
             dog.items.remove(item)
     for medication in dog.medications:
         medication = medications[medication]
-        human._balance -= medication["cost"]
+        human.balance -= medication["cost"]
         medication["duration"] -= 1
         if medication["duration"] == 0:
             dog.medications.remove(medication)
     
-    human._balance = round(human._balance, 2)
+    human.balance = round(human.balance, 2)
     return dog, human
 
 def check_resistance(dog: Dog, human: Human, event: dict) -> None:

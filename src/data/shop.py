@@ -60,6 +60,6 @@ medications = {
             },
     }
 
-default_walk_options = {"short": {"time": 2, "health": 1, "happiness": 0}, "medium": {"time": 7, "health": 2, "happiness": 3}, "long": {"time": 15, "health": 3, "happiness": 5}}
+walk_options = {"short": {"time": 2, "health": 1, "happiness": 0}, "medium": {"time": 7, "health": 2, "happiness": 3}, "long": {"time": 15, "health": 3, "happiness": 5}}
 
 meal_options = {"cheap": {"display": "Walmart's Finest", "cost": 1.07, "health": 1}, "normal": {"display": "Purina One", "cost": 1.84, "health": 2}, "vet_recommended": {"display": "Vet Recommended", "cost": 2.15, "health": 3}}
