@@ -411,12 +411,14 @@ class ShopWindow(customtkinter.CTkToplevel):
         for med_checkbox in self.meds_checkboxes:
             if med_checkbox.get():
                 med_key = med_checkbox.cget("text")
-                self.master.dog.medications[med_key] = medications[med_key]# .add(med_checkbox.cget("text"))
+                #print('med_key =', med_key)
+                #print("medications = ", self.master.dog.medications)
+                self.master.dog.medications[med_key] = medications[med_key]["duration"]# .add(med_checkbox.cget("text"))
 
         for item_checkbox in self.items_checkboxes:
             if item_checkbox.get():
                 item_key = item_checkbox.cget("text")
-                self.master.dog.items[item_key] = care_items[item_key]
+                self.master.dog.items[item_key] = care_items[item_key]["duration"]
 
         # Update human balance and screen
         self.master.human.balance -= self.total
@@ -1260,7 +1262,7 @@ class MainWindow(customtkinter.CTk):
 
     def continue_button_event(self):
         print("Continue Button Pressed")
-        self.event = controller.load_event()
+        self.event = controller.load_event(self.dog)
 
         resistance = controller.check_resistance(self.dog, self.human, self.event)
 
@@ -1270,8 +1272,8 @@ class MainWindow(customtkinter.CTk):
             self.textbox.insert("0.0", self.event["resist"]["message"])
             self.textbox.configure(state="disabled")
             
-            if self.event["name"] in self.dog.medications:
-                del self.dog.medications[self.event["name"]]
+            """if self.event["name"] in self.dog.medications:
+                del self.dog.medications[self.event["name"]]"""
 
         elif len(self.event["options"])==0:
             self.textbox.configure(state="normal")
@@ -1305,10 +1307,15 @@ class MainWindow(customtkinter.CTk):
         self.textbox.configure(state="disabled")
 
         self.continue_button_frame.tkraise()
+        
 
         #TODO update dog and human stats
+        #print("event = ", self.event)
+        self.dog, self.human = controller.handle_event(self.event, button_number, self.dog, self.human)
         controller.next_round(self.dog, self.human)
         self.refresh_screen()
+        print(self.dog)
+        print(self.human)
         return
 
     def change_walk_option_event(self, choice: str):

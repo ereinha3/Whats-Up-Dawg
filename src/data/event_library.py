@@ -1,7 +1,7 @@
 import random
 event_lookup_table = {
     "fleas": {
-        "name": "Flea and Tick Meds",
+        "name": "fleas",
         "resist": {
             "check": lambda dog: "Flea and Tick Meds" in dog.medications, #().keys(),
             "message": "Your dog was exposed to fleas, but fortunately they were on flea and tick meds and it didn't catch them.",
@@ -21,7 +21,7 @@ event_lookup_table = {
 
 
     "heartworm": {
-        "name": "Heartworm Meds",
+        "name": "heartworm",
         "resist": {
             "check": lambda dog: "Heartworm Meds" in dog.medications, #().keys(),
             "message": "Your dog was exposed to Heartworm, but luckily has already taken medication for that!",
@@ -99,7 +99,7 @@ event_lookup_table = {
     "obesity": {
         "name": "obesity",
         "resist": {
-            "check": lambda dog: (dog.walk_schedule is "Medium" and dog.meal_plan in ["Normal", "Vet Recommended"]) or (dog.walk_schedule is "Long") ,  #add a clause for excersise when this is added to the dog object model
+            "check": lambda dog: (dog.walk_schedule is "Medium" and dog.meal_plan is "Vet Recommended") or (dog.walk_schedule is "Long" and dog.meal_plan in []) ,  #add a clause for excersise when this is added to the dog object model
             "message": "Maybe your dog just had a big lunch? Well done for walking you dog consistently and feeding it properly. Your dog has avoided obesity.",
             },
         "intro": "Your dog appears to be gaining weight is having trouble goin to the bathroom. Do you... ?",

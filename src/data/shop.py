@@ -54,11 +54,13 @@ care_items = {
 
 medications = {
         "Flea and Tick Meds": {
+            "illness": "fleas",
             "cost": 150, #cost from chewy: https://www.chewy.com/nexgard-chew-dogs-241-60-lbs-purple/dp/173254
             "duration": 1,
             "display": "Flea and Tick Meds",
             },
         "Heartworm Meds": {
+            "illness": "heartworm",
             "cost": 150, #cost from chewy: https://www.chewy.com/nexgard-chew-dogs-241-60-lbs-purple/dp/173254
             "duration": 1,
             "display": "Heartworm Meds",

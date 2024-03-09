@@ -1,9 +1,10 @@
 from random import *
+import math
 afflictions_dictionary = {
     0: 
         {
           "dog_ate_pizza": {
-            "persistent": False, #until treatment
+            "duration" : 1, #until treatment
             "indefinite": False, #until death
             "cure": { "cost": lambda dog : 30,  "work": 1 },
             "health": 0,
@@ -11,7 +12,7 @@ afflictions_dictionary = {
             "description": "Your dog got the runs and you had to do a little extra clean-up as a result. While you shouldn't give you dog pizza, it won't significantly impact its health.",
             }, 
           "accident": {
-            "persistent": False, #until treatment
+            "duration" : 1, #until treatment
             "indefinite": False, #until death
             "cure": { "cost": lambda dog : 0,  "work": 2 },
             "health": 0,
@@ -19,7 +20,7 @@ afflictions_dictionary = {
             "description": "Your dog had an accident in the house, requiring you to clean it up.",
             },
           "dislikes_friend": {
-            "persistent": False, #until treatment
+            "duration" : 1, #until treatment
             "indefinite": False, #until death
             "cure": { "cost": lambda dog : 60,  "work": 0 },
             "health": 0,
@@ -27,7 +28,7 @@ afflictions_dictionary = {
             "description": "Your dog dislikes your friend. You take your friend out to dinner instead of having them over for dinner.",
             },
           "bit_other_dog": {
-            "persistent": False, #until treatment
+            "duration" : 1, #until treatment
             "indefinite": False, #until death
             "cure": { "cost": lambda dog : random.randint(3, 6)*100,  "work": 4},
             "health": 0,
@@ -38,7 +39,7 @@ afflictions_dictionary = {
     1:
         {
         "fleas": {
-            "persistent": True, #until treatment
+            "duration" : 1, #until treatment
             "indefinite": False, #until death
             "cure": { "cost": lambda dog : 150,  "work": 8, },
             "health": -5,
@@ -46,7 +47,7 @@ afflictions_dictionary = {
             "description": "Fleas cause anemia, and may carry eggs from other parasites, particularly tapeworms. Treatment involves medications, specialty shampoos and extermination of fleas from the environment.",
             },
         "ingrown_nail" : {
-            "persistent": False,
+            "duration" : 1,
             "indefinite": False,
             "cure": { "cost": lambda dog : 100,  "work": 1, }, 
             "health": -1,
@@ -54,7 +55,7 @@ afflictions_dictionary = {
             "description": "Your dog has an ingrown nail on its paw.",
             },
         "bur_in_paw" : {
-            "persistent": False,
+            "duration" : 1,
             "indefinite": False,
             "cure": { "cost": lambda dog : 100,  "work": 1, }, 
             "health": -1,
@@ -65,7 +66,7 @@ afflictions_dictionary = {
     2:
         {
         "allergies" : {
-            "persistent": True,
+            "duration": math.inf,
             "indefinite": True,
             "cure": { "cost": lambda dog : 60,  "work": 1, }, #this is the recurrent cost... NOT the intitial cost. That will be in the event lookup 
             "health": -1,
@@ -73,8 +74,8 @@ afflictions_dictionary = {
             "description": "Allergies are a lifelong condition. Your dog will need to recieve treatment for it's whole life.",
             },
         "obesity" : {
-            "persistent": True,
-            "indefinite": True,
+            "duration": 3,
+            "indefinite": False,
             "cure": { "cost": lambda dog : 0,  "work": 10, }, #this is the recurrent cost... NOT the intitial cost. That will be in the event lookup 
             "health": -3,
             "stress": -2,
@@ -84,7 +85,7 @@ afflictions_dictionary = {
     3:
         {    
         "heartworm" : {
-            "persistent": True,
+            "duration" : 1,
             "indefinite": False,
             "cure": { "cost": lambda dog : 500 + (200*dog.weight)//50,  "work": 2, }, #WHEN SIZE is implemented, change cost to lambda dog : dog.get_size() to output between $500-1100
             "health": -100,
@@ -96,7 +97,7 @@ afflictions_dictionary = {
     4: 
         {    
         "cancer" : {
-            "persistent": True,
+            "duration" : 1,
             "indefinite": False,
             "cure": { "cost": lambda dog : 4100,  "work": 2, }, #WHEN SIZE is implemented, change cost to lambda dog : dog.get_size() to output between $500-1100
             "health": -100,

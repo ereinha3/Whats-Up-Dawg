@@ -24,15 +24,22 @@ class Dog:
         self.name = name
         self.walk_schedule = "short"
         self.meal_plan = "normal"
+        # This should be a dictionary following this structure 
+        #   {"affliction_name": {treated (boolean) -> this will affect whether or not the health is decremented, duration}}
         self.afflictions = {}
+        # This should be a dictionary of the following structure {medication_name: duration}
         self.medications = {}
+        # Same structure as medications
         self.items = {}
         self.alive = True
         self.surrendered = False
         self.calculate_food_per_day = lambda w = self.weight: 0.045*w + 0.81
         
     def __str__(self):
-        return f"{self.name} is a {self.breed} with {self._health} health and is {self.age} years old.\nMedication are {[item for item in self.medications]}.\nItems are {[item for item in self.items]}"
+        return f"{self.name} is a {self.breed} with {self._health} health and is {self.age} years old.\
+                \nMedication are {[item for item in self.medications.keys()]} with respective durations of {[val for val in self.medications.values()]}.\
+                \nItems are {[item for item in self.items.keys()]} with respective durations of {[val for val in self.items.values()]}.\
+                \n{self.name} currently suffers from {[key for key in self.afflictions]} with respective durations of {[val for val in self.afflictions.values()]}"
 
     @property
     def health(self):
@@ -54,7 +61,7 @@ class Human:
         self.dog = dog
         
     def __str__(self):
-        return f"{self.name} currently has a balance of ${self._balance} and has spent {self.time_spent} hours on {self.dog.name}"
+        return f"{self.name} currently has a balance of ${self._balance} and has spent {self.time_spent} hours on {self.dog.name}."
 
     @property
     def revenue(self):
