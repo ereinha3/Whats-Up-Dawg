@@ -1170,7 +1170,6 @@ class MainWindow(customtkinter.CTk):
         self.human_name_label.configure(text=human_name)
         self.dog_name_label.configure(text=dog_name)
         self.balance_label.configure(text=f'Balance: ${income}')
-        # self.current_balance = int(income) # TODO
 
         # Set Dog Image
         dog_string = self.dog_type_combobox.get().lower().strip().replace(" ", "_") + ".jpg"
@@ -1287,8 +1286,9 @@ class MainWindow(customtkinter.CTk):
     def continue_button_event(self):
         print("Continue Button Pressed")
         self.event = controller.load_event(self.dog)
+        event_name = self.event["name"]
 
-        resistance = controller.check_resistance(self.dog, self.human, self.event)
+        resistance = controller.check_resistance(self.dog, self.event)
 
         if resistance:
             self.textbox.configure(state="normal")
@@ -1296,8 +1296,9 @@ class MainWindow(customtkinter.CTk):
             self.textbox.insert("0.0", self.event["resist"]["message"])
             self.textbox.configure(state="disabled")
             
-            """if self.event["name"] in self.dog.medications:
-                del self.dog.medications[self.event["name"]]"""
+            if event_name in self.dog.medications:
+                if self.dog.medications[event_name] == 0:
+                    del self.dog.medications[event_name]
 
         elif len(self.event["options"])==0:
             self.textbox.configure(state="normal")
@@ -1314,13 +1315,13 @@ class MainWindow(customtkinter.CTk):
             self.textbox.configure(state="disabled")
 
             self.decision_options_frame.tkraise()
-            self.push_splash_screen(summary)
+            # self.push_splash_screen(summary)
             return
             # return TODO <- This could prevent stat updates until an option is selected
 
         #TODO update dog and human stats
         self.dog, self.human, summary = controller.next_round(self.dog, self.human)
-        self.push_splash_screen(summary)
+        # self.push_splash_screen(summary)
         self.refresh_screen()
         return
     
