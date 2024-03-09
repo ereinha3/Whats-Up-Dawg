@@ -20,7 +20,7 @@ def load_event(dog):
             end -= 1
         # 25% chance that the selected affliction occurs, 75% chance a random non-affliction event occurs
         probability_of_non_affliction = [0 for x in range(int((dog.max_age-dog.age)//3))]
-        # print(probability_of_non_affliction)
+        print(probability_of_non_affliction)
         selection = choice([choice(new_probabilities)]+probability_of_non_affliction)
         name = choice(list(afflictions_dictionary[selection].keys()))
         if name not in dog.afflictions.keys():
@@ -34,6 +34,26 @@ def find_affliction_from_event_name(event_name):
             #print(commonality, value[event_name])
             return commonality, value[event_name]
     return None
+        
+def handle_event(event:dict, button_number, dog:Dog, human:Human):
+    affliction_name = event["name"]
+    #print(affliction_name)
+    commonality, affliction = find_affliction_from_event_name(affliction_name)
+    #print(affliction)
+    if str(button_number) == '1':
+        if commonality != 0:
+            dog.afflictions[affliction_name] = [1, affliction['duration']]
+        else:
+            human.balance -= affliction["cure"]["cost"](dog)
+            human.time_spent -= affliction["cure"]["work"]
+    if str(button_number) == '2':
+        if commonality != 0:
+            dog.afflictions[affliction_name] = [0, math.inf]
+        else:
+            dog.health += affliction["health"]
+            dog.happiness += affliction["stress"]
+    human.balance = round(human.balance, 2)
+    return dog, human
 
 def next_round(dog:Dog, human:Human):
     summary_paragraph = 'A whole 6 months have passed! The following occured over the period of time:\n\n'
@@ -82,10 +102,11 @@ def next_round(dog:Dog, human:Human):
             dog.health += affliction["health"]
             dog.happiness += affliction["stress"]
         
-
+    
     for affliction in afflictions_to_remove:
         summary_paragraph += f"{dog.name} has been cured of {affliction} thanks to rigorous treatment.\n"
         dog.afflictions.pop(affliction)
+        
         
     # Remove timed our durations on items
     items_to_remove = []
@@ -96,7 +117,7 @@ def next_round(dog:Dog, human:Human):
         dog.items[item] -= 1
         if dog.items[item] <= 0:  
             items_to_remove.append(dog.items[item["display"]])
-
+            # del dog.items[item["display"]]
     for item in items_to_remove:
         summary_paragraph += f"{dog.name} completely used their {item}.\n"
         del item
@@ -109,7 +130,7 @@ def next_round(dog:Dog, human:Human):
         dog.medications[med_name] -= 1
         if dog.medications[med_name] <= 0:
             meds_to_remove.append(med_name)
-
+            # del dog.medications[medication]
     for medication in meds_to_remove:
         summary_paragraph += f"You ran out of {medication} for {dog.name}.\n"
         del medication
@@ -118,5 +139,5 @@ def next_round(dog:Dog, human:Human):
     summary_paragraph += f"You spent a total of {start_balance-human.balance} on {dog.name} over the past 6 months.\n"
     return dog, human, summary_paragraph
 
-def check_resistance(dog: Dog, event: dict) -> None:
+def check_resistance(dog: Dog, human: Human, event: dict) -> None:
     return (event["resist"]["check"](dog))
