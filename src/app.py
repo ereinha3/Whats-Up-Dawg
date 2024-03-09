@@ -1118,9 +1118,10 @@ class MainWindow(customtkinter.CTk):
         summary_label.grid(
             row=0,
             column=0,
-            rowspan=3,
             columnspan=3,
-            sticky="news"
+            sticky="news",
+            padx = 5,
+            pady = 5,
         )
         self.continue_and_destroy_frame_button = customtkinter.CTkButton(
             self.splash_frame,
@@ -1129,7 +1130,8 @@ class MainWindow(customtkinter.CTk):
         self.continue_and_destroy_frame_button.grid(
             row=1,
             column=0,
-            sticky='ew')
+            columnspan=3,
+            sticky='news')
         self.splash_frame.tkraise()
 
     
