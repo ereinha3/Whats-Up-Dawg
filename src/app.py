@@ -1100,9 +1100,18 @@ class MainWindow(customtkinter.CTk):
             column=1,
             padx=20,
             pady=20)
+        
+        self.resume_button = None
 
     #--------------------------------------------------------------------------
     # Main Window Methods
+    def destroy_and_maybe_return_to_main(self, frame):
+        frame.destroy()
+        if not self.dog.alive:
+            if self.resume_button:
+                self.resume_button.destroy()
+            self.main_menu_button_event()
+    
     def push_splash_screen(self, text):
         self.splash_frame = customtkinter.CTkFrame(self)
         self.splash_frame.grid(
@@ -1123,7 +1132,7 @@ class MainWindow(customtkinter.CTk):
         self.continue_and_destroy_frame_button = customtkinter.CTkButton(
             self.splash_frame,
             text="Continue",
-            command=lambda: self.splash_frame.destroy(),
+            command=lambda: self.destroy_and_maybe_return_to_main(self.splash_frame),
             height = 60,
             width = 100,)
         self.continue_and_destroy_frame_button.grid(
@@ -1133,7 +1142,6 @@ class MainWindow(customtkinter.CTk):
             padx = 5,
             pady = 5,)
         self.splash_frame.tkraise()
-
     
     def instructions_button_event(self):
         print("How to Button Pressed")

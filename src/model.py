@@ -3,7 +3,7 @@ class Dog:
     def __init__(self, 
                  name = "Stitch", 
                  age = 0, 
-                 health = 100, 
+                 health = 10, 
                  happiness = 100, 
                  max_age = 14,
                  weight = 50,
