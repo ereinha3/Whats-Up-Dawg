@@ -1169,7 +1169,7 @@ class MainWindow(customtkinter.CTk):
         #TODO set Dog and Human attributes
         self.human_name_label.configure(text=human_name)
         self.dog_name_label.configure(text=dog_name)
-        self.balance_label.configure(text=f'Balance: ${income}')
+        self.balance_label.configure(text=f'Balance: ${self.human.revenue}')
 
         # Set Dog Image
         dog_string = self.dog_type_combobox.get().lower().strip().replace(" ", "_") + ".jpg"
