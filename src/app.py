@@ -8,6 +8,7 @@ from PIL import Image
 from data.matches import matches
 from data.shop import care_items, medications, walk_options, meal_options
 from string import capwords
+import time
 
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
@@ -101,6 +102,7 @@ class MedicationsWindow(customtkinter.CTkToplevel):
         '''Destroys the medications window when close button is pressed'''
         self.destroy()
         return
+    
 
 class ItemsWindow(customtkinter.CTkToplevel):
     '''Items list pop up window containing list of current items
@@ -421,7 +423,7 @@ class ShopWindow(customtkinter.CTkToplevel):
                 self.master.dog.items[item_key] = care_items[item_key]["duration"]
 
         # Update human balance and screen
-        self.master.human.balance -= self.total
+        self.master.human.balance = round(int(self.master.human.balance) - int(self.total), 2)
         self.master.balance_label.configure(text=f'Balance: ${str(self.master.human.balance)}')
     
         self.destroy()
@@ -1101,6 +1103,28 @@ class MainWindow(customtkinter.CTk):
 
     #--------------------------------------------------------------------------
     # Main Window Methods
+    def push_splash_screen(self, text):
+        self.splash_frame = customtkinter.CTkFrame(self)
+        self.splash_frame.grid(
+            row=0,
+            column=0,
+            rowspan=3,
+            columnspan=3,
+            sticky="news")
+        self.splash_frame.grid_columnconfigure((0, 1, 2), weight=1)
+        # self.main_menu_frame.grid_columnconfigure(1, weight=0)
+        self.splash_frame.grid_rowconfigure(1, weight=1)
+        summary_label = customtkinter.CTkLabel(self.splash_frame, text=text, font=customtkinter.CTkFont(size=20, weight="bold"))
+        summary_label.grid(
+            row=0,
+            column=0,
+            rowspan=3,
+            columnspan=3,
+            sticky="news"
+        )
+        self.splash_frame.tkraise()
+        self.splash_frame.after(3000, self.splash_frame.destroy)
+    
     def instructions_button_event(self):
         print("How to Button Pressed")
         if self.instructions_window is None or not self.instructions_window.winfo_exists():
@@ -1290,11 +1314,13 @@ class MainWindow(customtkinter.CTk):
             self.textbox.configure(state="disabled")
 
             self.decision_options_frame.tkraise()
+            self.push_splash_screen(summary)
             return
             # return TODO <- This could prevent stat updates until an option is selected
 
         #TODO update dog and human stats
-        controller.next_round(self.dog, self.human)
+        self.dog, self.human, summary = controller.next_round(self.dog, self.human)
+        self.push_splash_screen(summary)
         self.refresh_screen()
         return
     
@@ -1312,7 +1338,6 @@ class MainWindow(customtkinter.CTk):
         #TODO update dog and human stats
         #print("event = ", self.event)
         self.dog, self.human = controller.handle_event(self.event, button_number, self.dog, self.human)
-        controller.next_round(self.dog, self.human)
         self.refresh_screen()
         print(self.dog)
         print(self.human)

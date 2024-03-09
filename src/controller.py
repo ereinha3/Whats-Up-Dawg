@@ -51,7 +51,7 @@ def determine_event_outcome(options: dict, human: Human):
 def find_affliction_from_event_name(event_name):
     for commonality, value in afflictions_dictionary.items():
         if event_name in value.keys():
-            print(commonality, value[event_name])
+            #print(commonality, value[event_name])
             return commonality, value[event_name]
     return None
         
@@ -72,6 +72,7 @@ def handle_event(event:dict, button_number, dog:Dog, human:Human):
         else:
             dog.health += affliction["health"]
             dog.happiness += affliction["stress"]
+    human.balance = round(human.balance, 2)
     return dog, human
 
 def next_round(dog:Dog, human:Human):
