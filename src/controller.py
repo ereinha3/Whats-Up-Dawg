@@ -139,5 +139,5 @@ def next_round(dog:Dog, human:Human):
     summary_paragraph += f"You spent a total of {start_balance-human.balance} on {dog.name} over the past 6 months.\n"
     return dog, human, summary_paragraph
 
-def check_resistance(dog: Dog, human: Human, event: dict) -> None:
+def check_resistance(dog: Dog, event: dict) -> None:
     return (event["resist"]["check"](dog))
