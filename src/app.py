@@ -1122,8 +1122,16 @@ class MainWindow(customtkinter.CTk):
             columnspan=3,
             sticky="news"
         )
+        self.continue_and_destroy_frame_button = customtkinter.CTkButton(
+            self.splash_frame,
+            text="Continue",
+            command=lambda: self.splash_frame.destroy())
+        self.continue_and_destroy_frame_button.grid(
+            row=1,
+            column=0,
+            sticky='ew')
         self.splash_frame.tkraise()
-        self.splash_frame.after(3000, self.splash_frame.destroy)
+
     
     def instructions_button_event(self):
         print("How to Button Pressed")
@@ -1313,15 +1321,15 @@ class MainWindow(customtkinter.CTk):
                                 + f'[Option 1]: {self.event["options"]["1"]["intro"]}' + "\n" 
                                 + f'[Option 2]: {self.event["options"]["2"]["intro"]}')
             self.textbox.configure(state="disabled")
-
+            self.dog, self.human, summary = controller.next_round(self.dog, self.human)
+            self.push_splash_screen(summary)
             self.decision_options_frame.tkraise()
-            # self.push_splash_screen(summary)
             return
             # return TODO <- This could prevent stat updates until an option is selected
 
         #TODO update dog and human stats
         self.dog, self.human, summary = controller.next_round(self.dog, self.human)
-        # self.push_splash_screen(summary)
+        self.push_splash_screen(summary)
         self.refresh_screen()
         return
     
