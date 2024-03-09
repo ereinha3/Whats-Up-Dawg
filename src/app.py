@@ -1108,17 +1108,14 @@ class MainWindow(customtkinter.CTk):
         self.splash_frame.grid(
             row=0,
             column=0,
-            rowspan=3,
-            columnspan=3,
             sticky="news")
-        self.splash_frame.grid_columnconfigure((0, 1, 2), weight=1)
+        #self.splash_frame.grid_columnconfigure((0, 1, 2), weight=1)
         # self.main_menu_frame.grid_columnconfigure(1, weight=0)
-        self.splash_frame.grid_rowconfigure(1, weight=1)
+        #self.splash_frame.grid_rowconfigure(1, weight=1)
         summary_label = customtkinter.CTkLabel(self.splash_frame, text=text, font=customtkinter.CTkFont(size=20, weight="bold"))
         summary_label.grid(
             row=0,
             column=0,
-            columnspan=3,
             sticky="news",
             padx = 5,
             pady = 5,
@@ -1126,12 +1123,15 @@ class MainWindow(customtkinter.CTk):
         self.continue_and_destroy_frame_button = customtkinter.CTkButton(
             self.splash_frame,
             text="Continue",
-            command=lambda: self.splash_frame.destroy())
+            command=lambda: self.splash_frame.destroy(),
+            height = 60,
+            width = 100,)
         self.continue_and_destroy_frame_button.grid(
             row=1,
             column=0,
-            columnspan=3,
-            sticky='news')
+            sticky='news',
+            padx = 5,
+            pady = 5,)
         self.splash_frame.tkraise()
 
     

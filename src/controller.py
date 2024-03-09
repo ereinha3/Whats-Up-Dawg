@@ -69,17 +69,17 @@ def next_round(dog:Dog, human:Human):
     summary_paragraph += f'You spent {walk_time} walking {dog.name} over the last 6 months.\n'
     
     # Dividing by 4 to get price per 4oz, then multiply by cups eaten per day, then by 180 to find total cost
-    human.balance -= meal_options[dog.meal_plan]["cost"]/4 * dog.calculate_food_per_day() * 180
+    meal_cost = round(meal_options[dog.meal_plan]["cost"]/4 * dog.calculate_food_per_day() * 180,2)
+    human.balance -= meal_cost
+    
+    # Add food costs to time summary
+    summary_paragraph += f'You spent ${meal_cost} on food for {dog.name} over the last 6 months.\n'
     
     # Half a year
     dog.age += 0.5
     old_max = dog.max_health
     
-    # Dog max age has to be multiplied by two to account for the fact that this is a 6 month, not a year-long, round
-    dog.max_health -= 100/(dog.max_age*2)
-    if dog.max_health <= 0:
-        dog.alive = False
-    dog.health = dog.health/old_max * dog.max_health
+    
     
     # TODO: Apply medications to afflictions and get rid of them if applicable
     
@@ -134,9 +134,31 @@ def next_round(dog:Dog, human:Human):
     for medication in meds_to_remove:
         summary_paragraph += f"You ran out of {medication} for {dog.name}.\n"
         del medication
+        
+    # Dog max age has to be multiplied by two to account for the fact that this is a 6 month, not a year-long, round
+    dog.max_health -= 100/(dog.max_age*2)
+    dog.health = dog.health/old_max * dog.max_health
+    
+    if dog.health <= 0:
+        summary_paragraph += f"After {dog.age} trips around the sun, {dog.name}'s life has come to an end.\n"
+        summary_paragraph += "The cause of death was ruled to be: "
+        afflictions_list = list(dog.afflictions.keys())
+        if len(afflictions_list) != 0:
+            if len(afflictions_list)>1:
+                for affliction in afflictions_list[:-1]:
+                    summary_paragraph += f"{affliction}, "
+                summary_paragraph += f"and {afflictions_list[-1]}.\n"
+            else:
+                summary_paragraph += f"{afflictions_list[0]}.\n"
+        else:
+            summary_paragraph += "natural causes.\n"
+        dog.alive = False
     
     human.balance = round(human.balance, 2)
-    summary_paragraph += f"You spent a total of {start_balance-human.balance} on {dog.name} over the past 6 months.\n"
+    if dog.alive:
+        summary_paragraph += f"You spent a total of {round(start_balance-human.balance,2)} on {dog.name} over the past 6 months.\n"
+    else:
+        summary_paragraph += f"You spent a total of {round(human.revenue*2*dog.age-human.balance,2)} on {dog.name} over the course of {dog.name}'s life.\n"
     return dog, human, summary_paragraph
 
 def check_resistance(dog: Dog, event: dict) -> None:
