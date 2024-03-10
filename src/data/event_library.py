@@ -99,7 +99,7 @@ event_lookup_table = {
     "obesity": {
         "name": "obesity",
         "resist": {
-            "check": lambda dog: (dog.walk_schedule is "Medium" and dog.meal_plan is "Vet Recommended") or (dog.walk_schedule is "Long" and dog.meal_plan in []) ,  #add a clause for excersise when this is added to the dog object model
+            "check": lambda dog: (dog.walk_schedule == "Medium" and dog.meal_plan is "Vet Recommended") or (dog.walk_schedule == "Long" and dog.meal_plan in []) ,  #add a clause for excersise when this is added to the dog object model
             "message": "Maybe your dog just had a big lunch? Well done for walking you dog consistently and feeding it properly. Your dog has avoided obesity.",
             },
         "intro": "Your dog appears to be gaining weight is having trouble goin to the bathroom. Do you... ?",
@@ -211,7 +211,7 @@ event_lookup_table = {
                 "outro": "The other dog is fine. Your dog may bite again though.",  
                 },
             },
-    }
+    },
         "singing": {
          "name": "singing",
         "resist": {
