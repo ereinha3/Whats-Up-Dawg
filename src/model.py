@@ -3,7 +3,7 @@ class Dog:
     def __init__(self, 
                  name = "Stitch", 
                  age = 0, 
-                 health = 10, 
+                 health = 100, 
                  happiness = 100, 
                  max_age = 14,
                  weight = 50,
@@ -52,9 +52,10 @@ class Dog:
             self.alive = False
 
 class Human:
-    def __init__(self, income, dog:Dog, name="John"):
+    def __init__(self, monthly_income, dog:Dog, name="John"):
         # This explicitly needs to be declared as disposable income to the user as they need income for a variety of essentials
-        self.income = int(income)
+        self.monthly_income = float(monthly_income)
+        self.income = float(monthly_income) * 6 #This is the 6-monthly income
         self._balance = self.revenue
         self.time_spent = 0
         self.name = name
@@ -74,5 +75,5 @@ class Human:
     @balance.setter
     def balance(self, value):
         self._balance = value
-        if (self._balance < -(self.revenue * 4)):
-            self.dog.surrender = True
+        if (self._balance < -(self.revenue / 6 * 4)):
+            self.dog.surrendered = True

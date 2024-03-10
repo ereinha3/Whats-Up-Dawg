@@ -834,7 +834,8 @@ class MainWindow(customtkinter.CTk):
             padx=10,
             pady=10,
             sticky="nsew")
-        self.textbox.insert("0.0", "It's time to begin your adventure with your new furry friend! Make sure to take good care of them!\n\nPress 'Continue' to begin.")
+        self.start_string = "It's time to begin your adventure with your new furry friend! Make sure to take good care of them!\n\nPress 'Continue' to begin."
+        self.textbox.insert("0.0", self.start_string)
         self.textbox.configure(state="disabled")
 
     #--------------------------------------------------------------------------
@@ -1107,7 +1108,7 @@ class MainWindow(customtkinter.CTk):
     # Main Window Methods
     def destroy_and_maybe_return_to_main(self, frame):
         frame.destroy()
-        if not self.dog.alive:
+        if not self.dog.alive or self.human.dog.surrendered:
             if self.resume_button:
                 self.resume_button.destroy()
             self.main_menu_button_event()
@@ -1303,11 +1304,15 @@ class MainWindow(customtkinter.CTk):
 
     def continue_button_event(self):
         print("Continue Button Pressed")
+        # These are needed to prevent update on initial continue press
+        current_text = str(self.textbox.get("1.0", tkinter.END)).replace(' ', '').replace('\n', '')
+        stripped_start = self.start_string.replace(' ', '').replace('\n', '')
+
         self.event = controller.load_event(self.dog)
         event_name = self.event["name"]
 
         resistance = controller.check_resistance(self.dog, self.event)
-
+        print(self.textbox.get("1.0", tkinter.END))
         if resistance:
             self.textbox.configure(state="normal")
             self.textbox.delete("0.0", tkinter.END)
@@ -1331,15 +1336,16 @@ class MainWindow(customtkinter.CTk):
                                 + f'[Option 1]: {self.event["options"]["1"]["intro"]}' + "\n" 
                                 + f'[Option 2]: {self.event["options"]["2"]["intro"]}')
             self.textbox.configure(state="disabled")
-            self.dog, self.human, summary = controller.next_round(self.dog, self.human)
-            self.push_splash_screen(summary)
+            if stripped_start != current_text:
+                self.dog, self.human, summary = controller.next_round(self.dog, self.human)
+                self.push_splash_screen(summary)
             self.decision_options_frame.tkraise()
             return
             # return TODO <- This could prevent stat updates until an option is selected
-
         #TODO update dog and human stats
-        self.dog, self.human, summary = controller.next_round(self.dog, self.human)
-        self.push_splash_screen(summary)
+        if stripped_start != current_text:
+            self.dog, self.human, summary = controller.next_round(self.dog, self.human)
+            self.push_splash_screen(summary)
         self.refresh_screen()
         return
     

@@ -40,8 +40,8 @@ def handle_event(event:dict, button_number, dog:Dog, human:Human):
     #print(affliction_name)
     commonality, affliction = find_affliction_from_event_name(affliction_name)
     #print(affliction)
-    if str(button_number) == '1':
-        if commonality != 0:
+    if str(button_number) == '1': #Human chose to treat
+        if commonality != 0: # Is an affliction
             dog.afflictions[affliction_name] = [1, affliction['duration']]
         else:
             human.balance -= affliction["cure"]["cost"](dog)
@@ -153,6 +153,10 @@ def next_round(dog:Dog, human:Human):
         else:
             summary_paragraph += "natural causes.\n"
         dog.alive = False
+        
+    elif human.dog.surrendered:
+        summary_paragraph += f"Your balance has exceeded the minimum threshold meaning you are no longer able to financially support {dog.name}.\n"
+        summary_paragraph += f"{dog.name} has been surrendered to a shelter."
     
     human.balance = round(human.balance, 2)
     if dog.alive:
