@@ -35,6 +35,214 @@ afflictions_dictionary = {
             "stress": 0,
             "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
             },
+          "brings_rat": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 1},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "singing": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 1},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "growls": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 2},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "dog_on_table": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 4},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "begs": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 2},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "apple_juice": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 150,  "work": 4},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "spin": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 0},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "socks": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 1},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "scratched_sofa": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 0},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "heel": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 2},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "marigolds": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 0},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "car_window": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 0},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "trash": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 1},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "let_out": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 1},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "lasagna": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 0},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "dirty_dog": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 2},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "doorbell": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 4},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "wrong_word": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 2},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "barber": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 0},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "father": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 0},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "collar": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 25},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "bonus_tricks": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 0},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "mouth_kiss": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 0},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "tight collar": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 30,  "work": 1},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "dog_sitter": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 40,  "work": 0},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
+          "play_date": {
+            "duration" : 1, #until treatment
+            "indefinite": False, #until death
+            "cure": { "cost": lambda dog : 0,  "work": 0},
+            "health": 0,
+            "stress": 0,
+            "description": "Your dog bit another dog. This is a result of disobedience stemming from poor training.",
+            },
         },
     1:
         {
