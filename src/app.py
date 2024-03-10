@@ -1307,6 +1307,10 @@ class MainWindow(customtkinter.CTk):
         # These are needed to prevent update on initial continue press
         current_text = str(self.textbox.get("1.0", tkinter.END)).replace(' ', '').replace('\n', '')
         stripped_start = self.start_string.replace(' ', '').replace('\n', '')
+        if stripped_start != current_text:
+            self.dog, self.human, summary = controller.next_round(self.dog, self.human)
+            self.push_splash_screen(summary)
+            self.refresh_screen()
 
         self.event = controller.load_event(self.dog)
         event_name = self.event["name"]
@@ -1336,17 +1340,11 @@ class MainWindow(customtkinter.CTk):
                                 + f'[Option 1]: {self.event["options"]["1"]["intro"]}' + "\n" 
                                 + f'[Option 2]: {self.event["options"]["2"]["intro"]}')
             self.textbox.configure(state="disabled")
-            if stripped_start != current_text:
-                self.dog, self.human, summary = controller.next_round(self.dog, self.human)
-                self.push_splash_screen(summary)
+            
             self.decision_options_frame.tkraise()
             return
             # return TODO <- This could prevent stat updates until an option is selected
         #TODO update dog and human stats
-        if stripped_start != current_text:
-            self.dog, self.human, summary = controller.next_round(self.dog, self.human)
-            self.push_splash_screen(summary)
-        self.refresh_screen()
         return
     
     def option_button_event(self, button_number):

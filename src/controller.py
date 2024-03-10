@@ -59,14 +59,14 @@ def next_round(dog:Dog, human:Human):
     summary_paragraph = 'A whole 6 months have passed! The following occured over the period of time:\n\n'
     # take 5% of income for now
     start_balance = human.balance
-    human.balance += human.revenue
+    
     
     # Multiply by 180 here to accurately calculate the time over 6 month
     walk_time = walk_options[dog.walk_schedule]["time"] * 180
     human.time_spent += walk_time
     
     # Adding to time summary
-    summary_paragraph += f'You spent {walk_time} walking {dog.name} over the last 6 months.\n'
+    summary_paragraph += f'You spent {walk_time} hours walking {dog.name} over the last 6 months.\n'
     
     # Dividing by 4 to get price per 4oz, then multiply by cups eaten per day, then by 180 to find total cost
     meal_cost = round(meal_options[dog.meal_plan]["cost"]/4 * dog.calculate_food_per_day() * 180,2)
@@ -111,15 +111,17 @@ def next_round(dog:Dog, human:Human):
     # Remove timed our durations on items
     items_to_remove = []
     for item in dog.items.keys():
+        item_name = item
         item = care_items[item]
         dog.happiness += item["happiness"]
         dog.health += item["health"]
-        dog.items[item] -= 1
-        if dog.items[item] <= 0:  
-            items_to_remove.append(dog.items[item["display"]])
+        dog.items[item_name] -= 1
+        if dog.items[item_name] <= 0:  
+            items_to_remove.append(item_name)
             # del dog.items[item["display"]]
     for item in items_to_remove:
         summary_paragraph += f"{dog.name} completely used their {item}.\n"
+        dog.items.pop(item_name)
         del item
 
     meds_to_remove = []
@@ -133,6 +135,7 @@ def next_round(dog:Dog, human:Human):
             # del dog.medications[medication]
     for medication in meds_to_remove:
         summary_paragraph += f"You ran out of {medication} for {dog.name}.\n"
+        dog.medications.pop(medication)
         del medication
         
     # Dog max age has to be multiplied by two to account for the fact that this is a 6 month, not a year-long, round
@@ -160,9 +163,10 @@ def next_round(dog:Dog, human:Human):
     
     human.balance = round(human.balance, 2)
     if dog.alive:
-        summary_paragraph += f"You spent a total of {round(start_balance-human.balance,2)} on {dog.name} over the past 6 months.\n"
+        summary_paragraph += f"You spent a total of ${round(start_balance-human.balance,2)} on {dog.name} over the past 6 months.\n"
+        human.balance += human.revenue
     else:
-        summary_paragraph += f"You spent a total of {round(human.revenue*2*dog.age-human.balance,2)} on {dog.name} over the course of {dog.name}'s life.\n"
+        summary_paragraph += f"You spent a total of ${round(human.revenue*2*dog.age-human.balance,2)} on {dog.name} over the course of {dog.name}'s life.\n"
     return dog, human, summary_paragraph
 
 def check_resistance(dog: Dog, event: dict) -> None:
