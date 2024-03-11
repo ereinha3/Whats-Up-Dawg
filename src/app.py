@@ -1281,6 +1281,7 @@ class MainWindow(customtkinter.CTk):
         self.textbox.delete("0.0", tkinter.END)
         self.textbox.insert("0.0", self.start_string)
         self.textbox.configure(state="disabled")
+        self.continue_button_frame.tkraise()
 
         # Set Dog Image
         dog_string = self.dog_type_combobox.get().lower().strip().replace(" ", "_") + ".jpg"
