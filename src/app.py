@@ -1544,7 +1544,7 @@ class MainWindow(customtkinter.CTk):
 
         # Happiness image based on dogs happiness
         happiness_value = self.dog.happiness
-        print(f"Happiness Value: {happiness_value}")
+        # print(f"Happiness Value: {happiness_value}")
         if (80 <= happiness_value <= 100):
             self.happiness_image_label.configure(image=self.face1_image)
         elif (60 <= happiness_value <= 79):
