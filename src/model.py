@@ -14,12 +14,12 @@ class Dog:
                  max_age = 14,
                  weight = 50,
                  breed = "yorkshire terrier",
-                 trained = 10
+                 training = 10
                  ):
         self.breed = breed 
         self.happiness = happiness
-        self.trained = trained
-        self.trainability = breeds[breed]["trainability_value"] * 10
+        self.training = training
+        #self._trainability = breeds[breed]["trainability_value"] * 10
         self.max_age = breeds[breed]["max_expectancy"] #dog will not survive long past max age
         self._age = age #dog age in years
         self._health = health
