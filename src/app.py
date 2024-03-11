@@ -453,6 +453,7 @@ class MainWindow(customtkinter.CTk):
         self.dog = None
         self.dog_image = None
         self.event = None
+        self.event_cost = 0
         
         # Clip art image paths
         self.dog_image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../docs/Images")
@@ -1143,8 +1144,6 @@ class MainWindow(customtkinter.CTk):
             padx = 5,
             pady = 5,)
         self.splash_frame.tkraise()
-        
-        self.event_cost = 0
     
     def instructions_button_event(self):
         print("How to Button Pressed")

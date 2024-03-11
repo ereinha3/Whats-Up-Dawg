@@ -79,7 +79,7 @@ def next_round(dog:Dog, human:Human, event_cost, event):
     
     # Add event costs to time summary
     if event_cost > 0:
-        summary_paragraph += f'You spent ${event_cost} on resolving {event} for {dog.name} over the last 6 months.\n'
+        summary_paragraph += f'You spent ${event_cost} on resolving {event.replace("_", " ")} for {dog.name} over the last 6 months.\n'
     
     # Half a year
     dog.age += 0.5
@@ -92,7 +92,6 @@ def next_round(dog:Dog, human:Human, event_cost, event):
     # Apply afflictions
     afflictions_to_remove = []
     for illness in dog.afflictions.keys():
-        dog.afflictions[illness][1] -= 1
         if dog.afflictions[illness][1] <= 0:
             afflictions_to_remove.append(illness)
         if event_lookup_table[illness]["resist"]["check"](dog):
@@ -100,17 +99,18 @@ def next_round(dog:Dog, human:Human, event_cost, event):
         treatment = dog.afflictions[illness][0]
         affliction = find_affliction_from_event_name(illness)[1]
         if treatment:
-            human.balance -= affliction["cure"]["cost"](dog)
-            human.time_spent -= affliction["cure"]["work"]
             if illness not in afflictions_to_remove:
-                summary_paragraph += f"{dog.name} still suffers from {illness}, but is undergoing treatment.\n"
+                human.balance -= round(affliction["cure"]["cost"](dog),2)
+                human.time_spent -= affliction["cure"]["work"]
+                summary_paragraph += f"{dog.name} still suffers from {illness.replace('_', ' ')}, but is undergoing treatment.\nYou spend ${affliction['cure']['cost'](dog)} on this treatment.\n"
         else:
             dog.health += affliction["health"]
             dog.happiness += affliction["stress"]
+        dog.afflictions[illness][1] -= 1
         
     
     for affliction in afflictions_to_remove:
-        summary_paragraph += f"{dog.name} has been cured of {affliction} thanks to rigorous treatment.\n"
+        summary_paragraph += f"{dog.name} has been cured of {str(affliction).replace('_', ' ')} thanks to rigorous treatment.\n"
         dog.afflictions.pop(affliction)
         
         
@@ -126,7 +126,7 @@ def next_round(dog:Dog, human:Human, event_cost, event):
             items_to_remove.append(item_name)
             # del dog.items[item["display"]]
     for item in items_to_remove:
-        summary_paragraph += f"{dog.name} completely used their {item}.\n"
+        summary_paragraph += f"{dog.name} completely used their {str(item).replace('_', ' ')}.\n"
         dog.items.pop(item_name)
         del item
 
@@ -134,13 +134,13 @@ def next_round(dog:Dog, human:Human, event_cost, event):
     for medication in dog.medications.keys():
         med_name = medication
         medication = medications[medication]
-        human.balance -= medication["cost"]
+        human.balance -= round(medication["cost"],2)
         dog.medications[med_name] -= 1
         if dog.medications[med_name] <= 0:
             meds_to_remove.append(med_name)
             # del dog.medications[medication]
     for medication in meds_to_remove:
-        summary_paragraph += f"You ran out of {medication} for {dog.name}.\n"
+        summary_paragraph += f"You ran out of {str(medication).replace('_', ' ')} for {dog.name}.\n"
         dog.medications.pop(medication)
         del medication
         
@@ -167,12 +167,12 @@ def next_round(dog:Dog, human:Human, event_cost, event):
         summary_paragraph += f"Your balance has exceeded the minimum threshold meaning you are no longer able to financially support {dog.name}.\n"
         summary_paragraph += f"{dog.name} has been surrendered to a shelter."
     
-    human.balance = round(human.balance, 2)
     if dog.alive:
         summary_paragraph += f"You spent a total of ${round(start_balance-human.balance+event_cost,2)} on {dog.name} over the past 6 months.\n"
         human.balance += human.revenue
     else:
         summary_paragraph += f"You spent a total of ${round(human.revenue*2*dog.age-human.balance,2)} on {dog.name} over the course of {dog.name}'s life.\n"
+    human.balance = round(human.balance, 2)
     return dog, human, summary_paragraph
 
 def check_resistance(dog: Dog, event: dict) -> None:
