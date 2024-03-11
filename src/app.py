@@ -1143,6 +1143,8 @@ class MainWindow(customtkinter.CTk):
             padx = 5,
             pady = 5,)
         self.splash_frame.tkraise()
+        
+        self.event_cost = 0
     
     def instructions_button_event(self):
         print("How to Button Pressed")
@@ -1308,7 +1310,7 @@ class MainWindow(customtkinter.CTk):
         current_text = str(self.textbox.get("1.0", tkinter.END)).replace(' ', '').replace('\n', '')
         stripped_start = self.start_string.replace(' ', '').replace('\n', '')
         if stripped_start != current_text:
-            self.dog, self.human, summary = controller.next_round(self.dog, self.human)
+            self.dog, self.human, summary = controller.next_round(self.dog, self.human, self.event_cost, self.event["name"])
             self.push_splash_screen(summary)
             self.refresh_screen()
 
@@ -1350,20 +1352,14 @@ class MainWindow(customtkinter.CTk):
     def option_button_event(self, button_number):
         print("Option Button Pressed")
 
+        self.dog, self.human, self.event_cost = controller.handle_event(self.event, button_number, self.dog, self.human)
         self.textbox.configure(state="normal")
         self.textbox.delete("0.0", tkinter.END)
         self.textbox.insert("0.0", self.event["options"][button_number]["outro"])
         self.textbox.configure(state="disabled")
-
+        
         self.continue_button_frame.tkraise()
         
-
-        #TODO update dog and human stats
-        #print("event = ", self.event)
-        self.dog, self.human = controller.handle_event(self.event, button_number, self.dog, self.human)
-        self.refresh_screen()
-        print(self.dog)
-        print(self.human)
         return
 
     def change_walk_option_event(self, choice: str):

@@ -38,6 +38,7 @@ def find_affliction_from_event_name(event_name):
 def handle_event(event:dict, button_number, dog:Dog, human:Human):
     affliction_name = event["name"]
     #print(affliction_name)
+    initial_balance = human.balance
     commonality, affliction = find_affliction_from_event_name(affliction_name)
     #print(affliction)
     if str(button_number) == '1': #Human chose to treat
@@ -53,9 +54,10 @@ def handle_event(event:dict, button_number, dog:Dog, human:Human):
             dog.health += affliction["health"]
             dog.happiness += affliction["stress"]
     human.balance = round(human.balance, 2)
-    return dog, human
+    return dog, human, round(initial_balance-human.balance, 2)
 
-def next_round(dog:Dog, human:Human):
+
+def next_round(dog:Dog, human:Human, event_cost, event):
     summary_paragraph = 'A whole 6 months have passed! The following occured over the period of time:\n\n'
     # take 5% of income for now
     start_balance = human.balance
@@ -74,6 +76,10 @@ def next_round(dog:Dog, human:Human):
     
     # Add food costs to time summary
     summary_paragraph += f'You spent ${meal_cost} on food for {dog.name} over the last 6 months.\n'
+    
+    # Add event costs to time summary
+    if event_cost > 0:
+        summary_paragraph += f'You spent ${event_cost} on resolving {event} for {dog.name} over the last 6 months.\n'
     
     # Half a year
     dog.age += 0.5
@@ -163,7 +169,7 @@ def next_round(dog:Dog, human:Human):
     
     human.balance = round(human.balance, 2)
     if dog.alive:
-        summary_paragraph += f"You spent a total of ${round(start_balance-human.balance,2)} on {dog.name} over the past 6 months.\n"
+        summary_paragraph += f"You spent a total of ${round(start_balance-human.balance+event_cost,2)} on {dog.name} over the past 6 months.\n"
         human.balance += human.revenue
     else:
         summary_paragraph += f"You spent a total of ${round(human.revenue*2*dog.age-human.balance,2)} on {dog.name} over the course of {dog.name}'s life.\n"
