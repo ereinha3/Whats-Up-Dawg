@@ -38,13 +38,11 @@ def load_event(dog):
             end -= 1
         # 25% chance that the selected affliction occurs, 75% chance a random non-affliction event occurs
         probability_of_non_affliction = [0 for x in range(int((dog.max_age-dog.age)//3))]
-        print(probability_of_non_affliction)
+        # print(probability_of_non_affliction)
         selection = choice([choice(new_probabilities)]+probability_of_non_affliction)
         name = choice(list(afflictions_dictionary[selection].keys()))
         if name not in dog.afflictions.keys():
             return event_lookup_table[name]
-
-    #return event_lookup_table[list(event_lookup_table)[randint(0, len(event_lookup_table) - 1)]]
 
 def handle_event(outcome, dog:Dog, human:Human) -> None:
     update_model_stats(outcome, human, dog)
@@ -58,7 +56,7 @@ def next_round(dog:Dog, human:Human, event_cost, event):
     #Update walk time
     summary_paragraph += f'You spent {walk_time} hours walking {dog.name}.\n'
     human.time_spent += walk_options[dog.walk_schedule]["time"] * 30 * config["months_per_round"]
-    
+        
     #Update meal expenses
     summary_paragraph += f'You spent ${dog.meal_expense} paying for your dogs meals.\n'
     human.balance -= dog.meal_expense
@@ -112,6 +110,7 @@ def next_round(dog:Dog, human:Human, event_cost, event):
         human.balance += human.revenue
     else:
         summary_paragraph += f"You spent a total of ${round(human.revenue*2*dog.age-human.balance,2)} on {dog.name} over the course of {dog.name}'s life.\n"
+    human.balance = round(human.balance, 2)
     return dog, human, summary_paragraph
 
 def check_resistance(dog: Dog, event: dict) -> None:

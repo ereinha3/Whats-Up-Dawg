@@ -1,3 +1,24 @@
+"""
+Graphical User Interface Module
+CS422, Group 7, Project 2 - What's Up Dawg!?
+
+Created on 3/2/2024
+
+Contributors:
+Darby W. (daw)
+Ethan R. (ear)
+
+- Created main screen and shop window - (daw) 3/3/2024
+- Added welcome and stat/info screens - (daw) 3/4/2024
+- Refined look of all menus and changed the arangement - (daw) 3/4/2024
+- Implemented continue and options buttons - (daw) 3/5/2024
+- Added happiness indicator and fixed meds/items/afflictions lists - (daw) 3/6/2024
+- Made shop dynamically load based on items and meds lists - (daw) 3/7/2024
+- Added screen refresh + bug fixes - (daw) 3/8/2024
+- Reforamtted splash screen, added docstrings and comments - (daw) 3/10/2024
+
+"""
+
 import tkinter
 import tkinter.messagebox
 import customtkinter
@@ -8,7 +29,6 @@ from PIL import Image
 from data.matches import matches
 from data.shop import care_items, medications, walk_options, meal_options
 from string import capwords
-import time
 
 
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
@@ -16,36 +36,45 @@ customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "gre
 
 
 class ToolTip(object):
-
-    def __init__(self, widget):
+    '''Tool tip pop up window - shows cost of food and time investment for walk options'''
+    def __init__(self, widget: tkinter.Widget):
         self.widget = widget
         self.tipwindow = None
         self.id = None
         self.x = self.y = 0
 
-    def showtip(self, text):
-        "Display text in tooltip window"
+    def showtip(self, text: str) -> None:
+        '''Display text in tooltip window'''
         self.text = text
         if self.tipwindow or not self.text:
             return
+        
         x, y, cx, cy = self.widget.bbox("insert")
         x = x + self.widget.winfo_rootx()
         y = y + cy + self.widget.winfo_rooty()
         self.tipwindow = tw = tkinter.Toplevel(self.widget)
         tw.wm_overrideredirect(1)
         tw.wm_geometry("+%d+%d" % (x, y))
-        label = tkinter.Label(tw, text=self.text, justify="left",
-                      background="#ffffe0", relief="solid", borderwidth=1,
-                      font=("tahoma", "12", "normal"))
+
+        label = tkinter.Label(
+            tw,
+            text=self.text,
+            justify="left",
+            background="#ffffe0",
+            relief="solid",
+            borderwidth=1,
+            font=("tahoma", "12", "normal"))
         label.pack(ipadx=1)
 
-    def hidetip(self):
+    def hidetip(self) -> None:
+        '''Hide tooltip window'''
         tw = self.tipwindow
         self.tipwindow = None
         if tw:
             tw.destroy()
             
-def CreateToolTip(widget, text):
+def CreateToolTip(widget, text: str) -> None:
+    '''Function for creating the tooltip widget'''
     toolTip = ToolTip(widget)
     def enter(event):
         toolTip.showtip(text)
@@ -55,13 +84,13 @@ def CreateToolTip(widget, text):
     widget.bind('<Leave>', leave)
 
 class MedicationsWindow(customtkinter.CTkToplevel):
-    '''Medication List Pop Up Window Containing List of Current Medications
+    '''Medication list pop up window containing list of current medications
     This window is a child (top level) of the main CTk window'''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.title("Medications")
-        self.geometry(f"{380}x{600}")
+        self.geometry(f"{380}x{625}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -98,11 +127,10 @@ class MedicationsWindow(customtkinter.CTkToplevel):
         
     #------------------------------------------------------------------------------
     # Medications Window Methods
-    def close_button_event(self):
+    def close_button_event(self) -> None:
         '''Destroys the medications window when close button is pressed'''
         self.destroy()
         return
-    
 
 class ItemsWindow(customtkinter.CTkToplevel):
     '''Items list pop up window containing list of current items
@@ -111,7 +139,7 @@ class ItemsWindow(customtkinter.CTkToplevel):
         super().__init__(*args, **kwargs)
 
         self.title("Items")
-        self.geometry(f"{380}x{600}")
+        self.geometry(f"{380}x{625}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -148,7 +176,7 @@ class ItemsWindow(customtkinter.CTkToplevel):
 
     #------------------------------------------------------------------------------
     # Items Window Methods
-    def close_button_event(self):
+    def close_button_event(self) -> None:
         '''Destroys the items window when close button is pressed'''
         self.destroy()
         return
@@ -160,7 +188,7 @@ class AfflictionsWindow(customtkinter.CTkToplevel):
         super().__init__(*args, **kwargs)
 
         self.title("Afflictions")
-        self.geometry(f"{380}x{600}")
+        self.geometry(f"{380}x{625}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -197,7 +225,7 @@ class AfflictionsWindow(customtkinter.CTkToplevel):
         
     #------------------------------------------------------------------------------
     # Afflictions Window Methods
-    def close_button_event(self):
+    def close_button_event(self) -> None:
         '''Destroys the afflictions window when close button is pressed'''
         self.destroy()
         return
@@ -209,7 +237,7 @@ class InstructionsWindow(customtkinter.CTkToplevel):
         super().__init__(*args, **kwargs)
 
         self.title("Game Instructions")
-        self.geometry(f"{380}x{600}")
+        self.geometry(f"{380}x{625}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -248,7 +276,7 @@ class InstructionsWindow(customtkinter.CTkToplevel):
 
     #------------------------------------------------------------------------------
     # Instructions Window Methods
-    def close_button_event(self):
+    def close_button_event(self) -> None:
         '''Destroys the Instructions window when close button is pressed'''
         self.destroy()
         return
@@ -260,7 +288,7 @@ class ShopWindow(customtkinter.CTkToplevel):
         super().__init__(*args, **kwargs)
 
         self.title("Ye Olde Shoppe")
-        self.geometry(f"{380}x{600}")
+        self.geometry(f"{380}x{625}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
@@ -382,16 +410,17 @@ class ShopWindow(customtkinter.CTkToplevel):
         
     #--------------------------------------------------------------------------
     # Shop Window Methods
-    def item_selected(self):
-        '''TODO'''
-        print("Item Selected")
+    def item_selected(self) -> None:
+        '''Command function for items/meds checkboxes.
+        Called whenever an item is selected or unselected'''
+        # print("Item Selected")
         self.pay_button.configure(state="enabled")
         self.total = 0
         # To update the running total we iterate through all meds/items and check which are switched on.
         for med_checkbox in self.meds_checkboxes:
             key = med_checkbox.cget("text")
             med_price = medications[key]["cost"]
-            if med_checkbox.get():
+            if med_checkbox.get(): # Check if the textbox is selected. If so, increment total
                 self.total += med_price
 
         for item_checkbox in self.items_checkboxes:
@@ -400,29 +429,26 @@ class ShopWindow(customtkinter.CTkToplevel):
             if item_checkbox.get():
                 self.total += item_price
 
-        # Update screen every time an item is selected or un-selected
+        # Update screen with new total every time an item is selected or un-selected
         self.cost_label.configure(text=f'Cost: $ {str(self.total)}.00')
 
         return
     
-    def pay_button_event(self):
-        '''TODO'''
-        print("Pay Button Pressed")
-
+    def pay_button_event(self) -> None:
+        '''Command function for shop 'Pay' button'''
+        # print("Pay Button Pressed")
         # Add all selected meds/items to appropriate dog attribute dictionaries
         for med_checkbox in self.meds_checkboxes:
             if med_checkbox.get():
                 med_key = med_checkbox.cget("text")
-                #print('med_key =', med_key)
-                #print("medications = ", self.master.dog.medications)
-                self.master.dog.medications[med_key] = medications[med_key]["duration"]# .add(med_checkbox.cget("text"))
+                self.master.dog.medications[med_key] = medications[med_key]["duration"]
 
         for item_checkbox in self.items_checkboxes:
             if item_checkbox.get():
                 item_key = item_checkbox.cget("text")
                 self.master.dog.items[item_key] = care_items[item_key]["duration"]
 
-        # Update human balance and screen
+        # Update main window human balance and screen
         self.master.human.balance = round(int(self.master.human.balance) - int(self.total), 2)
         self.master.balance_label.configure(text=f'Balance: ${str(self.master.human.balance)}')
     
@@ -430,12 +456,15 @@ class ShopWindow(customtkinter.CTkToplevel):
         return
 
 class MainWindow(customtkinter.CTk):
+    '''The main window of the application. Contains high level frames,
+    each containing various subframes with human and dog attributes and
+    buttons for game loop iteration'''
     def __init__(self):
         super().__init__()
 
         # Configure window
         self.title("What's Up Dawg?")
-        self.geometry(f"{1000}x{600}")
+        self.geometry(f"{1000}x{625}")
 
         # Give weight to window container - allows for better window size adjustment
         self.grid_columnconfigure(0, weight=1)
@@ -453,6 +482,10 @@ class MainWindow(customtkinter.CTk):
         self.dog = None
         self.dog_image = None
         self.event = None
+        self.event_cost = 0
+
+        # Number of iterations through the game loop
+        self.num_rounds = 0
         
         # Clip art image paths
         self.dog_image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../docs/Images")
@@ -509,7 +542,7 @@ class MainWindow(customtkinter.CTk):
             pady=15)
         
     #--------------------------------------------------------------------------
-        # Dog Side Bar (Right) - Contains dog name, age, image, and meds/items/afflictions lists
+        # Dog Side Bar (Right Side) - Contains dog name, age, image, and meds/items/afflictions lists
         self.dog_side_bar = customtkinter.CTkFrame(self.main_window_frame)
         self.dog_side_bar.grid(
             row=1,
@@ -528,7 +561,7 @@ class MainWindow(customtkinter.CTk):
             pady=(10, 5),
             sticky="news")
         self.dog_stats_frame.grid_columnconfigure(0, weight=1)
-        self.dog_stats_frame.grid_rowconfigure((0, 1), weight=1)
+        self.dog_stats_frame.grid_rowconfigure((0, 1, 2), weight=1)
 
         self.dog_name_label = customtkinter.CTkLabel(
             self.dog_stats_frame,
@@ -538,7 +571,7 @@ class MainWindow(customtkinter.CTk):
             row=0,
             column=0,
             padx=10,
-            pady=10)
+            pady=(10, 5))
 
         self.age_frame = customtkinter.CTkFrame(self.dog_stats_frame)
         self.age_frame.grid(
@@ -552,6 +585,23 @@ class MainWindow(customtkinter.CTk):
             text=f"Age: 0",
             font=customtkinter.CTkFont(size=18, weight="normal"))
         self.age_label.grid(
+            row=0,
+            column=0,
+            padx=10,
+            pady=5)
+        
+        self.health_frame = customtkinter.CTkFrame(self.dog_stats_frame)
+        self.health_frame.grid(
+            row=2,
+            column=0,
+            padx=5,
+            pady=(0, 5))
+        
+        self.health_label = customtkinter.CTkLabel(
+            self.health_frame,
+            text=f"Health: 100",
+            font=customtkinter.CTkFont(size=18, weight="normal"))
+        self.health_label.grid(
             row=0,
             column=0,
             padx=10,
@@ -619,7 +669,7 @@ class MainWindow(customtkinter.CTk):
             pady=(5,10))
         
     #--------------------------------------------------------------------------
-        # Human Side Bar (Left)
+        # Human Side Bar (Left Side) - Contains human stats, walk/food options, and shop/menu/dark-mode buttons
         self.human_side_bar = customtkinter.CTkFrame(self.main_window_frame)
         self.human_side_bar.grid(
             row=1,
@@ -648,8 +698,9 @@ class MainWindow(customtkinter.CTk):
             row=0,
             column=0,
             padx=10,
-            pady=10)
+            pady=(10, 5))
 
+        #------------------------------
         self.balance_frame = customtkinter.CTkFrame(self.human_stats_frame)
         self.balance_frame.grid(
             row=1,
@@ -772,7 +823,7 @@ class MainWindow(customtkinter.CTk):
         self.food_seg_button.set(meal_options["normal"]["display"])
 
         #------------------------------
-        # Bottom Bar (Inside Human Side Bar)
+        # Bottom Bar Frame (Inside Human Side Bar)
         self.bottom_bar_frame = customtkinter.CTkFrame(self.human_side_bar)
         self.bottom_bar_frame.grid(
             row=2,
@@ -814,7 +865,7 @@ class MainWindow(customtkinter.CTk):
             pady=(10, 20))
 
     #--------------------------------------------------------------------------
-        # TextBox and Decision
+        # TextBox and Decision Selection Frame
         self.text_and_decision_frame = customtkinter.CTkFrame(self.main_window_frame)
         self.text_and_decision_frame.grid(
             row=1,
@@ -838,7 +889,7 @@ class MainWindow(customtkinter.CTk):
         self.textbox.insert("0.0", self.start_string)
         self.textbox.configure(state="disabled")
 
-    #--------------------------------------------------------------------------
+        #------------------------------
         # Decisions Options Frame (Inside Text and Decisions Frame)
         self.decision_options_frame = customtkinter.CTkFrame(self.text_and_decision_frame)
         self.decision_options_frame.grid(
@@ -849,27 +900,27 @@ class MainWindow(customtkinter.CTk):
             sticky="ew")
         self.decision_options_frame.grid_columnconfigure((0, 1), weight=1)
 
-        self.vet_button = customtkinter.CTkButton(
+        self.option1_button = customtkinter.CTkButton(
             self.decision_options_frame,
             text="Option 1",
             command=lambda: self.option_button_event("1"))
-        self.vet_button.grid(
+        self.option1_button.grid(
             row=0,
             column=0,
             padx=(20, 5),
             pady=10)
         
-        self.nothing_button = customtkinter.CTkButton(
+        self.option2_button = customtkinter.CTkButton(
             self.decision_options_frame,
             text="Option 2",
             command=lambda: self.option_button_event("2"))
-        self.nothing_button.grid(
+        self.option2_button.grid(
             row=0,
             column=1,
             padx=(5, 20),
             pady=10)
         
-    #--------------------------------------------------------------------------
+        #------------------------------
         # Continue Button Frame (Inside Text and Decisions Frame)
         self.continue_button_frame = customtkinter.CTkFrame(self.text_and_decision_frame)
         self.continue_button_frame.grid(
@@ -1045,20 +1096,19 @@ class MainWindow(customtkinter.CTk):
             pady=10)
         
     #--------------------------------------------------------------------------
-        # Welcome / Main Menu Window
-        self.main_menu_frame = customtkinter.CTkFrame(self)
-        self.main_menu_frame.grid(
+        # Welcome / Main Menu Screen
+        self.main_menu_screen_frame = customtkinter.CTkFrame(self)
+        self.main_menu_screen_frame.grid(
             row=0,
             column=0,
             rowspan=3,
             columnspan=3,
             sticky="news")
-        self.main_menu_frame.grid_columnconfigure((0, 1, 2), weight=1)
-        # self.main_menu_frame.grid_columnconfigure(1, weight=0)
-        self.main_menu_frame.grid_rowconfigure(1, weight=1)
+        self.main_menu_screen_frame.grid_columnconfigure((0, 1, 2), weight=1)
+        self.main_menu_screen_frame.grid_rowconfigure(1, weight=1)
         
         self.welcome_label = customtkinter.CTkLabel(
-            self.main_menu_frame,
+            self.main_menu_screen_frame,
             text="Welcome!",
             font=customtkinter.CTkFont(size=40, weight="bold"))
         self.welcome_label.grid(
@@ -1069,7 +1119,7 @@ class MainWindow(customtkinter.CTk):
             pady=20)
         
         self.instructions_button = customtkinter.CTkButton(
-            self.main_menu_frame,
+            self.main_menu_screen_frame,
             text="How to Play",
             command=self.instructions_button_event)
         self.instructions_button.grid(
@@ -1079,10 +1129,10 @@ class MainWindow(customtkinter.CTk):
             pady=5,
             sticky="e")
         
-        # Resume Button gets added once a game is started...
+        # Resume Button added once a game is started...
 
         self.start_button = customtkinter.CTkButton(
-            self.main_menu_frame,
+            self.main_menu_screen_frame,
             text="Start New Game",
             command=self.start_button_event)
         self.start_button.grid(
@@ -1093,7 +1143,7 @@ class MainWindow(customtkinter.CTk):
             sticky="w")
         
         self.exit_button = customtkinter.CTkButton(
-            self.main_menu_frame,
+            self.main_menu_screen_frame,
             text="Exit",
             command=self.exit_button_event)
         self.exit_button.grid(
@@ -1106,57 +1156,81 @@ class MainWindow(customtkinter.CTk):
 
     #--------------------------------------------------------------------------
     # Main Window Methods
-    def destroy_and_maybe_return_to_main(self, frame):
-        frame.destroy()
+    def splash_continue_button_event(self, frame: customtkinter.CTkFrame) -> None:
+        """Called when the 'Continue' button on the splash screen is pressed.
+        Acts as an end game check.
+        
+        Inputs:
+            frame: the splash screen frame to be destroyed
+        """
+        frame.destroy() # Remove splash screen
+        # Check if the dog is not alive or if it has been surrendered
         if not self.dog.alive or self.human.dog.surrendered:
-            if self.resume_button:
-                self.resume_button.destroy()
+            self.resume_button.destroy()
             self.main_menu_button_event()
     
-    def push_splash_screen(self, text):
+    def push_splash_screen(self, text: str) -> None:
+        """Add's a splash screen to the main window containing a summary of events.
+        
+        Inputs:
+            text: The text to be displayed on the splash screen
+            """
+    #--------------------------------------------------------------------------
+        # Splash Screen Frame
         self.splash_frame = customtkinter.CTkFrame(self)
         self.splash_frame.grid(
             row=0,
             column=0,
             sticky="news")
-        #self.splash_frame.grid_columnconfigure((0, 1, 2), weight=1)
-        # self.main_menu_frame.grid_columnconfigure(1, weight=0)
-        #self.splash_frame.grid_rowconfigure(1, weight=1)
-        summary_label = customtkinter.CTkLabel(self.splash_frame, text=text, font=customtkinter.CTkFont(size=20, weight="bold"))
-        summary_label.grid(
-            row=0,
-            column=0,
-            sticky="news",
-            padx = 5,
-            pady = 5,
-        )
-        self.continue_and_destroy_frame_button = customtkinter.CTkButton(
-            self.splash_frame,
-            text="Continue",
-            command=lambda: self.destroy_and_maybe_return_to_main(self.splash_frame),
-            height = 60,
-            width = 100,)
-        self.continue_and_destroy_frame_button.grid(
-            row=1,
-            column=0,
-            sticky='news',
-            padx = 5,
-            pady = 5,)
-        self.splash_frame.tkraise()
+        self.splash_frame.grid_columnconfigure(0, weight=1)
+
+        # List of summary lines to be displayed - list length might be different each round
+        summary_lines: list[customtkinter.CTkLabel] = []
+        for index, line in enumerate(text.split("\n")):
+            self.line_label = customtkinter.CTkLabel(
+                self.splash_frame,
+                text=line,
+                font=customtkinter.CTkFont(size=15, weight="normal"))
+            self.line_label.grid(
+                row=index,
+                column=0,
+                padx=10,
+                pady=10)
+            summary_lines.append(self.line_label)
+
+        # Make the title bold
+        summary_lines[0].configure(font=customtkinter.CTkFont(size=20, weight="bold"))
+        length = len(summary_lines)
+        self.splash_frame.grid_rowconfigure((length, length + 1), weight=1)
         
-        self.event_cost = 0
+        self.splash_continue_button = customtkinter.CTkButton(
+            self.splash_frame,
+            width=250,
+            text="Continue",
+            command=lambda: self.splash_continue_button_event(self.splash_frame))
+        self.splash_continue_button.grid(
+            row=len(summary_lines) + 1,
+            column=0,
+            padx = 20,
+            pady = 20)
+        
+        self.splash_frame.tkraise()
     
-    def instructions_button_event(self):
-        print("How to Button Pressed")
+    def instructions_button_event(self) -> None:
+        """Called when the "How to Play' Button is pressed.
+        Opens up a toplevel child window containing a set of instructions."""
+        # print("How to Button Pressed")
         if self.instructions_window is None or not self.instructions_window.winfo_exists():
             self.instructions_window = InstructionsWindow(self)  # create window if its None or destroyed
         else:
             self.instructions_window.focus()
         return
 
-    def start_button_event(self):
-        print("Start Button Pressed")
-
+    def start_button_event(self) -> None:
+        """Called every time the 'Start' Button is pressed.
+        This initiates the process of gathering required input from the user."""
+        # print("Start Button Pressed")
+        # Reset the entry boxes in case they contiain any values
         self.human_name_variable.set("")
         self.dog_name_variable.set("")
         self.income_variable.set("")
@@ -1164,21 +1238,28 @@ class MainWindow(customtkinter.CTk):
         self.stat_screen_frame.tkraise()
         return
 
-    def back_button_event(self):
-        print("Back Button Pressed")
+    def back_button_event(self) -> None:
+        """Called every time the 'Back' button is pressed.
+        This happens from within the stat selection frame.
+        Allows a user to go back to the main menu from the stat selection screen."""
+        # print("Back Button Pressed")
+        # Reset the entry boxes if the user started filling them out
         self.human_name_variable.set("")
         self.dog_name_variable.set("")
         self.income_variable.set("")
 
-        self.main_menu_frame.tkraise()
+        self.main_menu_screen_frame.tkraise()
         return
     
-    def begin_button_event(self):
-        print("Begin Button Pressed")
+    def begin_button_event(self) -> None:
+        """Called every time the 'Begin' buttton is pressed.
+        Resets the dog and human objects, resets the screen, and adds a resume button to the main menu."""
+        # print("Begin Button Pressed")
         human_name = self.human_name_variable.get().strip()
         dog_name = self.dog_name_variable.get().strip()
         income = self.income_variable.get().strip().strip("$").strip() # strip white space, then $ symbol, then whitespace again
 
+        # If there are current dog or human objects, clear them out
         if self.dog or self.human:
             print("Deleting Old Dog/Human")
             self.dog = None
@@ -1186,11 +1267,20 @@ class MainWindow(customtkinter.CTk):
 
         self.dog = model.Dog(name=dog_name, breed = self.dog_type_combobox.get().lower()) #option: breed
         self.human = model.Human(income, self.dog)
+        self.num_rounds = 0
 
-        #TODO set Dog and Human attributes
+        # Update screen
         self.human_name_label.configure(text=human_name)
         self.dog_name_label.configure(text=dog_name)
         self.balance_label.configure(text=f'Balance: ${self.human.revenue}')
+        self.age_label.configure(text=f'Age: {self.dog.age}')
+        self.health_label.configure(text=f"Health: {self.dog.health}")
+        self.time_invested_label.configure(text=f'Time Invested: {self.human.time_spent}')
+
+        self.textbox.configure(state="normal")
+        self.textbox.delete("0.0", tkinter.END)
+        self.textbox.insert("0.0", self.start_string)
+        self.textbox.configure(state="disabled")
 
         # Set Dog Image
         dog_string = self.dog_type_combobox.get().lower().strip().replace(" ", "_") + ".jpg"
@@ -1203,7 +1293,7 @@ class MainWindow(customtkinter.CTk):
     
         # Add resume button to main menu once a game is started
         self.resume_button = customtkinter.CTkButton(
-            self.main_menu_frame,
+            self.main_menu_screen_frame,
             text="Resume",
             command=self.resume_button_event)
         self.resume_button.grid(
@@ -1215,18 +1305,21 @@ class MainWindow(customtkinter.CTk):
         self.main_window_frame.tkraise()
         return
 
-    # TODO - could combine the meds, items, and afflictions event funcntions
     def meds_button_event(self):
-        print("Meds Button Pressed")
+        """Called when the 'Medications' button is pressed.
+        Opens up a new window containing a list of current medications"""
+        # print("Meds Button Pressed")
         if self.meds_window is None or not self.meds_window.winfo_exists():
             self.meds_window = MedicationsWindow(self)  # create window if its None or destroyed
         else:
             self.meds_window.focus()
 
+        # Iterate through meds and add a newline after each one (for formatting)
         meds_str = ""
         for med in self.dog.medications:
             meds_str += med + "\n"
 
+        # Then add our meds to the medications textbox within the meds window
         self.meds_window.meds_textbox.configure(state="normal")
         self.meds_window.meds_textbox.delete("0.0", tkinter.END)
         self.meds_window.meds_textbox.insert("0.0", meds_str)
@@ -1234,18 +1327,21 @@ class MainWindow(customtkinter.CTk):
         self.meds_window.meds_textbox.insert("0.0", meds_str)
         return
     
-    # TODO - could combine the meds, items, and afflictions event funcntions
     def items_button_event(self):
-        print("Items Button Pressed")
+        """Called when the 'Items' button is pressed.
+        Opens up a new window containing a list of current items"""
+        # print("Items Button Pressed")
         if self.items_window is None or not self.items_window.winfo_exists():
             self.items_window = ItemsWindow(self)  # create window if its None or destroyed
         else:
             self.items_window.focus()
     
+        # Iterate through items and add a newline after each one (for formatting)
         items_str = ""
         for item in self.dog.items:
             items_str += item + "\n"
 
+        # Then add our items to the items textbox within the items window
         self.items_window.items_textbox.configure(state="normal")
         self.items_window.items_textbox.delete("0.0", tkinter.END)
         self.items_window.items_textbox.insert("0.0", items_str)
@@ -1253,18 +1349,21 @@ class MainWindow(customtkinter.CTk):
         self.items_window.items_textbox.insert("0.0", items_str)
         return
     
-    # TODO - could combine the meds, items, and afflictions event funcntions
     def afflictions_button_event(self):
-        print("Afflictions Button Pressed")
+        """Called when the 'Afflictions' button is pressed.
+        Opens up a new window containing a list of current afflictions"""
+        # print("Afflictions Button Pressed")
         if self.afflictions_window is None or not self.afflictions_window.winfo_exists():
             self.afflictions_window = AfflictionsWindow(self)  # create window if its None or destroyed
         else:
             self.afflictions_window.focus()
 
+        # Iterate through afflictions and add a newline after each one (for formatting)
         afflictions_str = ""
         for affliction in self.dog.afflictions:
             afflictions_str += affliction + "\n"
 
+        # Then add our afflictions to the afflictions textbox within the afflictions window
         self.afflictions_window.afflictions_textbox.configure(state="normal")
         self.afflictions_window.afflictions_textbox.delete("0.0", tkinter.END)
         self.afflictions_window.afflictions_textbox.insert("0.0", afflictions_str)
@@ -1273,7 +1372,9 @@ class MainWindow(customtkinter.CTk):
         return
     
     def shop_button_event(self):
-        print("Shop Button Pressed")
+        """Called when the 'Shop' button is pressed.
+        Opens up a new shop window, which is a toplevel child of the main window"""
+        # print("Shop Button Pressed")
         if self.shop_window is None or not self.shop_window.winfo_exists():
             self.shop_window = ShopWindow(self)  # create window if its None or destroyed
         else:
@@ -1281,43 +1382,52 @@ class MainWindow(customtkinter.CTk):
         return
     
     def main_menu_button_event(self):
-        print("Main Menu Button Pressed")
-        self.main_menu_frame.tkraise()
+        """Called when the Main Menu button is pressed.
+        Raises the main menu screen frame to the top of the screen"""
+        # print("Main Menu Button Pressed")
+        self.main_menu_screen_frame.tkraise()
         return
     
     def resume_button_event(self):
-        print("Resume Button Pressed")
+        """Called when the resume button is pressed.
+        Raises the main window frame to the top of the screen."""
+        # print("Resume Button Pressed")
         self.main_window_frame.tkraise()
         return
     
     def exit_button_event(self):
-        print("Exit Button Pressed")
+        """Called when the exit button is pressed.
+        Destroys the main window, closing the application"""
+        # print("Exit Button Pressed")
         self.destroy()
         return
     
     def change_appearance_mode_event(self):
+        """Called when the Light/Dark mode switch is interacted with.
+        Swaps the mode to the opposite of the current."""
         mode = customtkinter.get_appearance_mode()
         if mode == "Dark":
             customtkinter.set_appearance_mode("light")
         else:
             customtkinter.set_appearance_mode("dark")
     
-    #--------------------------------------------------------------------------
-
     def continue_button_event(self):
-        print("Continue Button Pressed")
-        # These are needed to prevent update on initial continue press
-        current_text = str(self.textbox.get("1.0", tkinter.END)).replace(' ', '').replace('\n', '')
-        stripped_start = self.start_string.replace(' ', '').replace('\n', '')
-        if stripped_start != current_text:
+        """Called every time the 'Continue' button on the main window is pressed.
+        Acts as the main driver of the game loop. Updates the player and human objects
+        as well as the screen."""
+        # print("Continue Button Pressed")
+        # Prevent screen update on initial continue press
+        if self.num_rounds != 0:
             self.dog, self.human, summary = controller.next_round(self.dog, self.human, self.event_cost, self.event["name"])
             self.push_splash_screen(summary)
             self.refresh_screen()
+        self.num_rounds += 1
 
+        # Load a semi random event
         self.event = controller.load_event(self.dog)
 
+        # Check if the dog has resistance to the event
         resistance = controller.check_resistance(self.dog, self.event)
-        print(self.textbox.get("1.0", tkinter.END))
         if resistance:
             self.textbox.configure(state="normal")
             self.textbox.delete("0.0", tkinter.END)
@@ -1325,12 +1435,13 @@ class MainWindow(customtkinter.CTk):
             self.textbox.configure(state="disabled")
             
         elif len(self.event["options"])==0:
+            # If there are no options for the event loaded, just print the intro
             self.textbox.configure(state="normal")
             self.textbox.delete("0.0", tkinter.END)
             self.textbox.insert("0.0", self.event["intro"])
             self.textbox.configure(state="disabled")
-        
         else:
+            # Otherwise display both options and raise the options buttons
             self.textbox.configure(state="normal")
             self.textbox.delete("0.0", tkinter.END)
             self.textbox.insert("0.0", self.event["intro"] + "\n" 
@@ -1339,71 +1450,93 @@ class MainWindow(customtkinter.CTk):
             self.textbox.configure(state="disabled")
             
             self.decision_options_frame.tkraise()
-            return
-            # return TODO <- This could prevent stat updates until an option is selected
-        #TODO update dog and human stats
+        
         return
     
-    def option_button_event(self, button_number):
-        print("Option Button Pressed")
-
-        self.dog, self.human = controller.handle_event(self.event[button_number], self.dog, self.human)
+    def option_button_event(self, button_number: str) -> None:
+        """Called every time one of the option buttons is pressed.
+        
+        Inputs:
+            button_number: a string representing the button pressed, either '1' or '2'
+        """
+        # print("Option Button Pressed")
+        # Handle the event and update the textbox
+        self.dog, self.human, self.event_cost = controller.handle_event(self.event, button_number, self.dog, self.human)
         self.textbox.configure(state="normal")
         self.textbox.delete("0.0", tkinter.END)
         self.textbox.insert("0.0", self.event["options"][button_number]["outro"])
         self.textbox.configure(state="disabled")
         
         self.continue_button_frame.tkraise()
-        
         return
 
-    def change_walk_option_event(self, choice: str):
-        print(f"Walk Option Changed to {choice}")
+    def change_walk_option_event(self, choice: str) -> None:
+        """Called every time the walk option changes. Updates the dog walk_schedule attribute.
+        
+        Inputs:
+            choice: The new walk option choice - choices are derived from walk_options in shop.py
+        """
+        # print(f"Walk Option Changed to {choice}")
         for key, value in walk_options.items():
             if value["display"] == choice:
                 self.dog.walk_schedule = key
-                return
-        print("ERROR: No Value Found For Walk Option")
+                break
         return
 
-    def change_food_option_event(self, choice: str):
-        print(f"Food Option Changed to {choice}")
+    def change_food_option_event(self, choice: str) -> None:
+        """Called every time the food option changes. Updates the dog meal_plan attribute.
+        
+        Inputs:
+            choice: The new meal plan choice - choices are derived from meal_options in shop.py
+        """
+        # print(f"Food Option Changed to {choice}")
         for key, value in meal_options.items():
             if value["display"] == choice:
                 self.dog.meal_plan = key
-                return
-        print("ERROR: No Value Found For Walk Option")
+                break
         return
 
-    def trace_function(self, *args):
-        print("Trace Function Called")
+    def trace_function(self, *args) -> None:
+        '''Trace function called every time the human and dog stats change.
+        Used primarily to ensure that all required entries (dog name, human name, human income)
+        are filled appropriately
+        
+        Inputs:
+            args: Included when a trace function is assigned to a tkinter widget. Not used in our case
+        '''
+        # print("Trace Function Called")
+        # Make sure all fields contain at least 1 character
         if (len(self.human_name_variable.get()) > 0 and len(self.dog_name_variable.get()) > 0 and len(self.income_variable.get()) > 0):
-
+            # Strip the supplied income value of any spaces and '$' signs
             income_value = self.income_variable.get().strip()
             if len(income_value) > 0 and income_value[0] == '$':
                 income_value = income_value[1:]
 
             try:
-                int(income_value)
+                int(income_value) # income needs to be an integer
             except:
                 print("Income Value Invalid - Not a Number")
-                self.begin_button.configure(state="disabled")
+                self.begin_button.configure(state="disabled") # Dont let the user proceed until income is an int
                 return
-            
+             
+            # If all entries are filled out with appropriate data, enable the begin button
             self.begin_button.configure(state="enabled")
         else:
-            self.begin_button.configure(state="disabled")
+            self.begin_button.configure(state="disabled") # otherwise disable and wait for proper entries
 
         return
     
-    def refresh_screen(self):
-        print("Refreshing")
+    def refresh_screen(self) -> None:
+        '''Updates the screen labels and images with current values'''
+        # print("Refreshing")
         self.balance_label.configure(text=f"Balance: ${self.human.balance}")
         self.time_invested_label.configure(text=f"Time Invested: {self.human.time_spent}")
         self.age_label.configure(text=f'Age: {self.dog.age}')
+        self.health_label.configure(text=f"Health: {self.dog.health}")
 
         # Happiness image based on dogs happiness
         happiness_value = self.dog.happiness
+        print(f"Happiness Value: {happiness_value}")
         if (80 <= happiness_value <= 100):
             self.happiness_image_label.configure(image=self.face1_image)
         elif (60 <= happiness_value <= 79):
