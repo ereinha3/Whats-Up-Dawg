@@ -1,10 +1,16 @@
 from data.breeds_dict import breeds
+from data.shop import meal_options, walk_options
+
+config = {
+        "months_per_round": 6
+        }
+
 class Dog:
     def __init__(self, 
                  name = "Stitch", 
                  age = 0, 
                  health = 100, 
-                 happiness = 100, 
+                 happiness = 50, 
                  max_age = 14,
                  weight = 50,
                  breed = "yorkshire terrier",
@@ -14,27 +20,27 @@ class Dog:
         self.happiness = happiness
         self.trained = trained
         self.trainability = breeds[breed]["trainability_value"] * 10
-        # Max health attribute to set a cap on the amount of health a dog can have so it does not live forever
-        self.max_age = breeds[breed]["max_expectancy"] #dog cannot live longer than max_age
-        self.age = age #dog age in years
+        self.max_age = breeds[breed]["max_expectancy"] #dog will not survive long past max age
+        self._age = age #dog age in years
         self._health = health
         self.max_health = health
         self.weight = (breeds[breed]["min_weight"] + breeds[breed]["max_weight"]) // 2
-        # self.happiness = happiness
+        self.happiness = happiness
         self.name = name
         self.walk_schedule = "short"
         self.meal_plan = "normal"
-        # This should be a dictionary following this structure 
-        #   {"affliction_name": {treated (boolean) -> this will affect whether or not the health is decremented, duration}}
         self.afflictions = {}
-        # This should be a dictionary of the following structure {medication_name: duration}
         self.medications = {}
-        # Same structure as medications
         self.items = {}
         self.alive = True
         self.surrendered = False
-        self.calculate_food_per_day = lambda w = self.weight: 0.045*w + 0.81
-        
+    
+    @property
+    def meal_expense(self):
+        cups_per_day = 0.045 * self.weight + 0.81
+        daily_cost = cups_per_day * meal_options[self.meal_plan]["cost"]
+        return daily_cost * 30 * config["months_per_round"]
+
     def __str__(self):
         return f"{self.name} is a {self.breed} with {self._health} health and is {self.age} years old.\
                 \nMedication are {[item for item in self.medications.keys()]} with respective durations of {[val for val in self.medications.values()]}.\
@@ -42,8 +48,23 @@ class Dog:
                 \n{self.name} currently suffers from {[key for key in self.afflictions]} with respective durations of {[val for val in self.afflictions.values()]}"
 
     @property
+    def age(self):
+        return self._age
+
+    @age.setter
+    def age(self, value):
+        self._age = value
+        middle_age = self.max_age / 2
+        if self._age > middle_age:
+            #Reduce max health slowly
+            self.max_health -= 2
+        elif self.age > max_age:
+            #Reduce max health very quickly
+            self.max_health -= (self.age - self.max_age) * config["months_per_round"]
+
+    @property
     def health(self):
-        return min(self._health, self.max_health)
+        return round(min(self._health, self.max_health), 2)
 
     @health.setter
     def health(self, value):
@@ -66,14 +87,29 @@ class Human:
 
     @property
     def revenue(self):
-        return self.income * 0.05
+        return round(self.income * 0.05 * config["months_per_round"], 2)
 
     @property
     def balance(self):
-        return self._balance
+        return round(self._balance, 2)
 
     @balance.setter
     def balance(self, value):
         self._balance = value
         if (self._balance < -(self.revenue / 6 * 4)):
             self.dog.surrendered = True
+
+def update_model(dog, human):
+    dog.name = dog.name + "_updated"
+    human.income = 5
+
+if __name__ == "__main__":
+    Kesey = Dog("Kesey")
+    Morgan = Human(2000, Kesey)
+    update_model(Kesey, Morgan)
+    print(Kesey.name)
+    Kesey.health -= 20
+    Kesey.max_health -= 20
+    print(Kesey.health)
+    print(Kesey.max_health)
+    print(Morgan.income)

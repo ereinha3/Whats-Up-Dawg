@@ -1352,7 +1352,7 @@ class MainWindow(customtkinter.CTk):
     def option_button_event(self, button_number):
         print("Option Button Pressed")
 
-        self.dog, self.human, self.event_cost = controller.handle_event(self.event, button_number, self.dog, self.human)
+        self.dog, self.human = controller.handle_event(self.event, button_number, self.dog, self.human)
         self.textbox.configure(state="normal")
         self.textbox.delete("0.0", tkinter.END)
         self.textbox.insert("0.0", self.event["options"][button_number]["outro"])
