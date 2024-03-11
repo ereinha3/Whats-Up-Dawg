@@ -561,7 +561,7 @@ class MainWindow(customtkinter.CTk):
             pady=(10, 5),
             sticky="news")
         self.dog_stats_frame.grid_columnconfigure(0, weight=1)
-        self.dog_stats_frame.grid_rowconfigure((0, 1), weight=1)
+        self.dog_stats_frame.grid_rowconfigure((0, 1, 2), weight=1)
 
         self.dog_name_label = customtkinter.CTkLabel(
             self.dog_stats_frame,
@@ -571,7 +571,7 @@ class MainWindow(customtkinter.CTk):
             row=0,
             column=0,
             padx=10,
-            pady=10)
+            pady=(10, 5))
 
         self.age_frame = customtkinter.CTkFrame(self.dog_stats_frame)
         self.age_frame.grid(
@@ -585,6 +585,23 @@ class MainWindow(customtkinter.CTk):
             text=f"Age: 0",
             font=customtkinter.CTkFont(size=18, weight="normal"))
         self.age_label.grid(
+            row=0,
+            column=0,
+            padx=10,
+            pady=5)
+        
+        self.health_frame = customtkinter.CTkFrame(self.dog_stats_frame)
+        self.health_frame.grid(
+            row=2,
+            column=0,
+            padx=5,
+            pady=(0, 5))
+        
+        self.health_label = customtkinter.CTkLabel(
+            self.health_frame,
+            text=f"Health: 100",
+            font=customtkinter.CTkFont(size=18, weight="normal"))
+        self.health_label.grid(
             row=0,
             column=0,
             padx=10,
@@ -681,7 +698,7 @@ class MainWindow(customtkinter.CTk):
             row=0,
             column=0,
             padx=10,
-            pady=10)
+            pady=(10, 5))
 
         #------------------------------
         self.balance_frame = customtkinter.CTkFrame(self.human_stats_frame)
@@ -1257,6 +1274,7 @@ class MainWindow(customtkinter.CTk):
         self.dog_name_label.configure(text=dog_name)
         self.balance_label.configure(text=f'Balance: ${self.human.revenue}')
         self.age_label.configure(text=f'Age: {self.dog.age}')
+        self.health_label.configure(text=f"Health: {self.dog.health}")
         self.time_invested_label.configure(text=f'Time Invested: {self.human.time_spent}')
 
         self.textbox.configure(state="normal")
@@ -1520,6 +1538,7 @@ class MainWindow(customtkinter.CTk):
         self.balance_label.configure(text=f"Balance: ${self.human.balance}")
         self.time_invested_label.configure(text=f"Time Invested: {self.human.time_spent}")
         self.age_label.configure(text=f'Age: {self.dog.age}')
+        self.health_label.configure(text=f"Health: {self.dog.health}")
 
         # Happiness image based on dogs happiness
         happiness_value = self.dog.happiness
