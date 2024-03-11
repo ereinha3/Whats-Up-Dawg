@@ -90,7 +90,7 @@ class MedicationsWindow(customtkinter.CTkToplevel):
         super().__init__(*args, **kwargs)
 
         self.title("Medications")
-        self.geometry(f"{380}x{600}")
+        self.geometry(f"{380}x{625}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -139,7 +139,7 @@ class ItemsWindow(customtkinter.CTkToplevel):
         super().__init__(*args, **kwargs)
 
         self.title("Items")
-        self.geometry(f"{380}x{600}")
+        self.geometry(f"{380}x{625}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -188,7 +188,7 @@ class AfflictionsWindow(customtkinter.CTkToplevel):
         super().__init__(*args, **kwargs)
 
         self.title("Afflictions")
-        self.geometry(f"{380}x{600}")
+        self.geometry(f"{380}x{625}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -237,7 +237,7 @@ class InstructionsWindow(customtkinter.CTkToplevel):
         super().__init__(*args, **kwargs)
 
         self.title("Game Instructions")
-        self.geometry(f"{380}x{600}")
+        self.geometry(f"{380}x{625}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -288,7 +288,7 @@ class ShopWindow(customtkinter.CTkToplevel):
         super().__init__(*args, **kwargs)
 
         self.title("Ye Olde Shoppe")
-        self.geometry(f"{380}x{600}")
+        self.geometry(f"{380}x{625}")
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
@@ -464,7 +464,7 @@ class MainWindow(customtkinter.CTk):
 
         # Configure window
         self.title("What's Up Dawg?")
-        self.geometry(f"{1000}x{600}")
+        self.geometry(f"{1000}x{625}")
 
         # Give weight to window container - allows for better window size adjustment
         self.grid_columnconfigure(0, weight=1)
