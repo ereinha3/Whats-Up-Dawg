@@ -20,13 +20,11 @@ def load_event(dog):
             end -= 1
         # 25% chance that the selected affliction occurs, 75% chance a random non-affliction event occurs
         probability_of_non_affliction = [0 for x in range(int((dog.max_age-dog.age)//3))]
-        print(probability_of_non_affliction)
+        # print(probability_of_non_affliction)
         selection = choice([choice(new_probabilities)]+probability_of_non_affliction)
         name = choice(list(afflictions_dictionary[selection].keys()))
         if name not in dog.afflictions.keys():
             return event_lookup_table[name]
-
-    #return event_lookup_table[list(event_lookup_table)[randint(0, len(event_lookup_table) - 1)]]
 
 def find_affliction_from_event_name(event_name):
     for commonality, value in afflictions_dictionary.items():
@@ -35,7 +33,7 @@ def find_affliction_from_event_name(event_name):
             return commonality, value[event_name]
     return None
         
-def handle_event(event:dict, button_number, dog:Dog, human:Human):
+def handle_event(event:dict, button_number: str, dog:Dog, human:Human):
     affliction_name = event["name"]
     #print(affliction_name)
     initial_balance = human.balance
@@ -124,7 +122,6 @@ def next_round(dog:Dog, human:Human, event_cost, event):
         dog.items[item_name] -= 1
         if dog.items[item_name] <= 0:  
             items_to_remove.append(item_name)
-            # del dog.items[item["display"]]
     for item in items_to_remove:
         summary_paragraph += f"{dog.name} completely used their {str(item).replace('_', ' ')}.\n"
         dog.items.pop(item_name)
@@ -138,7 +135,6 @@ def next_round(dog:Dog, human:Human, event_cost, event):
         dog.medications[med_name] -= 1
         if dog.medications[med_name] <= 0:
             meds_to_remove.append(med_name)
-            # del dog.medications[medication]
     for medication in meds_to_remove:
         summary_paragraph += f"You ran out of {str(medication).replace('_', ' ')} for {dog.name}.\n"
         dog.medications.pop(medication)
