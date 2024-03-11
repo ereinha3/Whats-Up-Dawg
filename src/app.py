@@ -1361,8 +1361,9 @@ class MainWindow(customtkinter.CTk):
 
         # Iterate through afflictions and add a newline after each one (for formatting)
         afflictions_str = ""
-        for affliction in self.dog.afflictions:
-            afflictions_str += affliction + "\n"
+        for affliction in self.dog.afflictions.keys():
+            if self.dog.afflictions[affliction][0]:
+                afflictions_str += affliction + "\n"
 
         # Then add our afflictions to the afflictions textbox within the afflictions window
         self.afflictions_window.afflictions_textbox.configure(state="normal")
