@@ -1,7 +1,7 @@
 from random import randint, choice
 from data.event_library import event_lookup_table
 from data.afflictions import afflictions_dictionary
-from model import Dog, Human
+from model import Dog, Human, config
 import sys
 from data.shop import meal_options, walk_options, medications, care_items
 import math
@@ -9,7 +9,7 @@ import math
 def percentCheck(value):
     return randint(1, 100) < value
 
-def applyAfflictions(afflictionSubset: set) -> dict:
+def affliction_detail_from_set(afflictionSubset: set) -> dict:
     return {key: value for key, value in afflictions_dictionary.items() if key in afflictionSubset}
 
 def update_model_stats(token: dict, human: Human, dog: Dog):
@@ -23,6 +23,9 @@ def update_model_stats(token: dict, human: Human, dog: Dog):
         human.time -= token["time"]
     if ("afflictions" in token):
         dog.afflictions = dog.afflictions | affliction_detail_from_set(token["afflictions"])
+    if ("treatments" in token):
+        for affliction_to_treat in token["treatments"]:
+            dog.afflictions[affliction_to_treat]["duration"] = 0
 
 def load_event(dog):
     while 1:

@@ -1315,7 +1315,6 @@ class MainWindow(customtkinter.CTk):
             self.refresh_screen()
 
         self.event = controller.load_event(self.dog)
-        event_name = self.event["name"]
 
         resistance = controller.check_resistance(self.dog, self.event)
         print(self.textbox.get("1.0", tkinter.END))
@@ -1325,10 +1324,6 @@ class MainWindow(customtkinter.CTk):
             self.textbox.insert("0.0", self.event["resist"]["message"])
             self.textbox.configure(state="disabled")
             
-            if event_name in self.dog.medications:
-                if self.dog.medications[event_name] == 0:
-                    del self.dog.medications[event_name]
-
         elif len(self.event["options"])==0:
             self.textbox.configure(state="normal")
             self.textbox.delete("0.0", tkinter.END)
@@ -1352,7 +1347,7 @@ class MainWindow(customtkinter.CTk):
     def option_button_event(self, button_number):
         print("Option Button Pressed")
 
-        self.dog, self.human = controller.handle_event(self.event, button_number, self.dog, self.human)
+        self.dog, self.human = controller.handle_event(self.event[button_number], self.dog, self.human)
         self.textbox.configure(state="normal")
         self.textbox.delete("0.0", tkinter.END)
         self.textbox.insert("0.0", self.event["options"][button_number]["outro"])

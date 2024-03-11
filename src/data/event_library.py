@@ -11,10 +11,13 @@ event_lookup_table = {
             "1": {
                 "intro": "Take your dog and get rid of those fleas!", 
                 "outro": "Your vet prescribes medication to your dog and flea shampoo. It takes several hours over the next few weeks to completely remove the fleas from your house, and the treatment isn't cheap. Your vet strongly recommends that you begin a medication plan for flea and tick meds. These will prevent your dog from getting fleas or ticks in the future.",
+                "cost": 150,
+                "time": 8,
                 },
             "2": {
                 "intro": "Ignore it for now. It's only fleas right?",
-                "outro": "Your dog won't stop scratching themself, and your skin is beginning to crawl.", 
+                "outro": "Your dog won't stop scratching themself, and your skin is beginning to crawl.",
+                "afflictions": {"fleas"}
                 },
             },
         },
@@ -31,10 +34,13 @@ event_lookup_table = {
             "1": {
                 "intro": "Take your dog to the vet!", 
                 "outro": "Your vet diagnosis your dog with Heartworms and prescribes a one-time medication: ProHeart. It's a chewable tablet.",
+                "cost": lambda dog: 500 * (200 * dog.weight) // 50
+                "time": 2
                 },
             "2": {
                 "intro": "Ignore it for now... it's probably fine?",
-                "outro": "Your dog is increasingly unable to breathe, and limps around the house. You think something is really wrong.", 
+                "outro": "Your dog is increasingly unable to breathe, and limps around the house. You think something is really wrong.",
+                "afflictions": {"heartworm"}
                 },
             },
         },
@@ -54,6 +60,7 @@ event_lookup_table = {
             "2": { 
                 "intro": "Ignore it. That will heal on it's own, right?",
                 "outro": "Your dog limps for a couple weeks, but eventually the condition appears to sort itself out.", 
+                
                 },
             },
         },

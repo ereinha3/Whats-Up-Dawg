@@ -257,7 +257,7 @@ afflictions_dictionary = {
         "ingrown_nail" : {
             "duration" : 1,
             "indefinite": False,
-            "cure": { "cost": lambda dog : 100,  "time": 1, }, 
+            "cure": { "cost": lambda dog : 100,  "time": 1, },
             "health": -1,
             "happiness": -2,
             "description": "Your dog has an ingrown nail on its paw.",
