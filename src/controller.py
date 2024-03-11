@@ -46,13 +46,13 @@ def handle_event(event:dict, button_number, dog:Dog, human:Human):
             dog.afflictions[affliction_name] = [1, affliction['duration']]
         else:
             human.balance -= affliction["cure"]["cost"](dog)
-            human.time_spent -= affliction["cure"]["work"]
+            human.time_spent -= affliction["cure"]["time"]
     if str(button_number) == '2':
         if commonality != 0:
             dog.afflictions[affliction_name] = [0, math.inf]
         else:
             dog.health += affliction["health"]
-            dog.happiness += affliction["stress"]
+            dog.happiness += affliction["happiness"]
     human.balance = round(human.balance, 2)
     return dog, human, round(initial_balance-human.balance, 2)
 
@@ -101,12 +101,12 @@ def next_round(dog:Dog, human:Human, event_cost, event):
         affliction = find_affliction_from_event_name(illness)[1]
         if treatment:
             human.balance -= affliction["cure"]["cost"](dog)
-            human.time_spent -= affliction["cure"]["work"]
+            human.time_spent -= affliction["cure"]["time"]
             if illness not in afflictions_to_remove:
                 summary_paragraph += f"{dog.name} still suffers from {illness}, but is undergoing treatment.\n"
         else:
             dog.health += affliction["health"]
-            dog.happiness += affliction["stress"]
+            dog.happiness += affliction["happiness"]
         
     
     for affliction in afflictions_to_remove:
