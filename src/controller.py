@@ -1,5 +1,5 @@
 from random import randint, choice, random
-from data.events import event_lookup_table, event_description_library
+from data.events import event_lookup_table, event_library
 from data.afflictions import afflictions_library
 from model import Dog, Human, config
 import sys
@@ -17,21 +17,42 @@ def call_or_get(value, dog):
         return value(dog)
     return value
 
-def update_model_stats(token: dict, human: Human, dog: Dog):
+def update_model_stats(token: dict, token_name, human: Human, dog: Dog):
+
+    print(f"Updating model based on {token_name}")
+    print(token)
+
     if ("health" in token):
-        dog.health += call_or_get(token["health"], dog)
+        health_value = call_or_get(token["health"], dog)
+        dog.health += health_value
+        if (health_value < 0):
+            human.log += f"{dog.name} lost health as a result of {token_name}. Take care!\n"
+        else:
+            human.log += f"{dog.name} gained health as a result of {token_name}. Good work!\n"
     if ("max_health" in token):
         dog.max_health += call_or_get(token["max_health"], dog)
     if ("happiness" in token):
+        happiness_value = call_or_get(token["happiness"], dog)
         dog.happiness += call_or_get(token["happiness"], dog)
+        if (happiness_value < 0):
+            human.log += f"{dog.name} lost happiness as a result of {token_name}. Bummer!\n"
+        else:
+            human.log += f"{dog.name} gained happiness as a result of {token_name}. Good work!\n"
     if ("training" in token):
-        dog.training += call_or_get(token["training"], dog)
-    if ("balance" in token):
-        human.balance -= call_or_get(token["cost"], dog)
+        training_value = call_or_get(token["training"], dog)
+        dog.training += training_value
+        if (training_value < 0):
+            human.log += f"{dog.name} is more poorly behaved as a result of {token_name}\n"
+        else:
+            human.log += f"{dog.name} is better behaved as a result of {token_name}\n"
+    if ("cost" in token):
+        cost = call_or_get(token["cost"], dog)
+        human.balance -= cost
+        human.log += f"You spent ${cost} to resolve {token_name}\n"
     if ("time" in token):
         human.time_spent -= call_or_get(token["time"], dog)
     if ("afflictions" in token):
-        dog.afflictions = dog.afflictions | affliction_detail_from_set(call_or_get(token["afflictions"]), dog)
+        dog.afflictions = dog.afflictions | affliction_detail_from_set(call_or_get(token["afflictions"], dog))
         human.log += "Your dog has suffered an affliction.\n"
     if ("treatments" in token):
         for affliction_to_treat in call_or_get(token["treatments"]):
@@ -39,7 +60,7 @@ def update_model_stats(token: dict, human: Human, dog: Dog):
 
 def load_event(dog):
     while 1:
-        event_probabilities = list(event_lookup_table.keys())
+        event_probabilities = list(event_lookup_table)
         event_probabilities.remove(0)
         new_probabilities = []
         end = event_probabilities[-1]
@@ -48,42 +69,24 @@ def load_event(dog):
             end -= 1
         probability_of_non_affliction = [0 for x in range(int((dog.max_age-dog.age)//3))]
         selection = choice([choice(new_probabilities)]+probability_of_non_affliction)
-        name = choice(list(afflictions_library[selection].keys()))
-        if name not in dog.afflictions.keys():
-            return event_description_library[name]
-'''
-    probability_count = len(event_lookup_table) + 1
+        name = choice(list(event_lookup_table[selection]))
 
-    #When age factor is higher, more common (less severe) events are favored
-    age_factor = max((dog.max_age - dog.age) / 2, 1)
-    print("age_factor is", age_factor)
+        #Don't give the dog cancer twice at once
+        if name in dog.afflictions.keys():
+            continue
 
-    #Apply inverse rank, less severe events (low key value) have higher probability
-    event_probabilities = {key: (probability_count - key) * age_factor for key in event_lookup_table.keys()}
-
-    #Normalize probabilities
-    sum_probabilities = sum(event_probabilities.values())
-    normalized_event_probabilities = {key: value / sum_probabilities for key, value in event_probabilities.items()}
-    
-    seed = random()
-    accum = 0
-    print(normalized_event_probabilities)
-    for severity, probability in normalized_event_probabilities.items():
-        print(severity, probability, seed, seed > probability)
-        if seed < probability + accum:
-            event_options = event_lookup_table[int(severity)]
-            event_name = choice(list(event_options))
-            return event_description_library[event_name]
-        accum += probability
-'''
+        #Don't give a user the same random event twice
+        elif name in dog.tags:
+            continue
+        return event_library[name]
 
 def handle_event(event, decision, dog:Dog, human:Human) -> None:
     event_outcome = event["options"][int(decision)]
-    update_model_stats(event_outcome, human, dog)
-    if "cost" in event_outcome:
-        cost = call_or_get(event_outcome['cost'], dog)
-        human.log += f"You spent {cost} resolving {event['name']}\n"
-        human.balance -= cost
+    update_model_stats(event_outcome, event["name"], human, dog)
+
+    #If not an affliction tag the event so it doesn't get replayed later
+    if event["name"] not in afflictions_library.keys():
+        dog.tags.add(event["name"])
     return dog, human
 
 def next_round(dog:Dog, human:Human, event):
@@ -102,8 +105,7 @@ def next_round(dog:Dog, human:Human, event):
 
     #Dog suffers from afflictions and may get better
     for affliction_name, affliction_detail in dog.afflictions.items():
-        human.log += f'You have spent ${dog.afflictions[affliction_name]["cost"]} caring for your dogs {affliction_name}\n.'
-        update_model_stats(affliction_detail, human, dog)
+        update_model_stats(affliction_detail, affliction_name, human, dog)
         if dog.afflictions[name]["duration"] < 1:
             human.log += f"{dog.name} no longer suffers from {affliction_name}.\n"
 
@@ -112,7 +114,7 @@ def next_round(dog:Dog, human:Human, event):
     #Dog plays with items and wears them out
     for item_name, item_detail in dog.items.items():
         print(item_name, item_detail)
-        update_model_stats(item_detail, human, dog)
+        update_model_stats(item_detail, item_name, human, dog)
         dog.items[item_name]["duration"] -= 1.
         if (dog.items[item_name]["duration"]) < 1:
             human.log += f"{dog.name} completely used their {item_name}.\n"
@@ -126,6 +128,8 @@ def next_round(dog:Dog, human:Human, event):
         if (dog.medications[med_name]["duration"]) < 1:
             human.log += f"You ran out of {med_name} for {dog.name}.\n"
 
+    dog.medications = {key: value for key, value in dog.medications.items() if value["duration"] > 0}
+
     #Handle dog death
     if dog.health <= 0:
         human.log += f"After {dog.age} trips around the sun, {dog.name}'s life has come to an end.\n"
@@ -135,7 +139,7 @@ def next_round(dog:Dog, human:Human, event):
     
     if dog.alive:
         human.log += f"You spent a total of ${human.round_expenses} on {dog.name} over the past 6 months.\n"
-        human.log += f"You earned ${human.revenue} of income over the past 6 months.\n"
+        human.log += f"You earned ${human.revenue} of disposable income for your doggy fund over the past 6 months.\n"
         human.balance += human.revenue
     else:
         human.log += f"You spent a total of ${human.total_expenses} on {dog.name} over the course of {dog.name}'s life.\n"

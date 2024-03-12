@@ -33,6 +33,7 @@ class Dog:
         self.afflictions = {}
         self.medications = {}
         self.items = {}
+        self.tags = set()
         self.alive = True
         self.surrendered = False
  

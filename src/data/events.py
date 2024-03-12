@@ -37,6 +37,8 @@ event_lookup_table = {
         "fleas",
         "ingrown_nail",
         "bur_in_paw",
+    },
+    2: {
         "allergies",
         "obesity",
     },
@@ -49,7 +51,7 @@ event_lookup_table = {
     },
 }
 
-event_description_library = {
+event_library = {
     "fleas": {
         "name": "fleas",
         "resist": {
