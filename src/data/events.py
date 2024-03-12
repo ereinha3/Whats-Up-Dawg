@@ -78,7 +78,7 @@ event_library = {
     "heartworm": {
         "name": "heartworm",
         "resist": {
-            "check": lambda dog: "Heartworm Meds" in dog.medications, #().keys(),
+            "check": lambda dog: "Heartworm Meds" in dog.medications,
             "message": "Your dog was exposed to Heartworm, but luckily has already taken medication for that!",
             },
         "intro": "Your dog is having trouble breathing and is very lethargic. Do you... ?",
@@ -88,11 +88,12 @@ event_library = {
                 "outro": "Your vet diagnosis your dog with Heartworms and prescribes a one-time medication: ProHeart. It's a chewable tablet.",
                 "cost": 50,
                 "time": 2,
+                "afflictions": {"heartworm_medicated"}
                 },
             2: {
                 "intro": "Ignore it for now... it's probably fine?",
                 "outro": "Your dog is increasingly unable to breathe, and limps around the house. You think something is really wrong.",
-                "afflictions": {"heartworm"}
+                "afflictions": {"heartworm_unchecked"}
                 },
             },
         },
@@ -197,7 +198,7 @@ event_library = {
             "check": lambda dog: random.choice([0, 0, (dog.walk_schedule in ["medium", "long"] and dog.meal_plan in ["normal", "vet_recommended"])]),
             "message": "While resisting cancer is difficult, frequent excercise and proper diet are the best mechanisms for prevention.",
             },
-        "intro": "Your dog is lethargic and seems to have no motivation to do anything. Do you... ?",
+        "intro": "Your dog is lethargic and seems to have no motivation to do anything. You've been noticing uncomfortable bumps on your dog and you are worried that it might be cancerous. Cancer treatment is very expensive, if it is cancer, you don't know if you'll be able to afford it. Do you... ?",
         "options": {
             1: {
                 "intro": "Take your dog to the vet.", 
@@ -209,6 +210,7 @@ event_library = {
             2: { 
                 "intro": "Do nothing, maybe it's a case of seasonal depression?",
                 "outro": "Your dog continues to lose energy and is no longer playful.",
+                "afflictions": {"cancer_unchecked"}
                 },
             },
         },
@@ -238,14 +240,14 @@ event_library = {
         "name": "accident",
         "resist": {
             "check": lambda dog: random.randint(1, 100) < dog.training,
-            "message": "Due to your previous potty training your dog didn't have an accident.",
+            "message": "You are lucky to have a dog who is so well behaved. You stayed out very late with your friends and you came back to find your dog whimpering by the door, very ready for a bathroom break. Good on you for training your dog well.",
             },
         "intro": "You left to go to dinner with friends and stayed out longer than usual. Your dog had an accident in the house while being left at home.",
         "options": {
             1: {
-                "intro": "Take your dog to a trainer.", 
+                "intro": "Consult a trainer on potty training your dog.", 
                 "outro": "Your dog is better behaved and less likely to have an accident.",
-                "cost": 500,
+                "cost": 250,
                 "time": 20,
                 "training": 10,
                 },

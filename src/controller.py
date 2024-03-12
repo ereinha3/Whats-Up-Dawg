@@ -6,9 +6,6 @@ import sys
 from data.shop import meal_options, walk_options, medications, care_items
 import math
 
-def percentCheck(value):
-    return randint(1, 100) < value
-
 def affliction_detail_from_set(afflictionSubset: set) -> dict:
     return {key: value for key, value in afflictions_library.items() if key in afflictionSubset}
 
@@ -110,18 +107,9 @@ def next_round(dog:Dog, human:Human, event):
     human.balance -= dog.meal_expense
     dog.health += meal_options[dog.meal_plan]["health"]
     dog.happiness += meal_options[dog.meal_plan]["happiness"]
-
-    #Dog suffers from afflictions and may get better
-    for affliction_name, affliction_detail in dog.afflictions.items():
-        update_model_stats(affliction_detail, affliction_name, human, dog)
-        if dog.afflictions[affliction_name]["duration"] < 1:
-            human.log += f"{dog.name} no longer suffers from {affliction_name}.\n"
-
-    dog.afflictions = {key: value for key, value in dog.afflictions.items() if value["duration"] > 0}
     
     #Dog plays with items and wears them out
     for item_name, item_detail in dog.items.items():
-        print(item_name, item_detail)
         update_model_stats(item_detail, item_name, human, dog, False) #There are too many items to show all updates.
         dog.items[item_name]["duration"] -= 1.
         if (dog.items[item_name]["duration"]) < 1:
@@ -133,10 +121,21 @@ def next_round(dog:Dog, human:Human, event):
     #Remove used up meds
     for med_name, med_detail in dog.medications.items():
         dog.medications[med_name]["duration"] -= 1
+        if (med_detail["treatment"] in dog.afflictions.keys()):
+            dog.afflictions[med_detail["treatment"]]["duration"] = 0
+            human.log += f"You have treated {dog.name} of {med_detail['treatment']}.\n"
         if (dog.medications[med_name]["duration"]) < 1:
             human.log += f"You ran out of {med_name} for {dog.name}.\n"
 
     dog.medications = {key: value for key, value in dog.medications.items() if value["duration"] > 0}
+    
+    #Dog suffers from afflictions and may get better
+    for affliction_name, affliction_detail in dog.afflictions.items():
+        update_model_stats(affliction_detail, affliction_name, human, dog)
+        if dog.afflictions[affliction_name]["duration"] < 1:
+            human.log += f"{dog.name} no longer suffers from {affliction_name}.\n"
+
+    dog.afflictions = {key: value for key, value in dog.afflictions.items() if value["duration"] > 0}
 
     #Handle dog death
     if dog.health <= 0:
