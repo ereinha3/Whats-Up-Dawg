@@ -1268,7 +1268,7 @@ class MainWindow(customtkinter.CTk):
             self.human = None
 
         self.dog = model.Dog(name=dog_name, breed = self.dog_type_combobox.get().lower()) #option: breed
-        self.human = model.Human(income, self.dog)
+        self.human = model.Human(income, self.dog, name=human_name)
         self.num_rounds = 0
 
         # Update screen
