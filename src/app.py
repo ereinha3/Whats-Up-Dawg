@@ -441,12 +441,12 @@ class ShopWindow(customtkinter.CTkToplevel):
         for med_checkbox in self.meds_checkboxes:
             if med_checkbox.get():
                 med_key = med_checkbox.cget("text")
-                self.master.dog.medications[med_key] = medications[med_key]["duration"]
+                self.master.dog.medications[med_key] = medications[med_key]
 
         for item_checkbox in self.items_checkboxes:
             if item_checkbox.get():
                 item_key = item_checkbox.cget("text")
-                self.master.dog.items[item_key] = care_items[item_key]["duration"]
+                self.master.dog.items[item_key] = care_items[item_key]
 
         # Update main window human balance and screen
         self.master.human.balance = round(int(self.master.human.balance) - int(self.total), 2)
@@ -482,7 +482,6 @@ class MainWindow(customtkinter.CTk):
         self.dog = None
         self.dog_image = None
         self.event = None
-        self.event_cost = 0
 
         # Number of iterations through the game loop
         self.num_rounds = 0
@@ -903,7 +902,7 @@ class MainWindow(customtkinter.CTk):
         self.option1_button = customtkinter.CTkButton(
             self.decision_options_frame,
             text="Option 1",
-            command=lambda: self.option_button_event("1"))
+            command=lambda: self.option_button_event(1))
         self.option1_button.grid(
             row=0,
             column=0,
@@ -913,7 +912,7 @@ class MainWindow(customtkinter.CTk):
         self.option2_button = customtkinter.CTkButton(
             self.decision_options_frame,
             text="Option 2",
-            command=lambda: self.option_button_event("2"))
+            command=lambda: self.option_button_event(2))
         self.option2_button.grid(
             row=0,
             column=1,
@@ -1418,7 +1417,7 @@ class MainWindow(customtkinter.CTk):
         # print("Continue Button Pressed")
         # Prevent screen update on initial continue press
         if self.num_rounds != 0:
-            self.dog, self.human, summary = controller.next_round(self.dog, self.human, self.event_cost, self.event["name"])
+            self.dog, self.human, summary = controller.next_round(self.dog, self.human, self.event["name"])
             self.push_splash_screen(summary)
             self.refresh_screen()
         self.num_rounds += 1
@@ -1445,8 +1444,8 @@ class MainWindow(customtkinter.CTk):
             self.textbox.configure(state="normal")
             self.textbox.delete("0.0", tkinter.END)
             self.textbox.insert("0.0", self.event["intro"] + "\n" 
-                                + f'[Option 1]: {self.event["options"]["1"]["intro"]}' + "\n" 
-                                + f'[Option 2]: {self.event["options"]["2"]["intro"]}')
+                                + f'[Option 1]: {self.event["options"][1]["intro"]}' + "\n" 
+                                + f'[Option 2]: {self.event["options"][2]["intro"]}')
             self.textbox.configure(state="disabled")
             
             self.decision_options_frame.tkraise()
@@ -1461,7 +1460,8 @@ class MainWindow(customtkinter.CTk):
         """
         # print("Option Button Pressed")
         # Handle the event and update the textbox
-        self.dog, self.human, self.event_cost = controller.handle_event(self.event, button_number, self.dog, self.human)
+        print(self.event)
+        self.dog, self.human = controller.handle_event(self.event, button_number, self.dog, self.human)
         self.textbox.configure(state="normal")
         self.textbox.delete("0.0", tkinter.END)
         self.textbox.insert("0.0", self.event["options"][button_number]["outro"])

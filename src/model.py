@@ -1,3 +1,4 @@
+import random
 from data.breeds_dict import breeds
 from data.shop import meal_options, walk_options
 
@@ -34,12 +35,16 @@ class Dog:
         self.items = {}
         self.alive = True
         self.surrendered = False
-    
+ 
+    @property
+    def walk_time(self):
+        return walk_options[self.walk_schedule]["time"] * 30 * config["months_per_round"]
+
     @property
     def meal_expense(self):
         cups_per_day = 0.045 * self.weight + 0.81
         daily_cost = cups_per_day * meal_options[self.meal_plan]["cost"]
-        return daily_cost * 30 * config["months_per_round"]
+        return round(daily_cost * 30 * config["months_per_round"], 2)
 
     def __str__(self):
         return f"{self.name} is a {self.breed} with {self._health} health and is {self.age} years old.\
@@ -57,8 +62,8 @@ class Dog:
         middle_age = self.max_age / 2
         if self._age > middle_age:
             #Reduce max health slowly
-            self.max_health -= 2
-        elif self.age > max_age:
+            self.max_health -= random.randint(1, 3)
+        elif self.age > self.max_age:
             #Reduce max health very quickly
             self.max_health -= (self.age - self.max_age) * config["months_per_round"]
 
@@ -76,14 +81,33 @@ class Human:
     def __init__(self, monthly_income, dog:Dog, name="John"):
         # This explicitly needs to be declared as disposable income to the user as they need income for a variety of essentials
         self.monthly_income = float(monthly_income)
-        self.income = float(monthly_income) * 6 #This is the 6-monthly income
+        self.income = float(monthly_income)
         self._balance = self.revenue
         self.time_spent = 0
         self.name = name
         self.dog = dog
+        self._round_expenses = 0 #Tracks expenses for a round, controller refreshes on a new round
+        self._total_expenses = 0
+        self.log = str()
         
     def __str__(self):
         return f"{self.name} currently has a balance of ${self._balance} and has spent {self.time_spent} hours on {self.dog.name}."
+
+    @property
+    def round_expenses(self):
+        return round(self._round_expenses, 2)
+
+    @round_expenses.setter
+    def round_expenses(self, value):
+        self._round_expenses = value
+
+    @property
+    def total_expenses(self):
+        return round(self._total_expenses, 2)
+
+    @total_expenses.setter
+    def total_expenses(self, value):
+        self._total_expenses = value
 
     @property
     def revenue(self):
@@ -95,6 +119,10 @@ class Human:
 
     @balance.setter
     def balance(self, value):
+        loss = max((self._balance - value), 0)
+        self.round_expenses += loss
+        self.total_expenses += loss
+
         self._balance = value
         if (self._balance < -(self.revenue / 6 * 4)):
             self.dog.surrendered = True
