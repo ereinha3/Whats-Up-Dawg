@@ -77,7 +77,7 @@ class Dog:
 
         #Health drops more quickly and earlier than max health
         #Health needs to be maintained with good diet and exercise, it is not a given
-        self.health -= health_loss + random.randint(4, 8) * age_difference
+        self.health -= health_loss + random.randint(4, 12) * age_difference
 
     @property
     def health(self):

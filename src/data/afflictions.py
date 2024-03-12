@@ -2,11 +2,13 @@ afflictions_library = {
         "allergies_medicated": {
             "name": "allergies_medicated",
             "cost": 30,
+            "duration": float("inf"),
         },
         "allergies_unchecked": {
             "name": "allergies_unchecked",
             "health": -1,
             "happiness": -1,
+            "duration": float("inf"),
         },
         "fleas": {
             "name": "fleas",

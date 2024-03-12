@@ -1464,7 +1464,6 @@ class MainWindow(customtkinter.CTk):
         """
         # print("Option Button Pressed")
         # Handle the event and update the textbox
-        print(self.event)
         self.dog, self.human = controller.handle_event(self.event, button_number, self.dog, self.human)
         self.textbox.configure(state="normal")
         self.textbox.delete("0.0", tkinter.END)
