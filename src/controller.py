@@ -138,8 +138,19 @@ def next_round(dog:Dog, human:Human, event):
     dog.afflictions = {key: value for key, value in dog.afflictions.items() if value["duration"] > 0}
 
     #Handle dog death
-    if dog.health <= 0:
+    if not dog.alive:
         human.log += f"After {dog.age} trips around the sun, {dog.name}'s life has come to an end.\n"
+        human.log += "The cause of death was ruled to be: "
+        afflictions_list = list(dog.afflictions.keys())
+        if len(afflictions_list) != 0:
+            if len(afflictions_list)>1:
+                for affliction in afflictions_list[:-1]:
+                    human.log += f"{affliction}, "
+                human.log += f"and {afflictions_list[-1]}.\n"
+            else:
+                human.log += f"{afflictions_list[0]}.\n"
+        else:
+            human.log += "natural causes.\n"
     elif dog.surrendered:
         human.log += f"Your balance has exceeded the minimum threshold meaning you are no longer able to financially support {dog.name}.\n"
         human.log += f"{dog.name} has been surrendered to a shelter."
@@ -157,17 +168,3 @@ def next_round(dog:Dog, human:Human, event):
 def check_resistance(dog: Dog, event: dict) -> None:
     return (event["resist"]["check"](dog))
 
-'''
-        human.log += "The cause of death was ruled to be: "
-        afflictions_list = list(dog.afflictions.keys())
-        if len(afflictions_list) != 0:
-            if len(afflictions_list)>1:
-                for affliction in afflictions_list[:-1]:
-                    human.log += f"{affliction}, "
-                human.log += f"and {afflictions_list[-1]}.\n"
-            else:
-                human.log += f"{afflictions_list[0]}.\n"
-        else:
-            human.log += "natural causes.\n"
-        dog.alive = False
-'''        

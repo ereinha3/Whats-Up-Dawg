@@ -6,11 +6,11 @@ config = {
         "months_per_round": 6
         }
 
-class Dog:
+class Dog():
     def __init__(self, 
                  name = "Stitch", 
-                 age = 0, 
-                 health = 100, 
+                 age = 9, 
+                 health = 80, 
                  happiness = 50, 
                  max_age = 14,
                  weight = 50,
@@ -44,7 +44,7 @@ class Dog:
     @property
     def meal_expense(self):
         cups_per_day = 0.045 * self.weight + 0.81
-        daily_cost = cups_per_day * meal_options[self.meal_plan]["cost"]
+        daily_cost = cups_per_day * (meal_options[self.meal_plan]["cost"] / 4)
         return round(daily_cost * 30 * config["months_per_round"], 2)
 
     def __str__(self):
@@ -59,25 +59,20 @@ class Dog:
 
     @age.setter
     def age(self, value):
+        
+        if self.age > self.max_age:
+            self.alive = False
         middle_age = self.max_age / 2
         age_difference = value - self._age
 
-       
-        health_loss = 0
-        self._age = value
-        if self._age > middle_age:
-            #Reduce max health slowly
-            health_loss = random.randint(1, 3) * age_difference
-        elif self.age > self.max_age:
-            #Reduce max health very quickly
-            health_loss = (self.age - self.max_age) * config["months_per_round"] * 2
+        health_loss = random.randint(4, 10) * age_difference if self._age > middle_age else 0
         
         self.max_health -= health_loss
         self.happiness -= health_loss #Happiness also drops as dog nears the end of their life
 
         #Health drops more quickly and earlier than max health
         #Health needs to be maintained with good diet and exercise, it is not a given
-        self.health -= health_loss + random.randint(4, 12) * age_difference
+        self.health -= (health_loss + random.randint(6, 12) * age_difference)
 
     @property
     def health(self):

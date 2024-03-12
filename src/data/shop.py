@@ -108,7 +108,7 @@ meal_options = {
             }, 
         "normal": {
             "name": "normal",
-            "display": "Walmart's\nFinest",
+            "display": "Purina\nOne",
             "cost": 1.84,
             "health": 2,
             "happiness": 0,
