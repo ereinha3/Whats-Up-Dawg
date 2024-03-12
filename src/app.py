@@ -807,7 +807,10 @@ class MainWindow(customtkinter.CTk):
             column=0,
             padx=10,
             pady=5)
-        CreateToolTip(self.food_option_label, text = "Walmart's finest : $1.07/lb\nPurina One : $1.84/lb\nVet Recommended : $2.15/lb")
+        food_text = ""
+        for val in meal_options.values():
+            food_text += f'{val["display"]} : ${val["cost"]}/lb\n'
+        CreateToolTip(self.food_option_label, text = food_text)
 
         self.food_seg_button = customtkinter.CTkSegmentedButton(
             self.options_frame,
@@ -1265,7 +1268,7 @@ class MainWindow(customtkinter.CTk):
             self.human = None
 
         self.dog = model.Dog(name=dog_name, breed = self.dog_type_combobox.get().lower()) #option: breed
-        self.human = model.Human(income, self.dog)
+        self.human = model.Human(income, self.dog, name=human_name)
         self.num_rounds = 0
 
         # Update screen
