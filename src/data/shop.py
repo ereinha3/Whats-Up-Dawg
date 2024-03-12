@@ -104,17 +104,20 @@ meal_options = {
             "display": "Walmart's\nCheapest", 
             "cost": 1.07, 
             "health": 1,
+            "happiness": -2,
             }, 
         "normal": {
             "name": "normal",
             "display": "Walmart's\nFinest",
-            "cost": 1.84, 
+            "cost": 1.84,
             "health": 2,
+            "happiness": 0,
         }, 
         "vet_recommended": {
             "name": "vet_recommended",
             "display": "Vet\nRecommended", 
             "cost": 2.15, 
             "health": 3,
+            "happiness": 1,
         }
     }

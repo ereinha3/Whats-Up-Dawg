@@ -17,38 +17,42 @@ def call_or_get(value, dog):
         return value(dog)
     return value
 
-def update_model_stats(token: dict, token_name, human: Human, dog: Dog):
+def update_model_stats(token: dict, token_name, human: Human, dog: Dog, show_display=True):
+    '''
+    This procedure performs an assembly line of checks on stat updates hitten by the token dictionary.
+    Dog stats and human stats are updated as appropriate, and if show_display is True the changes are logged.
+    '''
 
-    print(f"Updating model based on {token_name}")
-    print(token)
+    token_name = token_name.replace("_", " ").title()
 
     if ("health" in token):
         health_value = call_or_get(token["health"], dog)
         dog.health += health_value
-        if (health_value < 0):
+        if (health_value < 0 and show_display):
             human.log += f"{dog.name} lost health as a result of {token_name}. Take care!\n"
-        else:
+        elif (health_value > 0 and show_display):
             human.log += f"{dog.name} gained health as a result of {token_name}. Good work!\n"
     if ("max_health" in token):
         dog.max_health += call_or_get(token["max_health"], dog)
     if ("happiness" in token):
         happiness_value = call_or_get(token["happiness"], dog)
         dog.happiness += call_or_get(token["happiness"], dog)
-        if (happiness_value < 0):
+        if (happiness_value < 0 and show_display):
             human.log += f"{dog.name} lost happiness as a result of {token_name}. Bummer!\n"
-        else:
+        elif(happiness_value > 0 and show_display):
             human.log += f"{dog.name} gained happiness as a result of {token_name}. Good work!\n"
     if ("training" in token):
         training_value = call_or_get(token["training"], dog)
         dog.training += training_value
-        if (training_value < 0):
+        if (training_value < 0 and show_display):
             human.log += f"{dog.name} is more poorly behaved as a result of {token_name}\n"
-        else:
+        elif(training_value > 0 and show_display):
             human.log += f"{dog.name} is better behaved as a result of {token_name}\n"
     if ("cost" in token):
         cost = call_or_get(token["cost"], dog)
         human.balance -= cost
-        human.log += f"You spent ${cost} to resolve {token_name}\n"
+        if (show_display):
+            human.log += f"You spent ${cost} to resolve {token_name}\n"
     if ("time" in token):
         human.time_spent -= call_or_get(token["time"], dog)
     if ("afflictions" in token):
@@ -95,18 +99,22 @@ def next_round(dog:Dog, human:Human, event):
     summary_paragraph = 'A whole 6 months have passed! The following occured over the period of time:\n\n'
     dog.age += config["months_per_round"] / 12
 
-    #Update walk time
+    #Walk dog
     human.log += f'You spent {dog.walk_time} hours walking {dog.name}.\n'
     human.time_spent += dog.walk_time
+    dog.health += walk_options[dog.walk_schedule]["health"]
+    dog.happiness += walk_options[dog.walk_schedule]["happiness"]
         
-    #Update meal expenses
+    #Feed dog
     human.log += f'You spent ${dog.meal_expense} paying for your dogs meals.\n'
     human.balance -= dog.meal_expense
+    dog.health += meal_options[dog.meal_plan]["health"]
+    dog.happiness += meal_options[dog.meal_plan]["happiness"]
 
     #Dog suffers from afflictions and may get better
     for affliction_name, affliction_detail in dog.afflictions.items():
         update_model_stats(affliction_detail, affliction_name, human, dog)
-        if dog.afflictions[name]["duration"] < 1:
+        if dog.afflictions[affliction_name]["duration"] < 1:
             human.log += f"{dog.name} no longer suffers from {affliction_name}.\n"
 
     dog.afflictions = {key: value for key, value in dog.afflictions.items() if value["duration"] > 0}
@@ -114,7 +122,7 @@ def next_round(dog:Dog, human:Human, event):
     #Dog plays with items and wears them out
     for item_name, item_detail in dog.items.items():
         print(item_name, item_detail)
-        update_model_stats(item_detail, item_name, human, dog)
+        update_model_stats(item_detail, item_name, human, dog, False) #There are too many items to show all updates.
         dog.items[item_name]["duration"] -= 1.
         if (dog.items[item_name]["duration"]) < 1:
             human.log += f"{dog.name} completely used their {item_name}.\n"
@@ -136,7 +144,6 @@ def next_round(dog:Dog, human:Human, event):
     elif dog.surrendered:
         human.log += f"Your balance has exceeded the minimum threshold meaning you are no longer able to financially support {dog.name}.\n"
         human.log += f"{dog.name} has been surrendered to a shelter."
-    
     if dog.alive:
         human.log += f"You spent a total of ${human.round_expenses} on {dog.name} over the past 6 months.\n"
         human.log += f"You earned ${human.revenue} of disposable income for your doggy fund over the past 6 months.\n"

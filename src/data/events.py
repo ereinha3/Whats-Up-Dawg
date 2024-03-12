@@ -86,7 +86,7 @@ event_library = {
             1: {
                 "intro": "Take your dog to the vet!", 
                 "outro": "Your vet diagnosis your dog with Heartworms and prescribes a one-time medication: ProHeart. It's a chewable tablet.",
-                "cost": lambda dog: 500 * (200 * dog.weight) // 50,
+                "cost": 50,
                 "time": 2,
                 },
             2: {
@@ -156,12 +156,14 @@ event_library = {
                 "outro": "Your vet diagnosis your dog with allergies. The treatment is a medication is a recurrent and lifelong.",
                 "cost": 60,
                 "time": 2,
+                "afflictions": {"allergies_medicated"}
                 },
             2: { 
                 "intro": "Do nothing, we all get sneezy.",
                 "outro": "Your dog continues to sneeze and have very watery eyes.",
                 "health": -5,
                 "happiness": -10,
+                "afflictions": {"allergies_unchecked"}
                 },
             },
         },
@@ -200,13 +202,13 @@ event_library = {
             1: {
                 "intro": "Take your dog to the vet.", 
                 "outro": "Your vet informs you your dog has cancer. Treatment involves surgery and encouraging healthy behaviour following recovery.",
-                "cost": 4100,
-                "time": 30,
+                "cost": 150,
+                "time": 5,
+                "afflictions": {"cancer_medicated"}
                 },
             2: { 
                 "intro": "Do nothing, maybe it's a case of seasonal depression?",
                 "outro": "Your dog continues to lose energy and is no longer playful.",
-                "afflictions": {"cancer"}
                 },
             },
         },

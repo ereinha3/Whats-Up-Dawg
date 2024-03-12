@@ -59,14 +59,25 @@ class Dog:
 
     @age.setter
     def age(self, value):
-        self._age = value
         middle_age = self.max_age / 2
+        age_difference = value - self._age
+
+       
+        health_loss = 0
+        self._age = value
         if self._age > middle_age:
             #Reduce max health slowly
-            self.max_health -= random.randint(1, 3)
+            health_loss = random.randint(1, 3) * age_difference
         elif self.age > self.max_age:
             #Reduce max health very quickly
-            self.max_health -= (self.age - self.max_age) * config["months_per_round"]
+            health_loss = (self.age - self.max_age) * config["months_per_round"] * 2
+        
+        self.max_health -= health_loss
+        self.happiness -= health_loss #Happiness also drops as dog nears the end of their life
+
+        #Health drops more quickly and earlier than max health
+        #Health needs to be maintained with good diet and exercise, it is not a given
+        self.health -= health_loss + random.randint(4, 8) * age_difference
 
     @property
     def health(self):
