@@ -28,9 +28,9 @@ afflictions_library = {
         },
         "heartworm_medicated": {
             "name": "heartworm_medicated",
-            "duration": 3,
+            "duration": 2,
             "time": 10,
-            "cost": lambda dog : 800 + dog.weight * 10
+            "cost": lambda dog : 400 + dog.weight * 10
         },
         "cancer_unchecked": {
             "name": "cancer",
