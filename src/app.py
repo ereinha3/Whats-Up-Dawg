@@ -1280,6 +1280,7 @@ class MainWindow(customtkinter.CTk):
         self.textbox.delete("0.0", tkinter.END)
         self.textbox.insert("0.0", self.start_string)
         self.textbox.configure(state="disabled")
+        self.continue_button_frame.tkraise()
 
         # Set Dog Image
         dog_string = self.dog_type_combobox.get().lower().strip().replace(" ", "_") + ".jpg"
@@ -1359,8 +1360,9 @@ class MainWindow(customtkinter.CTk):
 
         # Iterate through afflictions and add a newline after each one (for formatting)
         afflictions_str = ""
-        for affliction in self.dog.afflictions:
-            afflictions_str += affliction + "\n"
+        for affliction in self.dog.afflictions.keys():
+            if self.dog.afflictions[affliction][0]:
+                afflictions_str += affliction + "\n"
 
         # Then add our afflictions to the afflictions textbox within the afflictions window
         self.afflictions_window.afflictions_textbox.configure(state="normal")
@@ -1536,7 +1538,7 @@ class MainWindow(customtkinter.CTk):
 
         # Happiness image based on dogs happiness
         happiness_value = self.dog.happiness
-        print(f"Happiness Value: {happiness_value}")
+        # print(f"Happiness Value: {happiness_value}")
         if (80 <= happiness_value <= 100):
             self.happiness_image_label.configure(image=self.face1_image)
         elif (60 <= happiness_value <= 79):
