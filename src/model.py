@@ -8,7 +8,7 @@ class Dog():
                  name = "Stitch", 
                  age = 0, 
                  health = 75, 
-                 happiness = 50, 
+                 happiness = 75, 
                  max_age = 14,
                  weight = 50,
                  breed = "yorkshire terrier",
