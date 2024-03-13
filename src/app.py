@@ -560,7 +560,7 @@ class MainWindow(customtkinter.CTk):
             pady=(10, 5),
             sticky="news")
         self.dog_stats_frame.grid_columnconfigure(0, weight=1)
-        self.dog_stats_frame.grid_rowconfigure((0, 1, 2), weight=1)
+        self.dog_stats_frame.grid_rowconfigure((0, 1, 2, 3), weight=1)
 
         self.dog_name_label = customtkinter.CTkLabel(
             self.dog_stats_frame,
@@ -604,6 +604,34 @@ class MainWindow(customtkinter.CTk):
             row=0,
             column=0,
             padx=10,
+            pady=5)
+        
+        self.happiness_frame = customtkinter.CTkFrame(self.dog_stats_frame)
+        self.happiness_frame.grid(
+            row=3,
+            column=0,
+            padx=20,
+            pady=(5, 10))
+        
+        self.happiness_label = customtkinter.CTkLabel(
+            self.happiness_frame,
+            text="Happiness:",
+            font=customtkinter.CTkFont(size=18, weight="normal"))
+        self.happiness_label.grid(
+            row=0,
+            column=0,
+            padx=(10, 5),
+            pady=5)
+
+        self.happiness_image_label = customtkinter.CTkLabel(
+            self.happiness_frame,
+            text="",
+            image=self.face1_image,
+            font=customtkinter.CTkFont(size=18, weight="normal"))
+        self.happiness_image_label.grid(
+            row=0,
+            column=1,
+            padx=(5, 10),
             pady=5)
         
         #------------------------------
@@ -718,33 +746,33 @@ class MainWindow(customtkinter.CTk):
             pady=5)
         
         #------------------------------
-        self.happiness_frame = customtkinter.CTkFrame(self.human_stats_frame)
-        self.happiness_frame.grid(
-            row=2,
-            column=0,
-            padx=20,
-            pady=0)
+        # self.happiness_frame = customtkinter.CTkFrame(self.human_stats_frame)
+        # self.happiness_frame.grid(
+        #     row=2,
+        #     column=0,
+        #     padx=20,
+        #     pady=0)
         
-        self.happiness_label = customtkinter.CTkLabel(
-            self.happiness_frame,
-            text="Happiness:",
-            font=customtkinter.CTkFont(size=18, weight="normal"))
-        self.happiness_label.grid(
-            row=0,
-            column=0,
-            padx=(10, 5),
-            pady=5)
+        # self.happiness_label = customtkinter.CTkLabel(
+        #     self.happiness_frame,
+        #     text="Happiness:",
+        #     font=customtkinter.CTkFont(size=18, weight="normal"))
+        # self.happiness_label.grid(
+        #     row=0,
+        #     column=0,
+        #     padx=(10, 5),
+        #     pady=5)
 
-        self.happiness_image_label = customtkinter.CTkLabel(
-            self.happiness_frame,
-            text="",
-            image=self.face1_image,
-            font=customtkinter.CTkFont(size=18, weight="normal"))
-        self.happiness_image_label.grid(
-            row=0,
-            column=1,
-            padx=(5, 10),
-            pady=5)
+        # self.happiness_image_label = customtkinter.CTkLabel(
+        #     self.happiness_frame,
+        #     text="",
+        #     image=self.face1_image,
+        #     font=customtkinter.CTkFont(size=18, weight="normal"))
+        # self.happiness_image_label.grid(
+        #     row=0,
+        #     column=1,
+        #     padx=(5, 10),
+        #     pady=5)
         
         #------------------------------
         self.time_invested_frame = customtkinter.CTkFrame(self.human_stats_frame)
@@ -1123,7 +1151,8 @@ class MainWindow(customtkinter.CTk):
         self.instructions_button = customtkinter.CTkButton(
             self.main_menu_screen_frame,
             text="How to Play",
-            command=self.instructions_button_event)
+            command=self.instructions_button_event,
+            font=customtkinter.CTkFont(size=20))
         self.instructions_button.grid(
             row=1,
             column=0,
@@ -1136,7 +1165,8 @@ class MainWindow(customtkinter.CTk):
         self.start_button = customtkinter.CTkButton(
             self.main_menu_screen_frame,
             text="Start New Game",
-            command=self.start_button_event)
+            command=self.start_button_event,
+            font=customtkinter.CTkFont(size=20))
         self.start_button.grid(
             row=1,
             column=2,
