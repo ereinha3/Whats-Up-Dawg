@@ -5,7 +5,6 @@ event_lookup_table = {
         "dog_ate_pizza",
         "accident",
         "dislikes_friend",
-        "bit_other_dog",
         "brings_rat",
         "singing",
         "growls",
@@ -37,12 +36,14 @@ event_lookup_table = {
         "fleas",
         "ingrown_nail",
         "bur_in_paw",
+        "bit_other_dog",
     },
     2: {
         "allergies",
         "obesity",
     },
     3:{    
+        "hit_by_car",
         "heartworm",
     },
         
@@ -52,6 +53,30 @@ event_lookup_table = {
 }
 
 event_library = {
+    "hit_by_car": {
+        "name": "fleas",
+        "resist": {
+            "check": lambda dog: random.randint(1, 100) < dog.training,
+            "message": "Your dog was almost hit by a car, but fortunately they were well trained and stuck by your side.",
+        },
+        "intro": "Your dog foolishly ran across the street in their eagerness to reach the park and was hit by a dog. Do you...",
+        "options": {
+            1: {
+                "intro": "Take your dog to the vet and prepare for the cost of surgery.",
+                "outro": "Hope that your dog is okay...",
+                "cost": 1000,
+                "health": -20,
+                "happiness": -10,
+            },
+            2: {
+                "intro": "Hope that your dog is okay...",
+                "outro": "Your dog should definitely be taken away from you, but you hope they survive.",
+                "health": -50,
+                "max_health": -25,
+                "happiness": -75,
+            },
+        },
+    },
     "fleas": {
         "name": "fleas",
         "resist": {
@@ -86,8 +111,6 @@ event_library = {
             1: {
                 "intro": "Take your dog to the vet!", 
                 "outro": "Your vet diagnosis your dog with Heartworms and prescribes a one-time medication: ProHeart. It's a chewable tablet.",
-                "cost": 50,
-                "time": 2,
                 "afflictions": {"heartworm_medicated"}
                 },
             2: {

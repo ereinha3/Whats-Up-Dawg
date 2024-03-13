@@ -42,16 +42,17 @@ def update_model_stats(token: dict, token_name, human: Human, dog: Dog, show_dis
         training_value = call_or_get(token["training"], dog)
         dog.training += training_value
         if (training_value < 0 and show_display):
-            human.log += f"{dog.name} is more poorly behaved as a result of {token_name}\n"
+            human.log += f"{dog.name} is more poorly behaved as a result of {token_name}.\n"
         elif(training_value > 0 and show_display):
-            human.log += f"{dog.name} is better behaved as a result of {token_name}\n"
+            human.log += f"{dog.name} is better behaved as a result of {token_name}.\n"
     if ("cost" in token):
         cost = call_or_get(token["cost"], dog)
         human.balance -= cost
         if (show_display):
-            human.log += f"You spent ${cost} to resolve {token_name}\n"
+            human.log += f"You spent ${cost} to resolve {token_name}.\n"
     if ("time" in token):
         human.time_spent -= call_or_get(token["time"], dog)
+        human.log += f"You spent {token['time']} hours of time on handling {token_name}.\n"
     if ("afflictions" in token):
         dog.afflictions = dog.afflictions | affliction_detail_from_set(call_or_get(token["afflictions"], dog))
         human.log += "Your dog has suffered an affliction.\n"
@@ -137,7 +138,7 @@ def next_round(dog:Dog, human:Human, event):
 
     dog.afflictions = {key: value for key, value in dog.afflictions.items() if value["duration"] > 0}
 
-    #Handle dog death
+    #Handle dog death or surrender
     if not dog.alive:
         human.log += f"After {dog.age} trips around the sun, {dog.name}'s life has come to an end.\n"
         human.log += "The cause of death was ruled to be: "
@@ -154,12 +155,15 @@ def next_round(dog:Dog, human:Human, event):
     elif dog.surrendered:
         human.log += f"Your balance has exceeded the minimum threshold meaning you are no longer able to financially support {dog.name}.\n"
         human.log += f"{dog.name} has been surrendered to a shelter."
+
+    #Normal output
     if dog.alive:
         human.log += f"You spent a total of ${human.round_expenses} on {dog.name} over the past 6 months.\n"
         human.log += f"You earned ${human.revenue} of disposable income for your doggy fund over the past 6 months.\n"
+        human.log += f"After expenses and revenue, your balance has changed by ${human.revenue - human.round_expenses}.\n"
         human.balance += human.revenue
     else:
-        human.log += f"You spent a total of ${human.total_expenses} on {dog.name} over the course of {dog.name}'s life.\n"
+        human.log += f"You spent a total of ${human.total_expenses} and {human.time_spent} hours on {dog.name} over the course of {dog.name}'s life.\n"
     summary_paragraph += human.log
     human.round_expenses = 0 #reset for next round
     human.log = str() #reset for next round

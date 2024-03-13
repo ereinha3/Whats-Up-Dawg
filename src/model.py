@@ -9,8 +9,8 @@ config = {
 class Dog():
     def __init__(self, 
                  name = "Stitch", 
-                 age = 9, 
-                 health = 80, 
+                 age = 0, 
+                 health = 75, 
                  happiness = 50, 
                  max_age = 14,
                  weight = 50,
@@ -64,15 +64,16 @@ class Dog():
             self.alive = False
         middle_age = self.max_age / 2
         age_difference = value - self._age
+        self._age = value
 
-        health_loss = random.randint(4, 10) * age_difference if self._age > middle_age else 0
+        health_loss = random.randint(6, 12) * age_difference if self._age > middle_age else 0
         
         self.max_health -= health_loss
         self.happiness -= health_loss #Happiness also drops as dog nears the end of their life
 
         #Health drops more quickly and earlier than max health
         #Health needs to be maintained with good diet and exercise, it is not a given
-        self.health -= (health_loss + random.randint(6, 12) * age_difference)
+        self.health -= (health_loss + random.randint(1, 12) * age_difference)
 
     @property
     def health(self):
