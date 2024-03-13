@@ -62,14 +62,14 @@ care_items = {
 medications = {
         "Flea and Tick Meds": {
             "treatment": "fleas",
-            "cost": 150, #cost from chewy: https://www.chewy.com/nexgard-chew-dogs-241-60-lbs-purple/dp/173254
-            "duration": 1,
+            "cost": 290, #https://www.chewy.com/nexgard-chew-dogs-241-60-lbs-purple/dp/322552
+            "duration": 2,
             "display": "Flea and Tick Meds",
             },
         "Heartworm Meds": {
             "treatment": "heartworm",
-            "cost": 150, #cost from chewy: https://www.chewy.com/nexgard-chew-dogs-241-60-lbs-purple/dp/173254
-            "duration": 1,
+            "cost": 100, #https://www.chewy.com/heartgard-plus-chew-dogs-51-100-lbs/dp/179482
+            "duration": 2,
             "display": "Heartworm Meds",
             },
     }
@@ -116,7 +116,7 @@ meal_options = {
         "vet_recommended": {
             "name": "vet_recommended",
             "display": "Vet\nRecommended", 
-            "cost": 2.15, 
+            "cost": 2.15,
             "health": 3,
             "happiness": 1,
         }

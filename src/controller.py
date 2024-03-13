@@ -1,7 +1,8 @@
 from random import randint, choice, random
 from data.events import event_lookup_table, event_library
 from data.afflictions import afflictions_library
-from model import Dog, Human, config
+from data.config import config
+from model import Dog, Human
 import sys
 from data.shop import meal_options, walk_options, medications, care_items
 import math
@@ -53,7 +54,7 @@ def update_model_stats(token: dict, token_name, human: Human, dog: Dog, show_dis
     if ("time" in token):
         human.time_spent -= call_or_get(token["time"], dog)
         human.log += f"You spent {token['time']} hours of time on handling {token_name}.\n"
-    if ("afflictions" in token):
+    if ("afflictions" in token and len(call_or_get(token["afflictions"], dog)) > 0):
         dog.afflictions = dog.afflictions | affliction_detail_from_set(call_or_get(token["afflictions"], dog))
         human.log += "Your dog has suffered an affliction.\n"
     if ("treatments" in token):
@@ -87,7 +88,8 @@ def handle_event(event, decision, dog:Dog, human:Human) -> None:
     update_model_stats(event_outcome, event["name"], human, dog)
 
     #If not an affliction tag the event so it doesn't get replayed later
-    if event["name"] not in afflictions_library.keys():
+    #Event names don't always cleanly map to an affliction name, removed common affliction suffixes for better comparison.
+    if event["name"].replace("_medicated", "").replace("_unchecked", "") not in afflictions_library.keys():
         dog.tags.add(event["name"])
     return dog, human
 
@@ -132,6 +134,7 @@ def next_round(dog:Dog, human:Human, event):
     
     #Dog suffers from afflictions and may get better
     for affliction_name, affliction_detail in dog.afflictions.items():
+        dog.afflictions[affliction_name]["duration"] -= 1
         update_model_stats(affliction_detail, affliction_name, human, dog)
         if dog.afflictions[affliction_name]["duration"] < 1:
             human.log += f"{dog.name} no longer suffers from {affliction_name}.\n"
@@ -160,7 +163,7 @@ def next_round(dog:Dog, human:Human, event):
     if dog.alive:
         human.log += f"You spent a total of ${human.round_expenses} on {dog.name} over the past 6 months.\n"
         human.log += f"You earned ${human.revenue} of disposable income for your doggy fund over the past 6 months.\n"
-        human.log += f"After expenses and revenue, your balance has changed by ${human.revenue - human.round_expenses}.\n"
+        human.log += f"After expenses and revenue, your balance has changed by ${round(human.revenue - human.round_expenses, 2)}.\n"
         human.balance += human.revenue
     else:
         human.log += f"You spent a total of ${human.total_expenses} and {human.time_spent} hours on {dog.name} over the course of {dog.name}'s life.\n"

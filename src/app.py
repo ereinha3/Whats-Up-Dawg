@@ -441,12 +441,12 @@ class ShopWindow(customtkinter.CTkToplevel):
         for med_checkbox in self.meds_checkboxes:
             if med_checkbox.get():
                 med_key = med_checkbox.cget("text")
-                self.master.dog.medications[med_key] = medications[med_key]
+                self.master.dog.medications[med_key] = dict(medications[med_key])
 
         for item_checkbox in self.items_checkboxes:
             if item_checkbox.get():
                 item_key = item_checkbox.cget("text")
-                self.master.dog.items[item_key] = care_items[item_key]
+                self.master.dog.items[item_key] = dict(care_items[item_key])
 
         # Update main window human balance and screen
         self.master.human.balance = round(int(self.master.human.balance) - int(self.total), 2)

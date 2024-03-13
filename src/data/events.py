@@ -1,3 +1,4 @@
+from .config import config
 import random
 
 event_lookup_table = {
@@ -41,6 +42,7 @@ event_lookup_table = {
     2: {
         "allergies",
         "obesity",
+        "ticks",
     },
     3:{    
         "hit_by_car",
@@ -54,12 +56,12 @@ event_lookup_table = {
 
 event_library = {
     "hit_by_car": {
-        "name": "fleas",
+        "name": "hit_by_car",
         "resist": {
             "check": lambda dog: random.randint(1, 100) < dog.training,
             "message": "Your dog was almost hit by a car, but fortunately they were well trained and stuck by your side.",
         },
-        "intro": "Your dog foolishly ran across the street in their eagerness to reach the park and was hit by a dog. Do you...",
+        "intro": "Your dog foolishly ran across the street in their eagerness to reach the park and was hit by a car. Do you...",
         "options": {
             1: {
                 "intro": "Take your dog to the vet and prepare for the cost of surgery.",
@@ -71,16 +73,42 @@ event_library = {
             2: {
                 "intro": "Hope that your dog is okay...",
                 "outro": "Your dog should definitely be taken away from you, but you hope they survive.",
-                "health": -50,
+                "health": lambda dog : -random.randint(50, 100),
                 "max_health": -25,
                 "happiness": -75,
+            },
+        },
+    },
+    "ticks": {
+        "name": "ticks",
+        "resist": {
+            "check": lambda dog: "Flea and Tick Meds" in dog.medications.keys(),
+            "message": "Your dog was exposed to ticks but fortunately your medications prevented an infection.",
+        },
+        "intro": "One day when petting your dog you find a strange bulbous growth in their fur. With some more investigation you realize that it is an overgrown tick, and there are a few of them growing on your dog. Do you?",
+        "options": {
+            1: {
+                "intro": "Take your dog to the vet.",
+                "outro": "Your vet removes the ticks and strongly recommends that you buy Flea and Tick meds in future. These will make your dogs blood poisonous to Flea and Ticks and prevent them from suffering a further infection.",
+                "cost": config["vet_urgent_cost"],
+                "time": 1,
+                "health": -5,
+                "happiness": -5,
+            },
+            2: {
+                "intro": "Do your best to remove the ticks yourself.",
+                "outro": "It's a tedious and disgusting process, but you think you get the ticks out. Hopefully, your dog hasn't contracted some kind of disease from them.",
+                "health": -5,
+                "happiness": -5,
+                "time": 1,
+                "afflictions": lambda dog : {} if random.randint(1, 10) < 7 else {"anemia"}
             },
         },
     },
     "fleas": {
         "name": "fleas",
         "resist": {
-            "check": lambda dog: "Flea and Tick Meds" in dog.medications, #().keys(),
+            "check": lambda dog: "Flea and Tick Meds" in dog.medications,
             "message": "Your dog was exposed to fleas, but fortunately they were on flea and tick meds and it didn't catch them.",
             },
         "intro": "Your dog is itchy and has little brown dots jumping from its skin. Do you... ?",
@@ -88,7 +116,7 @@ event_library = {
             1: {
                 "intro": "Take your dog and get rid of those fleas!", 
                 "outro": "Your vet prescribes medication to your dog and flea shampoo. It takes several hours over the next few weeks to completely remove the fleas from your house, and the treatment isn't cheap. Your vet strongly recommends that you begin a medication plan for flea and tick meds. These will prevent your dog from getting fleas or ticks in the future.",
-                "cost": 150,
+                "cost": 300,
                 "time": 8,
                 },
             2: {
@@ -137,9 +165,8 @@ event_library = {
                 },
             2: { 
                 "intro": "Ignore it. That will heal on it's own, right?",
-                "outro": "Your dog limps for a couple weeks, but eventually the condition appears to sort itself out.", 
-                "health": -5,
-                "happiness": -10
+                "outro": "It does not heal on its own. Your dogs nails become more warped over time, curling and growing into their paws.",
+                "afflictions": {"ingrown_nail"}
                 },
             },
         },
@@ -160,7 +187,7 @@ event_library = {
                 },
             2: { 
                 "intro": "Ignore it for now. That'll go away, right?",
-                "outro": "Eventually, the bur disloges from your dogs foot, and heals on it's own.",  
+                "outro": "Eventually, the bur disloges from your dogs foot, and heals on it's own. It's clearly a paintful and uncomfortable experience for your dog though.",  
                   "health": -5,
                   "happiness": -10,
                 },
@@ -203,7 +230,7 @@ event_library = {
             1: {
                 "intro": "Take your dog to the vet.", 
                 "outro": "Your vet informs you that your dog is overweight, and recommends a better diet and more consistent exercise. You try your best to give your dog a healthier lifestyle.",
-                "cost": 30,
+                "cost": config["vet_exam_cost"],
                 "time": 1,
                 },
             2: { 
@@ -249,7 +276,7 @@ event_library = {
             1: {
                 "intro": "Take your dog to the vet.", 
                 "outro": "Your vet says your dog is fine. Try to avoid letting it eat your pizza.",
-                "cost": 30,
+                "cost": config["vet_exam_cost"],
                 "time": 1
                 },
             2: { 
@@ -429,7 +456,7 @@ event_library = {
             1: {
                 "intro": "Take him to the vet. Better safe than sorry!", 
                 "outro": "You call off movie night to take your dog to the vet. The vet tells you your dog will be fine.",
-                "cost": 30,
+                "cost": config["vet_exam_cost"],
                 },
             2: { 
                 "intro": "It's only apple juice. Do nothing.",

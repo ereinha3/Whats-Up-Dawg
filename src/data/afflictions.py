@@ -1,4 +1,17 @@
 afflictions_library = {
+        "anemia": {
+            "name": "anemia",
+            "duration": 2,
+            "health": lambda dog: -random.randint(4, 12),
+            "max_health": -2.5,
+            "happiness": -5,
+        },
+        "ingrown_nail": {
+            "name": "ingrown_nail",
+            "duration": float("inf"),
+            "health": -2,
+            "happiness": -2,
+        },
         "allergies_medicated": {
             "name": "allergies_medicated",
             "cost": 30,

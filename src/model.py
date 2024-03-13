@@ -1,10 +1,7 @@
 import random
 from data.breeds_dict import breeds
 from data.shop import meal_options, walk_options
-
-config = {
-        "months_per_round": 6
-        }
+from data.config import config
 
 class Dog():
     def __init__(self, 
@@ -24,7 +21,7 @@ class Dog():
         self.max_age = breeds[breed]["max_expectancy"] #dog will not survive long past max age
         self._age = age #dog age in years
         self._health = health
-        self.max_health = health
+        self.max_health = 100
         self.weight = (breeds[breed]["min_weight"] + breeds[breed]["max_weight"]) // 2
         self.happiness = happiness
         self.name = name
@@ -134,18 +131,3 @@ class Human:
         self._balance = value
         if (self._balance < -(self.revenue / 6 * 4)):
             self.dog.surrendered = True
-
-def update_model(dog, human):
-    dog.name = dog.name + "_updated"
-    human.income = 5
-
-if __name__ == "__main__":
-    Kesey = Dog("Kesey")
-    Morgan = Human(2000, Kesey)
-    update_model(Kesey, Morgan)
-    print(Kesey.name)
-    Kesey.health -= 20
-    Kesey.max_health -= 20
-    print(Kesey.health)
-    print(Kesey.max_health)
-    print(Morgan.income)
