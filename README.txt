@@ -1,8 +1,24 @@
-Project Contributors: 
-Anna Finlay, Darby Wright, Ethan Reinhart, Morgan Jones
-
 Project Description:
-A game about the life of a dog owner... and the difficulties therein. Should be played by prospective dog owners.
+What's Up Dawg?! A simulation game about the life of a dog and its human... Should be played by prospective dog owners.
 
-Purpose:
-This game is designed to be enjoyed but also educate prospective dog owners about the responsibilities and costs of owning a dog. Approximately 3.1 million dogs are surrendered each year in the US alone, most commonly due to negiligence or unpreparedness when adopting or purchasing a dog. This game hopes to enlighten Players about the things you need to consider when owning a dog such as feeding, walking, and taking it to the vet. It follows the simulation of a dog owner who is prompted with events that occur that the player must respond to. These events vary from rudimentary day-to-day interactions, such as you're dog has made a new friend at the dog park, to more severe diseases such as heartworm. This game is designed to mimic the randomness of daily life, showing users that money needs to always be saved in the event that your dog needs medical attention which proves costly. This game also serves to educate players to proper care for thier dog. It encourages players to walk their dog frequently, feed them high-quality food, and take them to the vet when they are exhibiting any symptoms. While this game should not serve as medical or life advice, it functions as a good guideline for how to responsibly take care of a dog while providing a stimulating player experience. This game has no true objective other than to assist your dog in living their best life, just as true dog ownership does. Our hope is this game will be able to make some impact on the number of dogs being surrended to shelters every year.
+Project Contributors: 
+Anna Finlay, Morgan Jones, Ethan Reinhart, Darby Wright
+
+Created 2/15/2024 - 3/11/2024
+
+University of Oregon - CS422/522 Software Methodologies Project 2, Group 7
+
+*Requires python 3.10 or above*
+
+The First Time You Play: From the root folder, type in './CLICKME.sh' in a terminal window and press enter. This will download dependent python libraries and run the application.
+
+For additional play-throughs, you can use the same command as above, or from the root folder type in 'python3 ./src/app.py' in a terminal window and press enter. This will skip the process of downloading dependent libraries.
+
+Directory Contents:
+Root folder (./): Contains docs/ and src/ sub directories as well as CLICKME.sh bash script
+
+Documents(./docs/): Contains folders and files with dog information and research, images, and development process meeting notes.
+
+Source Files(./src/): Contains static data libraries in /data/ sub directory, as well as the main source code files app.py, controller.py, and model.py.
+
+Data (./src/data): Contains static data including dictionaries of shop items, afflictions, events, dog breeds. Also contains the scraper (scraper.py) used to gather the data.
