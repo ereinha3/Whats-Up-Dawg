@@ -746,35 +746,6 @@ class MainWindow(customtkinter.CTk):
             pady=5)
         
         #------------------------------
-        # self.happiness_frame = customtkinter.CTkFrame(self.human_stats_frame)
-        # self.happiness_frame.grid(
-        #     row=2,
-        #     column=0,
-        #     padx=20,
-        #     pady=0)
-        
-        # self.happiness_label = customtkinter.CTkLabel(
-        #     self.happiness_frame,
-        #     text="Happiness:",
-        #     font=customtkinter.CTkFont(size=18, weight="normal"))
-        # self.happiness_label.grid(
-        #     row=0,
-        #     column=0,
-        #     padx=(10, 5),
-        #     pady=5)
-
-        # self.happiness_image_label = customtkinter.CTkLabel(
-        #     self.happiness_frame,
-        #     text="",
-        #     image=self.face1_image,
-        #     font=customtkinter.CTkFont(size=18, weight="normal"))
-        # self.happiness_image_label.grid(
-        #     row=0,
-        #     column=1,
-        #     padx=(5, 10),
-        #     pady=5)
-        
-        #------------------------------
         self.time_invested_frame = customtkinter.CTkFrame(self.human_stats_frame)
         self.time_invested_frame.grid(
             row=3,
