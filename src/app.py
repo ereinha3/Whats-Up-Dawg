@@ -35,6 +35,8 @@ customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
 
+# This code to create the tool tip object was directly copied from this link : https://stackoverflow.com/questions/20399243/display-message-when-hovering-over-something-with-mouse-cursor-in-python
+# All credit for the code for the ToolTip object is directed to user squareRoot17 at the following URL.
 class ToolTip(object):
     '''Tool tip pop up window - shows cost of food and time investment for walk options'''
     def __init__(self, widget: tkinter.Widget):
