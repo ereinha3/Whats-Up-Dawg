@@ -255,7 +255,7 @@ class InstructionsWindow(customtkinter.CTkToplevel):
         instructions = "How To Play\n- To start a new game, press the 'Start New Game' button on the main menu.\n- Enter your name and monthly income (on average), and pick a name and breed for your dog.\nThen press the 'Lets Begin!' button to start the game!\n\n"
         instructions += "- Once the game begins, press the 'Continue' button to begin the next round.\n- You will be presented with two options which you must pick from.\n- Between rounds, you can select a new walk schedule and food quality, as well as purchase items and medications from the shop.\n"
         instructions += "- At any time, you can see your current list of items, medications, or afflictions by pressing the cooresponding buttons in the lower left corner of the main window.\n\n- The game ends when either your dog passes away or you become too financially burdoned to continue.\n"
-        instructions += "Gameplay Instructions:\nThis game is designed to follow the simulated ownership of the life of a dog. \
+        instructions += "Gameplay:\nThis game is designed to follow the simulated ownership of the life of a dog. \
 The goal of the game is to educate prospective dog owners about the responsibilites, consequences, costs, and good practices of owning a dog. \
 The gameplay starts with selection of breed and input of Player Statistics such as Monthly Income, Dog Name, and Player Name. \
 The game follows the life of your selected dog, prompting the Player with a single event prompt for every 6-month interval of time. \
