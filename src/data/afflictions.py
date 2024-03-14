@@ -1,3 +1,4 @@
+import random
 afflictions_library = {
         "anemia": {
             "name": "anemia",
