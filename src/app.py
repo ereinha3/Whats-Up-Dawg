@@ -252,6 +252,10 @@ class InstructionsWindow(customtkinter.CTkToplevel):
             padx=20,
             pady=15)
         
+        instructions = "How To Play\n- To start a new game, press the 'Start New Game' button on the main menu.\n- Enter your name and monthly income (on average), and pick a name and breed for your dog.\nThen press the 'Lets Begin!' button to start the game!\n\n"
+        instructions += "- Once the game begins, press the 'Continue' button to begin the next round.\n- You will be presented with two options which you must pick from.\n- Between rounds, you can select a new walk schedule and food quality, as well as purchase items and medications from the shop.\n"
+        instructions += "- At any time, you can see your current list of items, medications, or afflictions by pressing the cooresponding buttons in the lower left corner of the main window.\n\n- The game ends when either your dog passes away or you become too financially burdoned to continue."
+
         self.instructions_textbox = customtkinter.CTkTextbox(
             self,
             wrap="word")
@@ -261,7 +265,7 @@ class InstructionsWindow(customtkinter.CTkToplevel):
             padx=20,
             pady=20,
             sticky="nsew")
-        self.instructions_textbox.insert("0.0", "Instructions Should Go Here...") # TODO
+        self.instructions_textbox.insert("0.0", instructions) # TODO
         self.instructions_textbox.configure(state="disabled")
 
         self.close_button = customtkinter.CTkButton(
