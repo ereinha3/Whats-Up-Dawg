@@ -10,7 +10,7 @@ University of Oregon - CS422/522 Software Methodologies Project 2, Group 7
 
 *Requires python 3.10 or above*
 
-The First Time You Play: From the root folder, type in './CLICKME.sh' in a terminal window and press enter. This will download dependent python libraries and run the application.
+The First Time You Play: From the root folder, type in 'sh CLICKME.sh' in a terminal window and press enter. This will download dependent python libraries and run the application.
 
 For additional play-throughs, you can use the same command as above, or from the root folder type in 'python3 ./src/app.py' in a terminal window and press enter. This will skip the process of downloading dependent libraries.
 
