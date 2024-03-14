@@ -8,9 +8,11 @@ from data.shop import meal_options, walk_options, medications, care_items
 import math
 
 def affliction_detail_from_set(afflictionSubset: set) -> dict:
+    '''Given a set of affliction names, return the actual values associated with those afflictions from the data libraries.'''
     return {key: value for key, value in afflictions_library.items() if key in afflictionSubset}
 
 def call_or_get(value, dog):
+    '''If the given value is a function, call it and return the value. If it is not a function simply return the value.'''
     if callable(value):
         return value(dog)
     return value
@@ -30,8 +32,10 @@ def update_model_stats(token: dict, token_name, human: Human, dog: Dog, show_dis
             human.log += f"{dog.name} lost health as a result of {token_name}. Take care!\n"
         elif (health_value > 0 and show_display):
             human.log += f"{dog.name} gained health as a result of {token_name}. Good work!\n"
+    
     if ("max_health" in token):
         dog.max_health += call_or_get(token["max_health"], dog)
+    
     if ("happiness" in token):
         happiness_value = call_or_get(token["happiness"], dog)
         dog.happiness += call_or_get(token["happiness"], dog)
@@ -39,6 +43,7 @@ def update_model_stats(token: dict, token_name, human: Human, dog: Dog, show_dis
             human.log += f"{dog.name} lost happiness as a result of {token_name}. Bummer!\n"
         elif(happiness_value > 0 and show_display):
             human.log += f"{dog.name} gained happiness as a result of {token_name}. Good work!\n"
+    
     if ("training" in token):
         training_value = call_or_get(token["training"], dog)
         dog.training += training_value
@@ -46,22 +51,29 @@ def update_model_stats(token: dict, token_name, human: Human, dog: Dog, show_dis
             human.log += f"{dog.name} is more poorly behaved as a result of {token_name}.\n"
         elif(training_value > 0 and show_display):
             human.log += f"{dog.name} is better behaved as a result of {token_name}.\n"
+    
     if ("cost" in token):
         cost = call_or_get(token["cost"], dog)
         human.balance -= cost
         if (show_display):
             human.log += f"You spent ${cost} to resolve {token_name}.\n"
+    
     if ("time" in token):
         human.time_spent -= call_or_get(token["time"], dog)
         human.log += f"You spent {token['time']} hours of time on handling {token_name}.\n"
+    
     if ("afflictions" in token and len(call_or_get(token["afflictions"], dog)) > 0):
         dog.afflictions = dog.afflictions | affliction_detail_from_set(call_or_get(token["afflictions"], dog))
         human.log += "Your dog has suffered an affliction.\n"
+    
     if ("treatments" in token):
         for affliction_to_treat in call_or_get(token["treatments"]):
             dog.afflictions[affliction_to_treat]["duration"] = 0
 
 def load_event(dog):
+    '''
+    Returns an event dictionary. The event dictionary chosen is selected at random, but algorithmically more likely to be a lower severity event than a higher severity event. Events which have already been chosen will not reload unless they represent an affliction which can be suffered multiple times.
+    '''
     while 1:
         event_probabilities = list(event_lookup_table)
         event_probabilities.remove(0)
@@ -84,6 +96,7 @@ def load_event(dog):
         return event_library[name]
 
 def handle_event(event, decision, dog:Dog, human:Human) -> None:
+    '''Update Model attributes based on event given and the user option selected.'''
     event_outcome = event["options"][int(decision)]
     update_model_stats(event_outcome, event["name"], human, dog)
 
@@ -94,6 +107,7 @@ def handle_event(event, decision, dog:Dog, human:Human) -> None:
     return dog, human
 
 def next_round(dog:Dog, human:Human, event):
+    '''Update all attributes in the model to reflect the passing of 6 months. Return a string to be displayed by the view, which summarizes the events.'''
 
     #Update dog age
     summary_paragraph = 'A whole 6 months have passed! The following occured over the period of time:\n\n'
@@ -172,6 +186,7 @@ def next_round(dog:Dog, human:Human, event):
     human.log = str() #reset for next round
     return dog, human, summary_paragraph
 
-def check_resistance(dog: Dog, event: dict) -> None:
+def check_resistance(dog: Dog, event: dict) -> bool:
+    '''Calls the resistance function specified within an event detail, and returns the value.'''
     return (event["resist"]["check"](dog))
 
