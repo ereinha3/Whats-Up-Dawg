@@ -17,6 +17,8 @@ Ethan R. (ear)
 - Added screen refresh + bug fixes - (daw) 3/8/2024
 - Reforamtted splash screen, added docstrings and comments - (daw) 3/10/2024
 
+Used customtkinter documentation extensively during creation: https://customtkinter.tomschimansky.com/documentation/
+
 """
 
 import tkinter

@@ -23,4 +23,4 @@ Source Files(./src/): Contains static data libraries in /data/ sub directory, as
 
 Data (./src/data): Contains static data including dictionaries of shop items, afflictions, events, dog breeds. Also contains the scraper (scraper.py) used to gather the data.
 
-Nearly all code throughout all directories was completely organically created by the members of our team. The sole exception to this is the creation of the ToolTip object and methods to provide a hover to display text feature in the ./src/app.py file. This is clearly stated in that file and the original creator of the code as well as the URL are provided there.
+Nearly all code throughout all directories is original and created by the members of our team. The sole exception to this is the creation of the ToolTip object and methods to provide a hover to display text feature in the ./src/app.py file. This is clearly stated in that file and the original creator of the code as well as the URL are provided there.
